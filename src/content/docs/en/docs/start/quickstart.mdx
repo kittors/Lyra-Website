@@ -7,8 +7,8 @@ sidebar:
 
 import { Steps, Aside } from '@astrojs/starlight/components';
 import { Image } from 'astro:assets';
-import modelsLight from '../../../../../assets/shots/settings-models-light.png';
-import modelsDark from '../../../../../assets/shots/settings-models-dark.png';
+import modelsLight from '../../../../../assets/shots/settings-models-light-en.png';
+import modelsDark from '../../../../../assets/shots/settings-models-dark-en.png';
 
 Lyra doesn't ship with a model, so the first thing to do is add one. Until you do, messages can't be sent.
 
@@ -28,8 +28,8 @@ Lyra doesn't ship with a model, so the first thing to do is add one. Until you d
 
    Then click **Fetch models** to read the model list from the endpoint and import the ones you want, or **Add a model** to enter a model ID by hand. Once a test passes, pick your usual model and choose **Make this the default**.
 
-   <Image src={modelsLight} alt="Settings → Models in the Chinese interface: the provider list on the left; the selected provider's Base URL, API format, API key and models on the right" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
-   <Image src={modelsDark} alt="Settings → Models in the Chinese interface: the provider list on the left; the selected provider's Base URL, API format, API key and models on the right" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+   <Image src={modelsLight} alt="Settings → Models: the provider list on the left; the selected provider's Base URL, API format, API key and models on the right" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+   <Image src={modelsDark} alt="Settings → Models: the provider list on the left; the selected provider's Base URL, API format, API key and models on the right" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 2. **Start your first chat**
 
