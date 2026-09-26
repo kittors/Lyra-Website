@@ -1,0 +1,40 @@
+---
+title: Skills
+description: Instructions written for the model. Each costs one line of description until it's actually used.
+sidebar:
+  order: 6
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A skill is a folder with a `SKILL.md` that teaches the model how to do one kind of job well. Only its name and one-line description go into the system prompt; the body is read when the model decides to use it. That's why dozens of skills barely touch your context.
+
+## Where skills come from
+
+- **The Plugin Market**: skill collections, or the skills inside a plugin.
+- **Your own**: see [Write skills and plugins](/en/docs/extend/plugins-and-skills/).
+- **Already in your project**: skills in `.claude/skills/` and `.agents/skills/` work as they are.
+- **Suggested skills**: turn on Settings → Personalization → **Build project memory on its own**, and Lyra drafts reusable routines from your recent chats. They wait under Settings → Plugins → Skills and do nothing until you enable them.
+
+## Using a skill
+
+- **Let the model pick**: with a clear description, it calls the skill when it fits.
+- **Call it yourself**: type `/skill-name` in the composer.
+- **Attach it**: choose one under **Plugins and skills** in the `@` menu to include it in this message.
+
+## Managing skills
+
+Switch skills on and off, open or delete them under Settings → Plugins → Skills. When two share a name, the more specific one wins:
+
+| Priority | Location |
+| --- | --- |
+| 1 | The project's `.lyra/skills/` |
+| 2 | Your `~/.lyra/skills/` |
+| 3 | Skills from plugins |
+| 4 | Built-in skills |
+
+So to change how a plugin's skill works, put a skill with the same name in your project.
+
+<Aside type="tip">
+Descriptions under 40 characters get flagged. The model decides from the description alone, and if that's vague it will never pick the skill.
+</Aside>

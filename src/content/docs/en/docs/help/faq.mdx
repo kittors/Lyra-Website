@@ -1,0 +1,60 @@
+---
+title: FAQ
+description: Common questions about cost, models, the phone app, your data and compatibility.
+sidebar:
+  order: 1
+---
+
+## Does Lyra cost anything?
+
+No. Lyra is open source under the MIT license. Your model provider bills you for what you use.
+
+## Do I need my own model?
+
+Yes. Lyra doesn't ship with a model — add a provider and API key under Settings → Models. See [Quick start](/en/docs/start/quickstart/).
+
+## Which APIs does it support?
+
+Three: **Responses** (`/v1/responses`), **Anthropic Messages** (`/v1/messages`) and **Chat Completions** (`/v1/chat/completions`) — from the vendor directly, or from any relay that speaks one of them.
+
+Pick the one your provider documents: Responses for OpenAI, Messages for Anthropic, and usually Chat Completions for other OpenAI-compatible services.
+
+## How does it relate to Claude Code or Codex?
+
+It doesn't. Lyra's agent loop, tools, skills and MCP support are its own, not a wrapper around either. It does read the same formats, though: `SKILL.md` skills, `.mcp.json`, `AGENTS.md` and `CLAUDE.md` in your project, plus `.claude/skills` and `.claude/commands`.
+
+## Can I use the phone app on its own?
+
+No. It connects to Lyra on your computer, where the sessions, models and keys live. See [Phone and sync](/en/docs/features/mobile/).
+
+## Are my code and conversations uploaded anywhere?
+
+Not to Lyra. There's no account to sign up for; conversations go only to the model providers you configure, and session logs stay in `~/.lyra` on your machine. See [Data and privacy](/en/docs/help/data-and-privacy/).
+
+## How do I move to a new computer?
+
+Copy the whole `~/.lyra` folder across. Keep `credentials.json` and `vault.key` together — with only one of them, the keys can't be decrypted.
+
+## What's the difference between plugins, skills and MCP?
+
+| | What it is |
+| --- | --- |
+| Skill | Instructions for the model, read only when used |
+| Plugin | Several skills bundled together |
+| MCP server | An external program that gives the agent tools |
+
+## My computer fell asleep during a long task
+
+Turn on Settings → General → **Keep this computer awake**. Closing the lid still sleeps the machine; that's up to your system's power settings.
+
+## Which languages does the interface support?
+
+简体中文, 繁體中文, English, Français, Русский, 한국어 and 日本語. Switch under Settings → General → Interface language; by default it follows your system.
+
+## Why do my subagents run one at a time?
+
+Check **Run at most** under Settings → Delegation. At 1, they run one after another and the rest queue.
+
+## Requests keep dropping on a flaky network
+
+Under Settings → General → Retries, set how many times and how far apart to retry for network drops and for upstream faults (rate limits, overloaded services). Tools that already ran are not run again.

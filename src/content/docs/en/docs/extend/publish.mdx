@@ -1,0 +1,67 @@
+---
+title: Publish to the market
+description: Get your plugin, skill collection or MCP server into the Lyra Plugin Market — or host a source of your own.
+sidebar:
+  order: 3
+---
+
+import { Steps, Aside, Badge } from '@astrojs/starlight/components';
+
+The [Lyra Plugin Market](https://market.07230805.xyz) is Lyra's default source. Every entry is built by the platform from a GitHub repository: it fetches the code, counts the skills and servers inside, packages it and records a SHA-256. Lyra checks that hash when someone installs it.
+
+## Prepare the repository
+
+- **A public GitHub repository.**
+- **One folder per entry**, at the repository root or in a subfolder. The platform decides what it is from what's inside:
+
+| The folder has | Treated as |
+| --- | --- |
+| `skills/<name>/SKILL.md` plus a manifest | Plugin |
+| Only a `.mcp.json` | MCP server |
+| A single level of `<name>/SKILL.md` | Skill collection — must be declared explicitly |
+
+- Name, description, icon and version come from the manifest. See [Write skills and plugins](/en/docs/extend/plugins-and-skills/) and [Connect an MCP server](/en/docs/extend/mcp-servers/).
+- Before submitting, drop it into your own `~/.lyra/plugins/` and make sure it loads.
+
+## Submit it
+
+Entries are currently added through the official plugin repository:
+
+<Steps>
+
+1. Fork [kittors/Lyra-Plugins](https://github.com/kittors/Lyra-Plugins).
+2. Add an entry to `sources` in `sources.json`, following the existing ones: upstream repository, category and a one-line description. The fields are documented in that repository's README.
+3. Open a pull request. Once a maintainer approves it, it goes live in the market.
+
+</Steps>
+
+Reviews look at four things: the upstream is public, works and is still maintained; the description says what it **does**, not how great it is; it doesn't duplicate an existing entry; and its `id` isn't taken.
+
+<Aside>
+The market site also supports self-service submissions after signing in with GitHub: enter the repository, it builds on the spot, and it's listed after review. Sign-in isn't open on the live site yet; once it is, the site is the way to go.
+</Aside>
+
+## After it's listed
+
+- The platform rebuilds from your repository periodically. When you ship a new version, people who installed it see the update.
+- The market doesn't review code, and the detail page tells users to look at the repository first. A clear README and description go a long way toward earning an install.
+
+## Host your own source
+
+To share outside the public market, host an index yourself and have people add its address as a source (market `⋯` → **Sources…** <Badge text="Next release" variant="note" size="small" />). The index is a JSON file served over `https://`:
+
+```json
+{
+  "name": "My plugins",
+  "plugins": [
+    {
+      "name": "my-plugin",
+      "repository": "https://github.com/me/my-plugins",
+      "path": "plugins/my-plugin",
+      "category": "Development"
+    }
+  ]
+}
+```
+
+Only `name` and `repository` are required. When a repository holds several bundles, point `path` at the subfolder. Lyra clones the repository on install.

@@ -1,0 +1,39 @@
+---
+title: Pull request review
+description: Read pull requests from several hosts in Lyra, have the agent review them, then approve or request changes.
+sidebar:
+  order: 9
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+**Pull requests** in the sidebar gathers the pull requests waiting on you and the ones you opened, across GitHub, GitLab, Gitee and Gitea — self-hosted instances included.
+
+## Connecting an account
+
+<Steps>
+
+1. Settings → Code hosting → add an account and pick the host. For a self-hosted instance, enter its server address.
+2. Click **Create one** to generate an access token on the host, then paste it back.
+3. Click **Verify and save**.
+
+</Steps>
+
+| Host | Token scopes |
+| --- | --- |
+| GitHub | `repo` `read:org` `read:user` |
+| GitLab | `api` |
+| Gitee | `projects` `pull_requests` `user_info` |
+
+Tokens are encrypted into `~/.lyra/forges.json`. They never reach `settings.json` and are never synced to your phone.
+
+## Reviewing
+
+- **The list** is split into Waiting on you, Yours and Already reviewed, with search and filters.
+- **The detail view** has **Summary** for the description, CI checks and activity, and **Code** for the diff.
+- **Have the agent review it** opens a new chat with a review request in the composer, ready for you to send. If the repository is one of your projects, the chat opens there; otherwise it uses a temporary folder.
+- **Decide** at the bottom: leave a comment, then **Approve** or **Request changes** (which needs a reason).
+
+<Aside type="tip">
+The drafted request asks for a read-only review that leaves the repository alone. If you'd like the agent to fix things as well, edit it before sending.
+</Aside>

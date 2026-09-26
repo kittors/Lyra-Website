@@ -1,0 +1,53 @@
+---
+title: 认识 Lyra
+description: Lyra 是一个自己配模型的独立 AI 智能体，桌面端和手机端共用一份会话。开源，MIT 许可。
+sidebar:
+  order: 1
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import heroLight from '../../../../assets/shots/hero-conversation-light.png';
+import heroDark from '../../../../assets/shots/hero-conversation-dark.png';
+
+Lyra 是一个独立的通用 AI 智能体。接上你自己的模型，它就能在你的电脑上读代码、改文件、跑命令；出门在外，拿手机也能接着聊。
+
+<Image src={heroLight} alt="Lyra 主窗口：左边是项目和会话，中间是对话，右边是 Git 面板" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={heroDark} alt="Lyra 主窗口：左边是项目和会话，中间是对话，右边是 Git 面板" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## 它是什么
+
+- **自己实现的 agent**：内核、工具、技能、MCP 都从零写起，不是 Claude Code 或 Codex 的外壳。
+- **模型由你来配**：接任意多个供应商，每个供应商下挂任意多个模型。
+- **桌面加手机**：桌面端支持 macOS、Windows、Linux；手机端（Android、iOS）连到你电脑上的 Lyra，两边是同一份会话。
+- **开源免费**：MIT 许可，代码在 [GitHub](https://github.com/kittors/Lyra)。
+
+## 能做什么
+
+<CardGrid>
+  <Card title="对话与工具" icon="comment-alt">
+    20 个内置工具：读写文件、搜索代码、执行命令、抓取网页。[了解](/docs/features/conversation/)
+  </Card>
+  <Card title="子智能体" icon="random">
+    把大活拆给有独立上下文的子智能体，可以并行。[了解](/docs/features/subagents/)
+  </Card>
+  <Card title="分屏" icon="window">
+    一个窗口并排最多 4 个会话，各带各的面板。[了解](/docs/features/split-view/)
+  </Card>
+  <Card title="插件市场" icon="puzzle">
+    浏览并安装插件、MCP 服务和技能。[了解](/docs/features/plugins/)
+  </Card>
+  <Card title="定时任务" icon="clock">
+    每天或每隔几分钟，自动开新会话跑提示词。[了解](/docs/features/scheduled/)
+  </Card>
+  <Card title="手机同步" icon="phone">
+    在手机上看进度、批准操作、继续追问。[了解](/docs/features/mobile/)
+  </Card>
+</CardGrid>
+
+## 下一步
+
+<CardGrid>
+  <LinkCard title="安装" description="挑对安装包，过掉首次打开时的系统拦截。" href="/docs/start/install/" />
+  <LinkCard title="快速上手" description="配模型、开对话、打开项目。" href="/docs/start/quickstart/" />
+</CardGrid>

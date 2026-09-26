@@ -1,0 +1,42 @@
+---
+title: 分屏
+description: 一个窗口里并排放最多 4 个会话，每个会话带着自己的面板。
+sidebar:
+  order: 3
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import splitLight from '../../../../assets/shots/split-view-light.png';
+import splitDark from '../../../../assets/shots/split-view-dark.png';
+
+一个窗口里并排放最多 4 个会话，各自带着自己的终端、浏览器、文件等面板，互不干扰。
+
+<Image src={splitLight} alt="分屏：两个会话左右并排，各有自己的标题栏和输入框" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={splitDark} alt="分屏：两个会话左右并排，各有自己的标题栏和输入框" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## 打开分屏
+
+- **菜单**：在侧栏右键一个会话 →「打开方式」→「分屏」。它会作为新的一列加进来；宽度不够时切开一个够大的屏，还放不下就改开一个新窗口。
+- **拖动**：把侧栏里的会话拖到某一屏上，靠近哪条边就分到哪一边。
+
+已经有 4 屏时再拖进来，会替换指针下的那一屏。某一屏太窄、再分就看不清时，会提示「这一屏放不下再分一屏」<Badge text="下一版本" variant="note" size="small" />
+
+## 调整
+
+| 想做的事 | 怎么做 |
+| --- | --- |
+| 挪动一屏 | 拖动它顶部中间的小横条；或右键会话，选「向左移动分屏」之类的选项 |
+| 改宽度或高度 | 拖动两屏之间的分隔条，双击恢复均分 |
+| 关掉一屏 | 点标题栏上的「关闭此屏」，会话本身不受影响 |
+| 单独开一个窗口 | 右键会话 →「打开方式」→「新窗口」 |
+
+## 要点
+
+- **面板属于会话**：每一屏的浏览器标签、终端、打开的文件都是各自的。
+- **保证能读**：聊天区至少 420 px 宽，每个面板至少 300 px。窗口缩窄放不下时，多出来的面板会转到独立窗口里，放大后可以收回来。
+- **布局会记住**：重启之后还是原来的样子。
+
+<Aside type="tip">
+面板放大到铺满之后，按 `Esc` 还原。它只还原放大的面板，不会关掉旁边的屏。
+</Aside>

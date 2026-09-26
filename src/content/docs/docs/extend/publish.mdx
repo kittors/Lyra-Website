@@ -1,0 +1,67 @@
+---
+title: 发布到插件市场
+description: 把你的插件、技能集或 MCP 服务放进 Lyra 插件市场，或者自己托管一个来源。
+sidebar:
+  order: 3
+---
+
+import { Steps, Aside, Badge } from '@astrojs/starlight/components';
+
+[Lyra 插件市场](https://market.07230805.xyz)是 Lyra 默认的插件来源。每个条目都由平台从 GitHub 仓库构建：拉取代码、数清里面有几个技能和服务、打包并记下 SHA-256。用户安装时，Lyra 会核对这个哈希。
+
+## 准备仓库
+
+- **公开的 GitHub 仓库**。
+- **一个条目一个目录**，可以在仓库根目录，也可以在子目录里。平台按目录里的内容判断它是什么：
+
+| 目录里有 | 会被当作 |
+| --- | --- |
+| `skills/<名字>/SKILL.md`，加上清单 | 插件 |
+| 只有 `.mcp.json` | MCP 服务 |
+| 一层 `<名字>/SKILL.md` | 技能集，需要明确声明 |
+
+- 名字、描述、图标、版本都从清单里读，写法见[写技能和插件](/docs/extend/plugins-and-skills/)和[接入 MCP 服务器](/docs/extend/mcp-servers/)。
+- 提交之前，先放进本机的 `~/.lyra/plugins/` 确认能正常加载。
+
+## 提交
+
+目前通过官方插件仓库收录：
+
+<Steps>
+
+1. Fork [kittors/Lyra-Plugins](https://github.com/kittors/Lyra-Plugins)。
+2. 在 `sources.json` 的 `sources` 里加一条，照着已有条目写：上游仓库、分类、一句话描述。字段说明见那个仓库的 README。
+3. 开 Pull Request。维护者审核通过后上架到市场。
+
+</Steps>
+
+审核主要看四点：上游公开、能跑、最近还有人维护；描述写的是它**做什么**，而不是它多好用；和已有条目不重复；`id` 没被占用。
+
+<Aside>
+市场站点本身也支持用 GitHub 登录后自助提交：填仓库地址，当场构建，审核后上架。线上站点目前还没有开放登录，开放后以站点为准。
+</Aside>
+
+## 上架之后
+
+- 平台会定期从你的仓库重新构建。你发布新版本后，已安装的用户会看到更新。
+- 市场不做代码审核，详情页会提醒用户先看仓库。README 和描述写认真一点，别人才敢装。
+
+## 自己托管一个来源
+
+不想放进公开市场，也可以自己托管一份索引，让别人把它的地址添加为插件来源（市场页 `⋯` →「插件来源…」<Badge text="下一版本" variant="note" size="small" />）。索引是一个能通过 `https://` 访问的 JSON：
+
+```json
+{
+  "name": "我的插件",
+  "plugins": [
+    {
+      "name": "my-plugin",
+      "repository": "https://github.com/me/my-plugins",
+      "path": "plugins/my-plugin",
+      "category": "开发"
+    }
+  ]
+}
+```
+
+每一条只有 `name` 和 `repository` 必填；一个仓库里放了多个时，用 `path` 指到子目录。安装时 Lyra 会克隆对应的仓库。

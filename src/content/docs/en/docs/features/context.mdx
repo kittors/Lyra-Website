@@ -1,0 +1,39 @@
+---
+title: Context compaction
+description: When a chat gets long, Lyra summarizes the older part — and the original stays within reach.
+sidebar:
+  order: 12
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Long conversations eventually outgrow the model's context window. Lyra summarizes the older part for you, and the original stays in the session log.
+
+## See what's using it
+
+The ring to the left of the model name in the composer shows how much of the context window this chat fills. Click it for a breakdown: messages, built-in tools, MCP tools, the skill list, the system prompt, project instructions, project memory, and what's left.
+
+The numbers come from the last reply's actual usage, estimated until there's been a reply. Past 80% the ring turns red.
+
+## Automatic compaction
+
+Three steps, cheapest first:
+
+1. **Trim oversized tool results.** No model call needed, and often enough on its own.
+2. **Summarize.** At 80% of the window, older turns are replaced by a structured summary and the most recent ones are kept word for word.
+3. **Recall on demand.** The `recall` tool reads the original log back whenever it's needed, so nothing summarized is really lost.
+
+## Compacting by hand
+
+- Type `/compact`, optionally followed by what the summary should keep.
+- Or pick **compact** under **Actions** in the `@` menu.
+
+Doing this between tasks frees up room without losing what you concluded.
+
+## Choosing the summary model
+
+By default the summary is written by the conversation's own model. To use a cheaper one, go to Settings → Subagents and, under **Session**, pick a model for **Compact the context**. It only writes summaries; answers still come from your chosen model.
+
+<Aside type="tip">
+Ring nearly full? A new chat gets you the whole window back. Switching off MCP servers you don't use, or deleting a `CLAUDE.md` nobody reads, helps too.
+</Aside>

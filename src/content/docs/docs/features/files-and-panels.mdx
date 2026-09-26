@@ -1,0 +1,66 @@
+---
+title: 附件、文件预览与面板
+description: 往对话里放文件和截图，在右侧面板里看文件、开终端、用浏览器。
+sidebar:
+  order: 10
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import panelsLight from '../../../../assets/shots/workspace-panels-light.png';
+import panelsDark from '../../../../assets/shots/workspace-panels-dark.png';
+import previewLight from '../../../../assets/shots/file-preview-light.png';
+import previewDark from '../../../../assets/shots/file-preview-dark.png';
+
+对话右边是一排随时能打开的面板：文件、终端、Git、浏览器……每个会话一套。
+
+<Image src={panelsLight} alt="对话右边打开着一个工作区面板" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={panelsDark} alt="对话右边打开着一个工作区面板" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## 附件
+
+把文件拖进输入框、直接粘贴，或者点输入框的 `+`。一次最多 8 个。
+
+| 文件 | 模型拿到的是 |
+| --- | --- |
+| 图片 | 图片本身（模型要支持图片输入） |
+| PDF、Word、Excel、PowerPoint | 抽出来的文字；扫描件里没有文字，只有文件名 |
+| 代码和文本 | 全文 |
+| 视频、音频、压缩包等 | 只有文件名和类型 |
+
+**截图**：在「设置 → 屏幕截图」里设好全局快捷键。截完可以标注（箭头、矩形、文字、画笔、马赛克），也可以设成截完自动放进输入框。
+
+## 文件预览
+
+在「文件」面板里点一个文件，它会在「文件内容」面板里打开：
+
+- **代码和文本**：带语法高亮的编辑器，`⌘S` 保存，还能一键格式化
+- **Markdown**：显示渲染后的样子，可以切回源码
+- **图片、视频、音频**
+- **PDF、Word**（`.docx`）
+- **表格**（`.xlsx` `.xls` `.ods`）和 **SQLite 数据库**，按表格显示
+
+<Image src={previewLight} alt="「文件内容」面板里打开的 Markdown 文档，正文和时序图都已渲染出来" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={previewDark} alt="「文件内容」面板里打开的 Markdown 文档，正文和时序图都已渲染出来" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## 面板
+
+| 面板 | 快捷键 | 用途 |
+| --- | --- | --- |
+| 文件 | `⌘P` | 项目文件树 |
+| 文件内容 | `⌥⌘P` | 查看、编辑当前文件 |
+| 终端 | `` ⌃` `` | 真正的终端 |
+| Git | `⌘⇧R` | 改动、提交、分支、历史 |
+| 侧边聊天 | `⌥⌘S` | 围绕当前会话另开一个对话，不写进主会话 |
+| 子 Agent | `⌥⌘A` | 每个子智能体在做什么 |
+| 任务 | `⌘J` | 计划清单、执行记录、正在运行的服务 |
+| 轨迹 | `⌘L` | 这一轮实际发给模型的内容 |
+| 浏览器 | `⌘T` | 内置浏览器，Agent 也能直接操作 |
+
+- **挪位置**：拖动面板顶部中间的小横条，放到别处重新排布。
+- **铺满**：面板可以占满整个对话区，`Esc` 还原。
+- **新窗口**：除浏览器外，面板都能单独开成一个窗口。
+
+<Aside>
+文件、文件内容和 Git 面板要先打开项目。Windows 和 Linux 上把 `⌘` 换成 `Ctrl`、`⌥` 换成 `Alt`。
+</Aside>

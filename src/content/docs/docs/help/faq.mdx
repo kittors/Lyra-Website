@@ -1,0 +1,60 @@
+---
+title: 常见问题
+description: 费用、模型、手机端、数据和兼容性方面的常见问题。
+sidebar:
+  order: 1
+---
+
+## Lyra 收费吗？
+
+不收费。Lyra 以 MIT 许可开源，模型的费用由你的供应商按用量收取。
+
+## 需要自己准备模型吗？
+
+需要。Lyra 不自带模型，要在「设置 → 模型设置」里添加供应商和 API Key，见[快速上手](/docs/start/quickstart/)。
+
+## 支持哪些接口？
+
+三种：**Responses**（`/v1/responses`）、**Anthropic Messages**（`/v1/messages`）和 **Chat Completions**（`/v1/chat/completions`）。官方接口，或者兼容这些格式的中转都可以。
+
+按供应商文档选：OpenAI 官方用 Responses，Anthropic 用 Messages，其他兼容 OpenAI 的服务一般是 Chat Completions。
+
+## 和 Claude Code、Codex 是什么关系？
+
+没有关系。Lyra 的 agent 内核、工具、技能和 MCP 都是自己实现的，不是它们的外壳。不过它读得懂同样的格式：`SKILL.md` 技能、`.mcp.json`、项目里的 `AGENTS.md` 和 `CLAUDE.md`，以及 `.claude/skills`、`.claude/commands`。
+
+## 手机端能单独用吗？
+
+不能。手机端连的是你电脑上的 Lyra，会话、模型和密钥都在电脑上，见[手机端与同步](/docs/features/mobile/)。
+
+## 我的代码和对话会被上传吗？
+
+不会传给 Lyra。Lyra 不用注册账号，对话只发给你配置的模型供应商，会话记录只存在本机的 `~/.lyra` 里。详见[数据与隐私](/docs/help/data-and-privacy/)。
+
+## 换电脑怎么迁移？
+
+把 `~/.lyra` 整个拷过去。`credentials.json` 和 `vault.key` 要一起拷，少一个，密钥就解不开了。
+
+## 插件、技能、MCP 有什么区别？
+
+| | 是什么 |
+| --- | --- |
+| 技能 | 一份写给模型的说明，用到时才读 |
+| 插件 | 几个技能打成的包 |
+| MCP 服务 | 一个给 agent 提供工具的外部程序 |
+
+## 长任务跑着跑着电脑睡了？
+
+打开「设置 → 常规 → 运行期间不让电脑休眠」。合上盖子仍然会睡，那由系统的电源策略决定。
+
+## 界面支持哪些语言？
+
+简体中文、繁體中文、English、Français、Русский、한국어、日本語。在「设置 → 常规 → 界面语言」里切换，默认跟随系统。
+
+## 子智能体为什么一个一个跑？
+
+看「设置 → 子智能体调度」里的「最多同时运行」。设成 1 就只能一个接一个，多出来的排队。
+
+## 网络不稳，请求老是断？
+
+到「设置 → 常规 → 请求重试」，分别设置网络中断和上游故障（限流、服务过载）时重试几次、隔多久。已经执行过的工具不会重做。

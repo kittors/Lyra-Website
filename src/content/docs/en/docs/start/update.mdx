@@ -1,0 +1,66 @@
+---
+title: Update
+description: How in-app updates work, how they are verified, and what to do when Microsoft Defender gets in the way.
+sidebar:
+  order: 4
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+Lyra checks for new versions on its own. Every download is checked against the release's checksums before anything is installed.
+
+## Updating
+
+<Steps>
+
+1. When a new version is out, a small dot appears at the end of the settings row at the bottom left of the sidebar. Click it, or go to Settings → About → **Check for updates**.
+2. Skim what's in the new version and click **Download it**. You can pause and resume, and closing the dialog doesn't stop the download.
+3. When it's done:
+   - **macOS and Linux**: click **Restart now** and the new version replaces the old one in place.
+   - **Windows**: the installer opens by itself. Follow it through, then start Lyra again.
+
+</Steps>
+
+<Aside>
+Restarting cuts short anything in progress, so pick a quiet moment.
+</Aside>
+
+## How often it checks
+
+Once at launch, then every 6 hours by default. Change it to anywhere from 1 to 24 hours under Settings → About.
+
+## How each install is replaced
+
+| Installed as | What the update does |
+| --- | --- |
+| macOS | Downloads the `.zip` and swaps Lyra.app in place |
+| Windows | Downloads the installer for your architecture and opens it |
+| Linux AppImage | Replaces the AppImage file, then restarts |
+| Linux deb | Installs the new package with `apt-get`, after your system's password prompt |
+| Anything else (e.g. a converted rpm) | No in-app update; you're sent to the release page |
+
+<Aside type="caution">
+An AppImage kept in a folder you can't write to (such as `/opt`) can't be replaced in place. Move it somewhere in your home folder first.
+</Aside>
+
+## How updates are verified
+
+- Every release publishes `SHA256SUMS`, the SHA-256 of each file.
+- The download is checked before it is installed. If it doesn't match, the file is deleted and nothing is installed.
+- If a release has no checksum file, or the file can't be fetched, the update is refused. No update is better than an unverified one.
+
+## When Microsoft Defender blocks the download
+
+Defender sometimes treats a large unsigned installer as suspicious. It shows up as a download that fails near the end.
+
+<Steps>
+
+1. Open Windows Security → Virus & threat protection → Protection history, find the entry that mentions Lyra, and choose **Allow**.
+2. Under Virus & threat protection → Manage settings → Exclusions, add the update folder: `%APPDATA%\@lyra\desktop\updates`
+3. Go back to Lyra and retry. What was already downloaded is kept.
+
+</Steps>
+
+## When GitHub is unreachable
+
+In-app updates download from GitHub. If your network can't reach it, grab the new version from the [download page](/en/download/) and install it over the old one. Your sessions and settings live in `~/.lyra` and survive a reinstall.

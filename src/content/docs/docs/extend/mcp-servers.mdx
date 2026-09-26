@@ -1,0 +1,158 @@
+---
+title: 接入 MCP 服务器
+description: 在设置里手动添加 MCP 服务，或者把它打包成能一键安装的 MCP 包。
+sidebar:
+  order: 2
+---
+
+import { Steps, Tabs, TabItem, FileTree, Aside, Badge } from '@astrojs/starlight/components';
+
+市场里没有你要的 MCP 服务？手动加一个，或者打成包分享出去。
+
+## 在设置里添加
+
+<Tabs>
+<TabItem label="本地（stdio）">
+
+<Steps>
+
+1. 「设置 → 插件 → MCP」→ 右边的 `⋯` →「添加 stdio 服务」。
+2. 填命令和参数，参数之间用空格分隔：
+
+   | 字段 | 例子 |
+   | --- | --- |
+   | 命令 | `npx` |
+   | 参数 | `-y @modelcontextprotocol/server-filesystem /Users/me/code` |
+
+3. 需要密钥的话，在卡片的「启动方式与环境变量」里添加环境变量。名字像密钥的（带 `KEY`、`TOKEN`、`SECRET`、`PASSWORD` 等）会加密保存 <Badge text="下一版本" variant="note" size="small" />
+4. 新添加的服务默认就是开着的。填好之后看卡片：连上了会显示它提供了几个工具，没连上会显示报错。
+
+</Steps>
+
+</TabItem>
+<TabItem label="远程（HTTP）">
+
+<Steps>
+
+1. 「设置 → 插件 → MCP」→ 右边的 `⋯` →「添加 HTTP 服务」。
+2. 填 URL，传输方式按服务的文档选 **Streamable HTTP** 或 **SSE**。
+3. 新添加的服务默认就是开着的，填好之后看卡片上的状态。
+
+</Steps>
+
+</TabItem>
+</Tabs>
+
+<Aside type="caution">
+stdio 服务会以你的权限在本机运行，只添加你信得过的命令。
+</Aside>
+
+## 打包成 MCP 包
+
+想让别人一键安装，就做成一个目录：`.mcp.json` 描述服务，清单写名字和说明。
+
+<FileTree>
+- playwright/
+  - .lyra-plugin/
+    - plugin.json
+    - icon.svg 可选
+  - .mcp.json
+</FileTree>
+
+`.mcp.json` 和 Claude Code 用的格式一样。本地服务写命令和参数：
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    }
+  }
+}
+```
+
+远程服务写 `type` 和 `url`：
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "deepwiki": {
+      "type": "http",
+      "url": "https://mcp.deepwiki.com/mcp"
+    }
+  }
+}
+```
+
+清单里用 `mcpServers` 指向这个文件：
+
+```json title=".lyra-plugin/plugin.json"
+{
+  "name": "playwright",
+  "version": "1.0.0",
+  "description": "用无障碍树驱动浏览器",
+  "mcpServers": ".mcp.json"
+}
+```
+
+<Aside>
+一个包里只有 `.mcp.json`、没有技能，它就是 MCP 服务：装好后出现在「设置 → 插件 → MCP」，默认关闭。
+</Aside>
+
+### 需要使用者填的值&nbsp;<Badge text="下一版本" variant="note" size="small" />
+
+密钥这类值要使用者自己填，在 `.mcp.json` 里写成 `${名字}` 占位：本地服务放进 `env`，远程服务放进 `headers`。
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "brave-search": {
+      "command": "npx",
+      "args": ["-y", "@brave/brave-search-mcp-server@latest"],
+      "env": { "BRAVE_API_KEY": "${BRAVE_API_KEY}" }
+    }
+  }
+}
+```
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": { "Authorization": "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}" }
+    }
+  }
+}
+```
+
+再在清单的 `env` 里逐个说明这些占位，Lyra 装好之后就会在界面上请人填：
+
+```json title=".lyra-plugin/plugin.json"
+{
+  "name": "brave-search",
+  "version": "1.0.0",
+  "description": "Brave 自建索引的网页搜索",
+  "mcpServers": ".mcp.json",
+  "env": [
+    {
+      "name": "BRAVE_API_KEY",
+      "description": "Brave Search API 的密钥",
+      "url": "https://brave.com/search/api/",
+      "secret": true
+    }
+  ]
+}
+```
+
+| `env` 字段 | 作用 |
+| --- | --- |
+| `name` | 占位的名字 |
+| `description` | 一句话说明这是什么 |
+| `url` | 去哪里申请，界面上显示为「去获取」 |
+| `secret` | 是否机密。不写的话按名字判断 |
+| `optional` | 可以不填。不填时这个环境变量不传 |
+
+取值时先用使用者在 Lyra 里填的，没有再读登录 shell 的环境变量。必填的缺了，服务不会启动，卡片上会写明缺哪几个。

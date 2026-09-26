@@ -1,0 +1,75 @@
+---
+title: 子智能体
+description: 把一件事交给有独立上下文的子智能体，只把结论带回主对话。
+sidebar:
+  order: 4
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import subagentsLight from '../../../../assets/shots/sub-agents-light.png';
+import subagentsDark from '../../../../assets/shots/sub-agents-dark.png';
+
+主 Agent 用 `task` 工具把一件事派给子智能体。子智能体有自己的上下文窗口，过程再长也不占主对话，做完只交回结论。适合「翻二十个文件找出 X 在哪定义」这种过程很长、结论很短的活。
+
+<Image src={subagentsLight} alt="主 Agent 把四项检查分给子智能体并行跑，右边的子 Agent 面板显示其中一个的过程" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={subagentsDark} alt="主 Agent 把四项检查分给子智能体并行跑，右边的子 Agent 面板显示其中一个的过程" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## 内置的七个
+
+| 名字 | 擅长 |
+| --- | --- |
+| `general` | 通用研究与代码修改 |
+| `explore` | 只读搜索与代码定位 |
+| `review` | 检查代码缺陷与风险 |
+| `verify` | 执行检查并报告结果 |
+| `plan` | 只读分析与实施规划 |
+| `simple` | 边界清楚的小改动，直接做完 |
+| `reason` | 先想清楚再动手的难题 |
+
+## 怎么用
+
+- **交给模型判断**：派不派、派几个，按「设置 → 子智能体调度」里的积极性来。
+- **点名**：在消息里写 `@explore`，或从 `@` 菜单里选，这一轮就派它，哪怕积极性设成了「从不派」。
+- **看进度**：输入框上方的状态条显示子智能体的运行情况；`⌥⌘A` 打开子 Agent 面板，能看每一个的完整过程。
+- **纠偏或叫停**：在面板里给某个子智能体发消息，补充信息或让它收尾；也可以单独停掉它，主 Agent 和其他子智能体不受影响。
+- **你一开口，主会话就不等了** <Badge text="下一版本" variant="note" size="small" />：子智能体在后台接着跑，跑完结果自动送回对话。
+
+## 检查点与续跑&nbsp;<Badge text="下一版本" variant="note" size="small" />
+
+子智能体每跑一段（默认 60 轮）会停下来看一眼：清单还在往前推就接着跑；否则交一份交接说明，**停下但保留上下文**。在面板上点「让主 Agent 接着跑它」，它会带着已经读过的东西从停下的地方继续，不必从头再派。
+
+<Aside type="caution">
+保留的上下文只在内存里（最近 24 个），重启 Lyra 之后就续不上了。
+</Aside>
+
+## 设置
+
+| 位置 | 能调什么 |
+| --- | --- |
+| 设置 → 子智能体调度 | 积极性：从不派、省着派、挑着派、主动派、放开派，默认跟随思考等级；最多同时运行几个（1–8，默认 4），多出来的排队 |
+| 设置 → 智能体 | 每个智能体用哪个模型、什么思考等级；新增自己的智能体 |
+
+## 自己定义一个
+
+在「设置 → 智能体」点「新增智能体」，填调用名、用途、指令和允许的工具。也可以直接写一个 Markdown 文件，放在项目的 `.lyra/agents/` 或 `~/.lyra/agents/` 下，项目里的优先：
+
+```markdown title=".lyra/agents/reviewer.md"
+---
+name: reviewer
+description: 审一段 diff，只报真问题
+tools: [read, grep, glob]
+---
+
+你在审查代码。只报会导致错误行为的问题……
+```
+
+| 字段 | 作用 |
+| --- | --- |
+| `name` | 调用名，省略则用文件名 |
+| `description` | 主 Agent 靠它决定派不派 |
+| `tools` | 只允许这些工具，省略则全部可用 |
+| `model` | 指定模型，省略则跟随当前会话 |
+| `max-turns` <Badge text="下一版本" variant="note" size="small" /> | 每跑多少轮停下来检查一次，默认 60 |
+
+正文就是它的系统提示。它看不到你和主 Agent 的对话，需要的背景都写进去。

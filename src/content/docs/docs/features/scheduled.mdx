@@ -1,0 +1,41 @@
+---
+title: 定时任务
+description: 「已安排」按时间自动开一个新会话，发出你写好的提示词。
+sidebar:
+  order: 8
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import scheduleLight from '../../../../assets/shots/schedule-light.png';
+import scheduleDark from '../../../../assets/shots/schedule-dark.png';
+
+侧栏的「已安排」按时间自动开一个新会话，把你写好的提示词发出去。适合每天早上审一遍未提交的改动、每小时跑一次测试并报告失败这类事。
+
+<Image src={scheduleLight} alt="「已安排」页面：三个定时任务，每个都有提示词、运行时间（每天几点，或每隔多少分钟）和开关" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={scheduleDark} alt="「已安排」页面：三个定时任务，每个都有提示词、运行时间（每天几点，或每隔多少分钟）和开关" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## 新建
+
+<Steps>
+
+1. 先打开任务要用的项目。新任务会在这个项目的主文件夹里运行。
+2. 侧栏 →「已安排」→ 新建。
+3. 改名字，写提示词。
+4. 选「每天」某个时刻，或者「每隔」多少分钟。
+5. 打开开关。新建的任务默认是停用的。
+
+</Steps>
+
+## 要点
+
+- **每次都是新会话**：不接着上一次聊，历史不会越积越长。
+- **用默认模型和当前的权限模式**：碰到需要批准的操作会等你，5 分钟没人批准就当作拒绝。无人值守的任务，权限要事先想好。
+- **Lyra 要开着**：关着的时候不会运行。重新打开后，已经到点还没跑的任务会补跑一次。
+- **立即运行一次**：不用等到点，先看看效果。
+- **打开上次会话**：直接看上一次跑出来的结果。
+- **删除任务**：只删任务本身，它跑出来的会话都还在。
+
+<Aside>
+任务开始、失败都会在窗口里提示。失败后不会每分钟重试，等下一个时间点再跑。
+</Aside>

@@ -1,0 +1,66 @@
+---
+title: Attachments and panes
+description: Add files and screenshots to a chat, and use the panes beside it for files, a terminal, a browser and more.
+sidebar:
+  order: 10
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import panelsLight from '../../../../../assets/shots/workspace-panels-light.png';
+import panelsDark from '../../../../../assets/shots/workspace-panels-dark.png';
+import previewLight from '../../../../../assets/shots/file-preview-light.png';
+import previewDark from '../../../../../assets/shots/file-preview-dark.png';
+
+Beside the conversation sits a row of panes you can open at any time — files, terminal, Git, browser and more. Each conversation has its own set.
+
+<Image src={panelsLight} alt="A conversation with a workspace pane open beside it, in the Chinese interface" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={panelsDark} alt="A conversation with a workspace pane open beside it, in the Chinese interface" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## Attachments
+
+Drag files into the composer, paste them, or click `+`. Up to 8 at a time.
+
+| File | What the model gets |
+| --- | --- |
+| Images | The image itself (the model must accept images) |
+| PDF, Word, Excel, PowerPoint | The extracted text; a scanned document has no text, so only its name |
+| Code and text | The full contents |
+| Video, audio, archives and so on | Just the name and type |
+
+**Screenshots**: set a global shortcut under Settings → Screenshots. After a capture you can annotate it — arrows, boxes, text, pen, mosaic — or have it attached to the composer automatically.
+
+## Previewing files
+
+Click a file in the **Files** pane and it opens in **File contents**:
+
+- **Code and text** in an editor with syntax highlighting; `⌘S` saves, and one keystroke formats
+- **Markdown** rendered, with a switch back to the source
+- **Images, video and audio**
+- **PDF and Word** (`.docx`)
+- **Spreadsheets** (`.xlsx`, `.xls`, `.ods`) and **SQLite databases**, shown as tables
+
+<Image src={previewLight} alt="A Markdown file open in the File contents pane in the Chinese interface, rendered with its text and a sequence diagram" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={previewDark} alt="A Markdown file open in the File contents pane in the Chinese interface, rendered with its text and a sequence diagram" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## Panes
+
+| Pane | Shortcut | For |
+| --- | --- | --- |
+| Files | `⌘P` | The project's file tree |
+| File contents | `⌥⌘P` | Viewing and editing the current file |
+| Terminal | `` ⌃` `` | A real terminal |
+| Git | `⌘⇧R` | Changes, commits, branches, history |
+| Side chat | `⌥⌘S` | A separate chat about this conversation that never writes into it |
+| Sub-agents | `⌥⌘A` | What each subagent is doing |
+| Tasks | `⌘J` | The plan, the run log, and services that are running |
+| Trace | `⌘L` | Exactly what this turn sent to the model |
+| Browser | `⌘T` | A built-in browser the agent can drive too |
+
+- **Move** a pane by dragging the small bar at its top centre.
+- **Maximize** a pane to fill the conversation area; `Esc` restores it.
+- **Pop out** any pane except the browser into its own window.
+
+<Aside>
+Files, File contents and Git need an open project. On Windows and Linux, use `Ctrl` for `⌘` and `Alt` for `⌥`.
+</Aside>

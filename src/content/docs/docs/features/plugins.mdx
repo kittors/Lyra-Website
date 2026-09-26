@@ -1,0 +1,57 @@
+---
+title: 插件与插件市场
+description: 在插件市场里浏览、安装插件、MCP 服务和技能，在设置里管理已装的。
+sidebar:
+  order: 5
+---
+
+import { Steps, Aside, Badge } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import marketLight from '../../../../assets/shots/plugin-market-light.png';
+import marketDark from '../../../../assets/shots/plugin-market-dark.png';
+import detailLight from '../../../../assets/shots/plugin-detail-light.png';
+import detailDark from '../../../../assets/shots/plugin-detail-dark.png';
+
+侧栏的「插件」就是插件市场：插件、MCP 服务和技能都在这里装。已经装上的，到「设置 → 插件」里管理。
+
+<Image src={marketLight} alt="插件市场：顶部是搜索和「全部 · 插件 · MCP · 技能」筛选，下面是分类，再往下是按分类排列的卡片" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={marketDark} alt="插件市场：顶部是搜索和「全部 · 插件 · MCP · 技能」筛选，下面是分类，再往下是按分类排列的卡片" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## 三种东西
+
+| 种类 | 是什么 | 装好之后 |
+| --- | --- | --- |
+| 插件 | 几个技能打成的包 | 新开的会话直接可用 |
+| MCP 服务 | 给 agent 提供工具的外部程序 | 默认关闭，要自己打开 |
+| 技能集 | 一组 `SKILL.md` | 整包安装，和插件一样可以整体开关 <Badge text="下一版本" variant="note" size="small" /> |
+
+## 安装
+
+<Steps>
+
+1. 打开侧栏的「插件」，搜索想要的。也可以按分类浏览 <Badge text="下一版本" variant="note" size="small" />
+2. 点卡片看详情：它能做什么，带了哪些技能或服务。
+
+   <Image src={detailLight} alt="技能集 Waza 的详情页：名称、简介和安装按钮，下面是它的 README" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+   <Image src={detailDark} alt="技能集 Waza 的详情页：名称、简介和安装按钮，下面是它的 README" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+3. 点「安装」。MCP 服务装好后默认关着，到「设置 → 插件 → MCP」打开开关。
+4. 要密钥的 MCP 服务，先在详情页或「设置 → 插件 → MCP」填好密钥，再打开 <Badge text="下一版本" variant="note" size="small" />
+
+</Steps>
+
+<Aside type="caution">
+市场不做代码审核。MCP 服务会以你的权限在本机运行，打开之前先看一眼它的启动命令和仓库。
+</Aside>
+
+## 管理与更新
+
+- **设置 → 插件**：分插件、MCP、技能、规则、扩展五栏，开关和卸载都在这里。市场页右上角有按钮直接跳过来。
+- **自动更新** <Badge text="下一版本" variant="note" size="small" />：装过的东西默认自己跟上新版本，大约每 30 分钟检查一次。在市场页右上角 `⋯` 菜单里关掉「自动更新」后只提示、不自动装，侧栏「插件」旁会显示可更新的数量。
+- **密钥** <Badge text="下一版本" variant="note" size="small" />：给 MCP 服务填的密钥加密保存在本机，不写进 `settings.json`，也不会同步到手机。
+
+## 插件来源
+
+默认来源是官方插件市场 [market.07230805.xyz](https://market.07230805.xyz)。要加别的市场，在市场页右上角 `⋯` →「插件来源…」里填地址，必须是 `https://` 开头 <Badge text="下一版本" variant="note" size="small" />
+
+想把自己写的放上去，见[发布到插件市场](/docs/extend/publish/)。

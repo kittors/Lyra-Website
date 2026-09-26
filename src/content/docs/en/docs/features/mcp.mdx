@@ -1,0 +1,40 @@
+---
+title: MCP
+description: Give the agent new tools with MCP servers — search, databases, browsers, design files and more.
+sidebar:
+  order: 7
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+
+An MCP server is an external program that gives the agent extra tools. Lyra connects over stdio, Streamable HTTP and SSE.
+
+## Adding a server
+
+- **From the Plugin Market**: filter for MCP. Servers arrive switched off, so switch them on yourself; if one needs a key, fill it in first <Badge text="Next release" variant="note" size="small" />
+- **By hand**: Settings → Plugins → MCP → `⋯` → **Add a stdio server** or **Add an HTTP server**. See [Connect an MCP server](/en/docs/extend/mcp-servers/).
+
+Every MCP server, typed in or installed, lives in one place: Settings → Plugins → MCP.
+
+## Status
+
+Each server gets a card that shows where it stands:
+
+| State | The card shows |
+| --- | --- |
+| Connected | How many tools it provides |
+| Could not connect | The error |
+| Needs a key <Badge text="Next release" variant="note" size="small" /> | Which values are missing; the server won't start until they're filled in |
+| Off | The switch is off |
+
+## Good to know
+
+- Tools are named `mcp__<server>__<tool>`, so they never clash with built-ins.
+- The model asks before calling an MCP tool; you can pick **Stop asking** for a single tool. In Full access it just runs.
+- Every server that's on adds its tool descriptions to the context. Switch off what you don't use — the [context ring](/en/docs/features/context/) shows what they cost.
+- MCP settings can't be changed from the phone.
+- Keys you enter in Lyra are encrypted on this machine, never written to `settings.json` and never synced to your phone <Badge text="Next release" variant="note" size="small" />
+
+<Aside type="caution">
+A stdio server runs on your machine with your permissions. Before switching one on, check its launch command.
+</Aside>

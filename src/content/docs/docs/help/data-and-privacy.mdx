@@ -1,0 +1,64 @@
+---
+title: 数据与隐私
+description: Lyra 把数据存在哪、哪些会离开你的电脑、密钥怎么保存。
+sidebar:
+  order: 3
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+
+Lyra 不用注册账号，也不替你保管数据：会话、设置和密钥都只存在你的电脑上。
+
+## 存在哪
+
+用户级的数据都在 `~/.lyra`（Windows 上是 `%USERPROFILE%\.lyra`）：
+
+| 路径 | 内容 |
+| --- | --- |
+| `settings.json` | 供应商、模型、MCP、权限模式等设置，不含 API Key |
+| `credentials.json` | API Key 等密钥，加密存放 |
+| `vault.key` | 解开上面那个文件的密钥 |
+| `forges.json` | 代码托管账号的访问令牌，加密存放 |
+| `sessions/` | 会话记录，JSONL 格式，一行一条 |
+| `sidechats/` | 侧边聊天记录 |
+| `memory.json` | `learn` 工具记下的内容 |
+| `skills/` `plugins/` `mcp/` `agents/` `rules/` `commands/` | 你的技能、插件、MCP 包、智能体、规则和斜杠命令 |
+
+项目里的：
+
+| 路径 | 内容 |
+| --- | --- |
+| `.lyra/skills/` `agents/` `commands/` `rules/` `plugins/` | 只对这个项目生效，可以跟着仓库提交 |
+| `.lyra/config.json` | 这个项目单独覆盖的设置；不允许放供应商、密钥和 MCP |
+| `LYRA.md`、`AGENTS.md`、`CLAUDE.md` | 项目指令，同一目录下取第一个存在的 |
+
+## 哪些会离开你的电脑
+
+| 发给谁 | 什么时候 |
+| --- | --- |
+| 你配置的模型供应商 | 对话时：消息、附件、工具结果 |
+| 你选的搜索服务 | Agent 用 `web_search` 时，发送搜索词 |
+| 你启用的 MCP 服务 | Agent 调用它的工具时，发送工具参数 |
+| GitHub | 检查和下载更新 |
+| 插件市场 | 浏览目录、下载安装的包 |
+| 代码托管平台 | 查看和审查拉取请求，使用你的令牌 |
+| 你的手机 | 开启移动端同步后，经局域网、你的反代或中转 |
+
+用量统计只在本机计算，不会上传。
+
+## 密钥
+
+- 模型供应商的 API Key 和代码托管令牌用 AES-256-GCM 加密后存进文件，文件权限 0600；解密用的密钥是同目录下的 `vault.key`。
+- 它们不会写进 `settings.json`，也不会同步到手机。
+- 在 Lyra 里给 MCP 服务填的密钥同样加密保存 <Badge text="下一版本" variant="note" size="small" />
+
+<Aside type="caution">
+加密文件和解密密钥放在同一个目录：任何能读你主目录的程序都能解开它们。介意的话，给令牌设一个短一点的有效期。
+</Aside>
+
+## 清理
+
+- **归档**：只是把会话移出侧栏，记录和用量都还在，随时能取消归档。
+- **删除**：先归档，再到「设置 → 已归档的聊天」里删除。删除后无法恢复。
+- **按时间清理**：「设置 → 存储」里选一段日期，把这段时间的会话记录一起清除。
+- **记忆**：「设置 → 个性化」里查看、删除，或者全部清除。

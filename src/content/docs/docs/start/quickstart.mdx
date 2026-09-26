@@ -1,0 +1,81 @@
+---
+title: 快速上手
+description: 配好模型，开第一个对话，打开项目。
+sidebar:
+  order: 3
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import modelsLight from '../../../../assets/shots/settings-models-light.png';
+import modelsDark from '../../../../assets/shots/settings-models-dark.png';
+
+Lyra 不自带模型，第一次打开要先配一个，不然发不出消息。
+
+<Steps>
+
+1. **添加模型供应商**
+
+   点侧栏左下角的齿轮打开设置，进入「模型设置」→「添加供应商」，填三项：
+
+   | 字段 | 填什么 |
+   | --- | --- |
+   | Base URL | 供应商或中转的接口地址 |
+   | API 格式 | **Responses**、**Anthropic Messages** 或 **Chat Completions** |
+   | API Key | 供应商给你的密钥 |
+
+   API 格式按供应商文档选：OpenAI 官方用 Responses，Anthropic 用 Messages，其他兼容 OpenAI 的服务一般是 Chat Completions。
+
+   然后点「拉取模型」，从接口读出模型列表勾选导入；也可以「添加模型」手动填模型 ID。测试通过后，把常用的那个「设为默认模型」。
+
+   <Image src={modelsLight} alt="模型设置：左边是供应商列表，右边是选中供应商的 Base URL、API 格式、API Key 和模型列表" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+   <Image src={modelsDark} alt="模型设置：左边是供应商列表，右边是选中供应商的 Base URL、API 格式、API Key 和模型列表" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+2. **开始第一个对话**
+
+   点侧栏顶部的「新对话」，在输入框里说你要做什么。`Enter` 发送，`Shift+Enter` 换行。
+
+3. **打开项目**
+
+   点侧栏「项目」旁的 `+`，或者输入框上方的项目按钮 →「新建项目」，起个名字，添加代码所在的文件夹。之后在这个项目里开的会话，都在它的主文件夹里运行。
+
+   不想绑项目，就选「不在项目中工作」。
+
+4. **选好权限**
+
+   在输入框左下角切换：
+
+   - **请求批准**：写文件、跑命令、联网之前都先问你
+   - **帮我批准**（默认）：只读的命令自动放行，其余仍然问
+   - **完全访问**：全部直接执行
+
+</Steps>
+
+## 常用操作
+
+| 想做的事 | 怎么做 |
+| --- | --- |
+| 调用命令或技能 | 输入 `/` |
+| 引用文件、文件夹、技能、智能体、历史会话 | 输入 `@` |
+| 翻出之前发过的消息 | 输入框为空时按 `↑` |
+| 压缩上下文 | 输入 `/compact` |
+| 开新对话 | 输入 `/clear` |
+| 显示或隐藏侧栏 | `⌘B` |
+
+## 面板快捷键
+
+| 面板 | 快捷键 |
+| --- | --- |
+| 文件 | `⌘P` |
+| 文件内容 | `⌥⌘P` |
+| 终端 | `` ⌃` `` |
+| Git | `⌘⇧R` |
+| 侧边聊天 | `⌥⌘S` |
+| 子 Agent | `⌥⌘A` |
+| 任务 | `⌘J` |
+| 轨迹 | `⌘L` |
+| 浏览器 | `⌘T` |
+
+<Aside>
+Windows 和 Linux 上把 `⌘` 换成 `Ctrl`、`⌥` 换成 `Alt`。
+</Aside>

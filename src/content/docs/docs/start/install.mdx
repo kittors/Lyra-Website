@@ -1,0 +1,148 @@
+---
+title: 安装
+description: 各平台该下载哪个文件、第一次打开怎么放行、怎么校验下载。
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem, Steps, Aside } from '@astrojs/starlight/components';
+
+到[官网下载页](/download/)下载，页面会按你的系统推荐安装包。全部文件也可以在 [GitHub Releases](https://github.com/kittors/Lyra/releases/latest) 找到。
+
+<Aside>
+安装包没有购买商业签名证书，三个桌面系统第一次打开时都会拦一下。按下面对应系统的步骤放行一次就好。
+</Aside>
+
+<Tabs syncKey="os">
+<TabItem label="macOS" icon="apple">
+
+| 芯片 | 下载 |
+| --- | --- |
+| Apple 芯片（M 系列） | `Lyra-<版本>-arm64.dmg` |
+| Intel | `Lyra-<版本>-x64.dmg` |
+
+不确定是哪种：苹果菜单 →「关于本机」，看「芯片」那一行。
+
+<Steps>
+
+1. 打开 `.dmg`，把 Lyra 拖进「应用程序」。
+2. 第一次打开会提示「无法验证开发者」。到「系统设置 → 隐私与安全性」，往下找到 Lyra，点「仍要打开」。
+3. 也可以在终端里去掉隔离标记，效果一样：
+
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/Lyra.app
+   ```
+
+</Steps>
+
+<Aside type="caution">
+如果提示的是「已损坏」，那是 0.6.0 及更早的旧包，只能删掉，换新版本重装。
+</Aside>
+
+</TabItem>
+<TabItem label="Windows" icon="seti:windows">
+
+| 架构 | 下载 |
+| --- | --- |
+| x64（绝大多数电脑） | `Lyra-<版本>-x64.exe` |
+| Arm（骁龙笔记本、Surface Pro X 等） | `Lyra-<版本>-arm64.exe` |
+
+不确定是哪种：「设置 → 系统 → 系统信息」，看「系统类型」。
+
+<Steps>
+
+1. 运行安装包。
+2. 弹出「Windows 已保护你的电脑」时，点「更多信息」→「仍要运行」。
+3. 按向导装完。安装目录可以改，但别选成安装包所在的下载文件夹。
+
+</Steps>
+
+<Aside type="tip">
+装完提示「缺少快捷方式」或找不到 `Lyra.exe`，见[故障排查](/docs/help/troubleshooting/#装完提示缺少快捷方式找不到-lyraexe)。
+</Aside>
+
+</TabItem>
+<TabItem label="Linux" icon="linux">
+
+| 架构 | AppImage | deb |
+| --- | --- | --- |
+| x64 | `Lyra-<版本>-x86_64.AppImage` | `Lyra-<版本>-amd64.deb` |
+| arm64 | `Lyra-<版本>-arm64.AppImage` | `Lyra-<版本>-arm64.deb` |
+
+不确定是哪种：运行 `uname -m`，`x86_64` 选 x64，`aarch64` 选 arm64。
+
+两种格式二选一：
+
+- **AppImage**：不用安装，大多数发行版都能直接跑。需要系统带 FUSE 3，Ubuntu 22.04 及以后默认就有。
+
+  ```bash
+  chmod +x Lyra-<版本>-x86_64.AppImage
+  ./Lyra-<版本>-x86_64.AppImage
+  ```
+
+- **deb**：Debian、Ubuntu 一系的安装包，需要 glibc 2.34 及以上（Ubuntu 22.04、Debian 12 起）。
+
+  ```bash
+  sudo apt install ./Lyra-<版本>-amd64.deb
+  ```
+
+<Aside type="tip">
+应用内更新会沿用你装的格式：AppImage 换 AppImage，deb 换 deb。
+</Aside>
+
+</TabItem>
+<TabItem label="手机" icon="phone">
+
+| 系统 | 下载 | 怎么装 |
+| --- | --- | --- |
+| Android | `Lyra-<版本>-android.apk` | 直接安装。第一次会问是否允许安装未知来源的应用 |
+| iOS | `Lyra-<版本>-ios-unsigned.ipa` | 未签名，双击装不上。用 Sideloadly、AltStore 或 Xcode 自己签名后安装，免费 Apple ID 就够 |
+
+<Aside>
+手机端要连到你电脑上的 Lyra 才能用，装好后看[手机端与同步](/docs/features/mobile/)完成配对。用免费 Apple ID 签的应用 7 天后会失效，到期再签一次即可。
+</Aside>
+
+</TabItem>
+</Tabs>
+
+## 校验下载
+
+每个版本都附带一个 `SHA256SUMS` 文件，列着所有安装包的 SHA-256。把它和安装包下载到同一个文件夹，然后：
+
+<Tabs syncKey="os">
+<TabItem label="macOS" icon="apple">
+
+```bash
+shasum -a 256 -c SHA256SUMS --ignore-missing
+```
+
+</TabItem>
+<TabItem label="Windows" icon="seti:windows">
+
+```powershell
+(Get-FileHash .\Lyra-<版本>-x64.exe -Algorithm SHA256).Hash.ToLower()
+```
+
+把输出和 `SHA256SUMS` 里同名那一行比对。
+
+</TabItem>
+<TabItem label="Linux" icon="linux">
+
+```bash
+sha256sum -c SHA256SUMS --ignore-missing
+```
+
+</TabItem>
+</Tabs>
+
+看到文件名后面跟着 `OK` 就对了。手机安装包在电脑上用同样的方法校验。
+
+## 其他文件
+
+Release 里还有几个文件，一般用不上：
+
+| 文件 | 用途 |
+| --- | --- |
+| `Lyra-<版本>-arm64.zip`、`Lyra-<版本>-x64.zip` | macOS 应用内更新用 |
+| `Lyra-<版本>.exe` | Windows x64 与 arm64 合一的安装包，体积大一倍 |
+| `SHA256SUMS` | 所有文件的校验值 |

@@ -1,0 +1,64 @@
+---
+title: Data and privacy
+description: Where Lyra keeps your data, what leaves your computer, and how keys are stored.
+sidebar:
+  order: 3
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+
+Lyra has no accounts and keeps none of your data for you: your sessions, settings and keys stay on your computer.
+
+## Where things live
+
+Everything user-level is in `~/.lyra` (on Windows, `%USERPROFILE%\.lyra`):
+
+| Path | Contents |
+| --- | --- |
+| `settings.json` | Providers, models, MCP, permission mode and other settings — no API keys |
+| `credentials.json` | API keys and other secrets, encrypted |
+| `vault.key` | The key that decrypts the file above |
+| `forges.json` | Access tokens for code-hosting accounts, encrypted |
+| `sessions/` | Session logs, one JSON record per line |
+| `sidechats/` | Side chats |
+| `memory.json` | What the `learn` tool wrote down |
+| `skills/` `plugins/` `mcp/` `agents/` `rules/` `commands/` | Your skills, plugins, MCP bundles, agents, rules and slash commands |
+
+In a project:
+
+| Path | Contents |
+| --- | --- |
+| `.lyra/skills/` `agents/` `commands/` `rules/` `plugins/` | Apply to this project only; commit them with the repo |
+| `.lyra/config.json` | Settings this project overrides; providers, keys and MCP aren't allowed here |
+| `LYRA.md`, `AGENTS.md`, `CLAUDE.md` | Project instructions; the first one found in a folder wins |
+
+## What leaves your computer
+
+| Sent to | When |
+| --- | --- |
+| The model providers you configured | While chatting: messages, attachments, tool results |
+| The search service you chose | When the agent uses `web_search`: the search terms |
+| MCP servers you've switched on | When the agent calls their tools: the tool arguments |
+| GitHub | Checking for and downloading updates |
+| The plugin market | Browsing the catalogue and downloading what you install |
+| Your code-hosting service | Reading and reviewing pull requests, with your token |
+| Your phone | With mobile sync on: over your LAN, your reverse proxy or a relay |
+
+Usage statistics are calculated on your machine and never uploaded.
+
+## Keys
+
+- Model provider API keys and code-hosting tokens are encrypted with AES-256-GCM into files with 0600 permissions; the decryption key is `vault.key` in the same folder.
+- They're never written to `settings.json` and never synced to your phone.
+- Keys you enter for MCP servers in Lyra are encrypted the same way <Badge text="Next release" variant="note" size="small" />
+
+<Aside type="caution">
+The encrypted file and its key sit side by side, so anything that can read your home folder can decrypt them. If that matters to you, give your tokens a short expiry.
+</Aside>
+
+## Cleaning up
+
+- **Archive** just moves a chat out of the sidebar. Its log and usage stay, and you can unarchive it any time.
+- **Delete** by archiving first, then deleting under Settings → Archived chats. Deletion can't be undone.
+- **Clear by date** under Settings → Storage: pick a date range and clear the session records from it.
+- **Memory** can be reviewed, deleted or cleared under Settings → Personalization.

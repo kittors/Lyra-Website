@@ -1,0 +1,53 @@
+---
+title: Meet Lyra
+description: Lyra is a standalone AI agent that runs on your own models. The desktop and phone apps share one session log. Open source, MIT.
+sidebar:
+  order: 1
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import heroLight from '../../../../../assets/shots/hero-conversation-light-en.png';
+import heroDark from '../../../../../assets/shots/hero-conversation-dark-en.png';
+
+Lyra is a standalone, general-purpose AI agent. Point it at your own models and it reads code, edits files and runs commands on your computer — and you can pick the conversation up on your phone.
+
+<Image src={heroLight} alt="Lyra's main window: projects and chats on the left, the conversation in the middle, the Git pane on the right" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={heroDark} alt="Lyra's main window: projects and chats on the left, the conversation in the middle, the Git pane on the right" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## What it is
+
+- **Its own agent.** The loop, tools, skills and MCP support are written from scratch. It is not a wrapper around Claude Code or Codex.
+- **Your models.** Add as many providers as you like, each with as many models as you like.
+- **Desktop and phone.** Desktop apps for macOS, Windows and Linux. The Android and iOS apps connect to Lyra on your computer, so both show the same sessions.
+- **Open source.** MIT licensed, on [GitHub](https://github.com/kittors/Lyra).
+
+## What it does
+
+<CardGrid>
+  <Card title="Chat and tools" icon="comment-alt">
+    20 built-in tools for files, code search, shell commands and the web. [More](/en/docs/features/conversation/)
+  </Card>
+  <Card title="Subagents" icon="random">
+    Hand big jobs to subagents with their own context, in parallel. [More](/en/docs/features/subagents/)
+  </Card>
+  <Card title="Split view" icon="window">
+    Up to four conversations side by side, each with its own panes. [More](/en/docs/features/split-view/)
+  </Card>
+  <Card title="Plugin market" icon="puzzle">
+    Browse and install plugins, MCP servers and skills. [More](/en/docs/features/plugins/)
+  </Card>
+  <Card title="Scheduled tasks" icon="clock">
+    Run a prompt in a fresh conversation every day or every few minutes. [More](/en/docs/features/scheduled/)
+  </Card>
+  <Card title="Phone sync" icon="phone">
+    Watch progress, approve actions and keep asking from your phone. [More](/en/docs/features/mobile/)
+  </Card>
+</CardGrid>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard title="Install" description="Pick the right file and get past the first-launch prompts." href="/en/docs/start/install/" />
+  <LinkCard title="Quick start" description="Add a model, start a chat, open a project." href="/en/docs/start/quickstart/" />
+</CardGrid>

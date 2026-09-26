@@ -1,0 +1,148 @@
+---
+title: Install
+description: Which file to download for your system, how to get past the first-launch prompts, and how to verify the download.
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem, Steps, Aside } from '@astrojs/starlight/components';
+
+Get Lyra from the [download page](/en/download/), which suggests the right file for your system. Every file is also on [GitHub Releases](https://github.com/kittors/Lyra/releases/latest).
+
+<Aside>
+The installers are not signed with a paid certificate, so each desktop system stops the first launch. Follow the steps for your system once to let it through.
+</Aside>
+
+<Tabs syncKey="os">
+<TabItem label="macOS" icon="apple">
+
+| Chip | File |
+| --- | --- |
+| Apple silicon (M-series) | `Lyra-<version>-arm64.dmg` |
+| Intel | `Lyra-<version>-x64.dmg` |
+
+Not sure? Apple menu → About This Mac, and look at the Chip line.
+
+<Steps>
+
+1. Open the `.dmg` and drag Lyra into Applications.
+2. The first launch says the developer cannot be verified. Go to System Settings → Privacy & Security, scroll down to Lyra and click **Open Anyway**.
+3. Or clear the quarantine flag from Terminal, which does the same thing:
+
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/Lyra.app
+   ```
+
+</Steps>
+
+<Aside type="caution">
+If macOS says the app is **damaged**, you have a 0.6.0 or earlier build. Move it to the Trash and install a current version.
+</Aside>
+
+</TabItem>
+<TabItem label="Windows" icon="seti:windows">
+
+| Architecture | File |
+| --- | --- |
+| x64 (most PCs) | `Lyra-<version>-x64.exe` |
+| Arm (Snapdragon laptops, Surface Pro X) | `Lyra-<version>-arm64.exe` |
+
+Not sure? Settings → System → About, and look at System type.
+
+<Steps>
+
+1. Run the installer.
+2. When SmartScreen says "Windows protected your PC", click **More info**, then **Run anyway**.
+3. Finish the wizard. You can change the install folder, but don't pick the folder the installer was downloaded into.
+
+</Steps>
+
+<Aside type="tip">
+If the shortcut is missing or Windows can't find `Lyra.exe` after installing, see [Troubleshooting](/en/docs/help/troubleshooting/#shortcut-missing-or-lyraexe-not-found).
+</Aside>
+
+</TabItem>
+<TabItem label="Linux" icon="linux">
+
+| Architecture | AppImage | deb |
+| --- | --- | --- |
+| x64 | `Lyra-<version>-x86_64.AppImage` | `Lyra-<version>-amd64.deb` |
+| arm64 | `Lyra-<version>-arm64.AppImage` | `Lyra-<version>-arm64.deb` |
+
+Not sure? Run `uname -m`: `x86_64` means x64, `aarch64` means arm64.
+
+Pick one format:
+
+- **AppImage** needs no install and runs on most distributions. It needs FUSE 3, which Ubuntu 22.04 and later ship by default.
+
+  ```bash
+  chmod +x Lyra-<version>-x86_64.AppImage
+  ./Lyra-<version>-x86_64.AppImage
+  ```
+
+- **deb** is for Debian, Ubuntu and their derivatives. It needs glibc 2.34 or newer (Ubuntu 22.04, Debian 12 and up).
+
+  ```bash
+  sudo apt install ./Lyra-<version>-amd64.deb
+  ```
+
+<Aside type="tip">
+In-app updates keep the format you chose: an AppImage is replaced by an AppImage, a deb by a deb.
+</Aside>
+
+</TabItem>
+<TabItem label="Phone" icon="phone">
+
+| System | File | How to install |
+| --- | --- | --- |
+| Android | `Lyra-<version>-android.apk` | Open it. The first time, Android asks you to allow installs from unknown sources |
+| iOS | `Lyra-<version>-ios-unsigned.ipa` | Unsigned, so it won't install as is. Sign it with Sideloadly, AltStore or Xcode, then install. A free Apple ID is enough |
+
+<Aside>
+The phone app needs Lyra running on your computer. After installing, pair it as described in [Phone and sync](/en/docs/features/mobile/). Apps signed with a free Apple ID expire after 7 days; sign it again when that happens.
+</Aside>
+
+</TabItem>
+</Tabs>
+
+## Verify the download
+
+Every release includes `SHA256SUMS`, the SHA-256 of each file. Download it into the same folder as the installer, then:
+
+<Tabs syncKey="os">
+<TabItem label="macOS" icon="apple">
+
+```bash
+shasum -a 256 -c SHA256SUMS --ignore-missing
+```
+
+</TabItem>
+<TabItem label="Windows" icon="seti:windows">
+
+```powershell
+(Get-FileHash .\Lyra-<version>-x64.exe -Algorithm SHA256).Hash.ToLower()
+```
+
+Compare the output with the line for the same file in `SHA256SUMS`.
+
+</TabItem>
+<TabItem label="Linux" icon="linux">
+
+```bash
+sha256sum -c SHA256SUMS --ignore-missing
+```
+
+</TabItem>
+</Tabs>
+
+`OK` after the file name means it matches. Check the phone files the same way on your computer.
+
+## Other files in a release
+
+You usually won't need these:
+
+| File | What it's for |
+| --- | --- |
+| `Lyra-<version>-arm64.zip`, `Lyra-<version>-x64.zip` | In-app updates on macOS |
+| `Lyra-<version>.exe` | A combined x64 + arm64 Windows installer, twice the size |
+| `SHA256SUMS` | Checksums for every file |

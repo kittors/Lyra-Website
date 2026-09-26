@@ -1,0 +1,39 @@
+---
+title: 拉取请求审查
+description: 在 Lyra 里看各平台的拉取请求，让 Agent 帮你审，再直接批准或请求修改。
+sidebar:
+  order: 9
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+侧栏的「拉取请求」把你在 GitHub、GitLab、Gitee、Gitea 上等着审的、自己发起的拉取请求放在一处，自建实例也支持。
+
+## 连接账号
+
+<Steps>
+
+1. 「设置 → 代码托管」→ 添加账号，选平台；自建实例填上服务地址。
+2. 点「去创建」到平台上生成访问令牌，把它粘贴回来。
+3. 点「验证并保存」。
+
+</Steps>
+
+| 平台 | 令牌需要的权限 |
+| --- | --- |
+| GitHub | `repo` `read:org` `read:user` |
+| GitLab | `api` |
+| Gitee | `projects` `pull_requests` `user_info` |
+
+令牌加密保存在 `~/.lyra/forges.json`，不写进 `settings.json`，也不会同步到手机。
+
+## 审查
+
+- **列表**：分成等你审查、由我创建、之前已审查三组，可以搜索和筛选。
+- **详情**：「摘要」看描述、CI 检查和活动记录；「代码」看改动。
+- **让 Agent 审查**：Lyra 新开一个对话，把审查要求填进输入框，你确认后再发。如果这个仓库就是你的某个项目，会在那个项目里开；否则用一个临时目录。
+- **给结论**：底部留评论，然后「批准」或「请求修改」（请求修改要写明理由）。
+
+<Aside type="tip">
+填进输入框的审查要求默认写着「只读，不要改动仓库」。想让 Agent 顺手修，发之前改一下就行。
+</Aside>

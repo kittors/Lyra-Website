@@ -1,0 +1,46 @@
+---
+title: Projects and chats
+description: How the sidebar organizes projects and conversations — creating, pinning, archiving and sorting.
+sidebar:
+  order: 2
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The sidebar groups conversations by project, or lists every chat by date. `⌘B` shows or hides it.
+
+## The sidebar at a glance
+
+| Where | What |
+| --- | --- |
+| Top | New chat, Search chats |
+| Destinations | [Pull requests](/en/docs/features/pull-requests/), [Scheduled](/en/docs/features/scheduled/), [Plugins](/en/docs/features/plugins/) |
+| **Projects** tab | Conversations grouped by project, pinned projects first |
+| **Chats** tab | Every conversation, grouped into Today, Yesterday, Last 7 days and so on |
+| Bottom | Settings, plus a small dot when an update is available |
+
+## Projects
+
+A project is a name and a set of source folders. The first folder is the **main folder**, and that's where its conversations run.
+
+- **Create one** with the `+` next to **Projects** in the sidebar, or the project button above the composer → **New project**. Name it and add folders.
+- **Project instructions**: put a `LYRA.md` (or `AGENTS.md`, or `CLAUDE.md`) in the project and it's included in every conversation.
+- **Right-click a project** to start a conversation in it, pin it, edit it, show it in your file manager, archive its conversations, or remove it.
+
+Removing a project only takes it off the list. Its conversations are archived, and nothing on disk is touched.
+
+## Conversations
+
+- **Titles**: a short title comes from your first message; for longer messages the model writes a better one. Turn that off under Settings → General → Automatic chat titles if you'd rather not spend the tokens.
+- **Hover** a row for the pin and archive buttons. Pause on it and a card shows the full title, folder and usage.
+- **Right-click** to pin, rename, archive, move to another project, copy the working directory or a deep link, or open it in [split view or a new window](/en/docs/features/split-view/).
+- **Delete** by archiving first, then deleting from the archive list or Settings → Archived chats. Deleting can't be undone.
+- **Status marks** show when a chat is working, waiting on you, finished but unread, or failed but unread. If Lyra isn't in front when a task finishes, you get a system notification that opens the chat.
+
+## Sorting
+
+The sidebar's **List settings** offers Recently updated, Recently created and Manual order. Dragging a project or conversation switches to manual order; press `Esc` mid-drag to cancel.
+
+<Aside type="tip">
+Want every new conversation to work in its own Git worktree, leaving your main checkout alone? Turn on **Create a worktree for every new conversation** under Settings → Worktrees.
+</Aside>

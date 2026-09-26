@@ -1,0 +1,98 @@
+---
+title: Troubleshooting
+description: What to do when Lyra won't open, screenshots go black, updates fail, messages won't send, or the phone won't connect.
+sidebar:
+  order: 2
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+
+## macOS
+
+### "Developer cannot be verified"
+
+Go to System Settings → Privacy & Security, find Lyra and click **Open Anyway**. Or run this in Terminal:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/Lyra.app
+```
+
+### "Lyra is damaged and can't be opened"
+
+That's a 0.6.0 or earlier build. Move it to the Trash and install a current version.
+
+### Screenshots are black or fail after an update
+
+Screenshots rely on the system's Screen Recording permission. After an update, macOS sometimes stops recognising Lyra as the same app: the permission still shows as granted, but captures come out black or fail. Reset Lyra's entry so it asks again:
+
+```bash
+tccutil reset ScreenCapture dev.lyra.app
+```
+
+Then **quit Lyra completely** (`⌘Q` — closing the window isn't enough) and reopen it. The next screenshot asks for permission again. If it doesn't, toggle Lyra off and on under System Settings → Privacy & Security → Screen Recording, or remove the entry with the minus button.
+
+<Aside type="caution">
+Keep `dev.lyra.app` in the command. Without it, `tccutil reset ScreenCapture` clears Screen Recording for **every** app — your meeting and recording apps included.
+</Aside>
+
+## Windows
+
+### SmartScreen blocks the installer
+
+When you see "Windows protected your PC", click **More info**, then **Run anyway**.
+
+### Shortcut missing or Lyra.exe not found
+
+Microsoft Defender has most likely quarantined `Lyra.exe`. Open Windows Security → Virus & threat protection → Protection history, allow the entry, and run the installer again.
+
+### Several .exe files in the install folder
+
+| File | Size | What it is |
+| --- | --- | --- |
+| `Lyra.exe` | A couple of hundred MB | The app — launch this one |
+| `Lyra-<version>-<arch>.exe` | About 100 MB | The installer itself; usually it ended up here because you installed into the download folder |
+| `Uninstall Lyra.exe` | A few hundred KB | The uninstaller |
+
+## Linux
+
+- **The AppImage does nothing when double-clicked**: run `chmod +x` on it, then start it from a terminal to see the error. It needs FUSE 3, which Ubuntu 22.04 and later have by default.
+- **The deb won't install**: it needs glibc 2.34 or newer, so Ubuntu 20.04 and Debian 11 are too old. Upgrade, or use the AppImage.
+
+## Updates fail
+
+| Symptom | Fix |
+| --- | --- |
+| On Windows, the download fails near the end | Defender blocked the installer. Allow Lyra in Protection history, add `%APPDATA%\@lyra\desktop\updates` as an exclusion, and retry — what's downloaded is kept |
+| Checksum doesn't match | The file isn't what was published, so it was deleted. Download again; if it keeps happening, try another network |
+| No checksum file | That release can't be verified, so Lyra won't install it. Download it from the [download page](/en/download/) |
+| Can't reach GitHub | In-app updates come from GitHub. Download from the [download page](/en/download/) and install over the top |
+| AppImage can't be replaced | It's in a folder you can't write to (such as `/opt`). Move it into your home folder first |
+
+More in [Update](/en/docs/start/update/).
+
+## Messages won't send
+
+| Message | Fix |
+| --- | --- |
+| No models yet | Add a provider under Settings → Models |
+| The credentials were rejected | Check the provider's API key is correct and hasn't expired |
+| Too many requests — you are being rate limited | Wait a little, or switch to another provider |
+| The model service is unavailable right now | The provider's server returned an error; Lyra retries on its own |
+
+On an unreliable network, raise the retry count under Settings → General → Retries.
+
+## The phone won't connect
+
+- Is the service running under Settings → Mobile sync on your computer?
+- A direct connection needs the phone and computer on the same network.
+- Token rejected? Copy the pairing details again on your computer, or rescan.
+- Not on the same network? Use a public address or a relay — see [Phone and sync](/en/docs/features/mobile/).
+
+## An MCP server won't start
+
+- **Needs a key** <Badge text="Next release" variant="note" size="small" />: fill in the missing values on its card, then switch it on.
+- **Could not connect**: the error is on the card. Servers launched with `npx` or `uvx` download themselves the first time, so the first start is slower.
+
+## Still stuck?
+
+Open an issue on [GitHub](https://github.com/kittors/Lyra/issues) with your OS, Lyra version and the error message.

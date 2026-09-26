@@ -1,0 +1,88 @@
+---
+title: Write skills and plugins
+description: The SKILL.md format, and how to bundle several skills into a plugin.
+sidebar:
+  order: 1
+---
+
+import { FileTree, Aside } from '@astrojs/starlight/components';
+
+A skill is a set of instructions for the model; a plugin is several skills bundled together. Both are plain files — drop them in the right folder and they work.
+
+## Write a skill
+
+A folder containing a `SKILL.md`: YAML frontmatter, then a Markdown body.
+
+```markdown title=".lyra/skills/changelog/SKILL.md"
+---
+name: changelog
+description: Turn the commit history into release notes. Use when writing release notes or summarising what changed.
+---
+
+Read `git log` and group the commits by conventional-commit type…
+```
+
+| Field | Purpose |
+| --- | --- |
+| `name` | Lowercase letters, digits and hyphens; also the slash-command name. Defaults to the folder name |
+| `description` | Required, up to 1024 characters. Say what it does and when to use it |
+| `allowed-tools` | Limit it to the listed tools; omit for no limit |
+| `disable-model-invocation` | `true` hides it from the model, so only you can call it with `/name` |
+
+A skill folder can also hold `scripts/`, `assets/` and other resources; relative paths in the body resolve against the skill's folder.
+
+| Put it in | Applies to |
+| --- | --- |
+| `<project>/.lyra/skills/<name>/` | This project; commit it with the repo |
+| `~/.lyra/skills/<name>/` | All your projects |
+
+<Aside type="tip">
+The `description` matters most — it's all the model reads when deciding whether to use the skill. "Handle files" won't get picked; "Rename a batch of screenshots by capture date and file them into monthly folders" will.
+</Aside>
+
+## Bundle skills into a plugin
+
+A plugin is a set of skills plus a manifest:
+
+<FileTree>
+- my-plugin/
+  - .lyra-plugin/
+    - plugin.json name, version, description
+    - icon.svg optional
+  - skills/
+    - changelog/
+      - SKILL.md
+    - release-check/
+      - SKILL.md
+      - scripts/
+</FileTree>
+
+```json title=".lyra-plugin/plugin.json"
+{
+  "name": "my-plugin",
+  "version": "1.0.0",
+  "description": "One line on what this plugin does",
+  "author": { "name": "Your name" },
+  "interface": {
+    "displayName": "My Plugin",
+    "category": "Development",
+    "defaultPrompt": ["Draft the release notes for this version"]
+  }
+}
+```
+
+- Only `name` is required. Without a manifest, a folder with a `skills/` directory still loads as a plugin, named after the folder.
+- `interface` holds the display name and category the market shows. `defaultPrompt` holds example prompts: **Try it now** opens a new chat with one already typed in.
+- Put the icon at `.lyra-plugin/icon.svg` (`png`, `webp` and `jpg` work too), ideally under 128 KB.
+
+Drop the folder into `~/.lyra/plugins/`, or your project's `.lyra/plugins/`, and it shows up under Settings → Plugins.
+
+<Aside type="caution">
+Plugins carry skills only, not MCP servers. A folder with nothing but a `.mcp.json` is treated as an MCP server — see [Connect an MCP server](/en/docs/extend/mcp-servers/).
+</Aside>
+
+## Which one wins
+
+The more specific copy wins: the project's `.lyra/skills/` → your `~/.lyra/skills/` → skills from plugins → built-ins. So a skill folder with the same name in your project overrides the one in a plugin.
+
+Ready to share it? See [Publish to the market](/en/docs/extend/publish/).

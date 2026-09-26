@@ -1,0 +1,40 @@
+---
+title: MCP
+description: 用 MCP 服务给 agent 添上新工具：搜索、数据库、浏览器、设计稿……
+sidebar:
+  order: 7
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+
+MCP 服务是给 agent 提供额外工具的外部程序。Lyra 支持 stdio、Streamable HTTP 和 SSE 三种连接方式。
+
+## 添加
+
+- **从插件市场装**：在侧栏「插件」里筛 MCP。装好默认关闭，要自己打开开关；需要密钥的先填好密钥 <Badge text="下一版本" variant="note" size="small" />
+- **手动添加**：「设置 → 插件 → MCP」→ `⋯` →「添加 stdio 服务」或「添加 HTTP 服务」，写法见[接入 MCP 服务器](/docs/extend/mcp-servers/)。
+
+不管是手动配的还是从市场装的，所有 MCP 服务都集中在「设置 → 插件 → MCP」这一处。
+
+## 状态
+
+每个服务一张卡片，上面能看到它现在的状态：
+
+| 状态 | 卡片上显示 |
+| --- | --- |
+| 已连接 | 它提供了几个工具 |
+| 连接失败 | 报错信息 |
+| 缺少密钥 <Badge text="下一版本" variant="note" size="small" /> | 缺哪几个值；填好之前服务不会启动 |
+| 未启用 | 开关是关着的 |
+
+## 要点
+
+- 工具以 `mcp__<服务>__<工具>` 命名，不会和内置工具撞名。
+- 模型调用 MCP 工具默认要你批准，可以对单个工具选「以后不再问」；完全访问模式下直接执行。
+- 开着的服务都会把工具说明放进上下文。用不上的就关掉，占了多少可以在[上下文圆环](/docs/features/context/)里看。
+- 手机端改不了 MCP 设置。
+- 在 Lyra 里填的密钥加密保存在本机，不写进 `settings.json`，也不同步到手机 <Badge text="下一版本" variant="note" size="small" />
+
+<Aside type="caution">
+stdio 服务会以你的权限在本机运行。打开之前，先看清它的启动命令。
+</Aside>

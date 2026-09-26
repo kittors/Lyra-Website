@@ -1,0 +1,56 @@
+---
+title: Phone and sync
+description: Lyra on your phone connects to your computer, so you can follow a task, approve actions and keep asking.
+sidebar:
+  order: 11
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+The phone app shows the Lyra running on your computer: the same conversations, so you can follow a task, approve actions and keep asking. Sessions, models and keys all stay on the computer.
+
+To install the phone app, see [Install](/en/docs/start/install/).
+
+## Pairing
+
+<Steps>
+
+1. On your computer, open Settings → Mobile sync and turn on **Enable the sync service**.
+2. On your phone, open Lyra → **Start pairing** → **Scan to connect**, and point it at the QR code on your computer.
+3. Can't scan? Copy the pairing link to your phone and paste it, or type in the address, port (4517 by default) and pairing token.
+
+</Steps>
+
+## Three ways to connect
+
+| Route | How | When |
+| --- | --- | --- |
+| Local network | The phone connects straight to the computer | Same Wi-Fi; fastest |
+| Public address | Through your own domain or port forward | You already have a domain and a reverse proxy |
+| Relay | Computer and phone both dial out to a relay server | Neither can reach the other |
+
+For the last two, turn on **Use a public proxy or relay** under Mobile sync and enter the address.
+
+## Running a relay
+
+You host the relay yourself. It's a single-file Node program in the [Lyra repository](https://github.com/kittors/Lyra) with no dependencies, and needs Node 18.17 or newer. From the repository root:
+
+```bash
+node packages/relay/server.mjs            # port 8787 by default
+PORT=9000 node packages/relay/server.mjs
+```
+
+Put it behind nginx or Caddy with TLS, then enter `wss://your-domain` on your computer.
+
+<Aside type="caution">
+The relay never sees your pairing token, but it can see the traffic passing through — this is not end-to-end encryption. Only use a relay you trust, and always put TLS in front of a public one.
+</Aside>
+
+## What the phone can do
+
+| Can | Can't |
+| --- | --- |
+| Start, send, stop, approve, edit and resend, switch models, compact | Terminal, built-in browser, Git |
+| Side chat, tasks, trace, sub-agents | Write or delete files |
+| Browse text files in your projects (read-only) | Take screenshots |
+| Change appearance, default model, reasoning level, permission mode | Change providers and keys, MCP, hooks or scheduled tasks |

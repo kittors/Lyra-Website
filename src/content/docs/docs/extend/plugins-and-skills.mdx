@@ -1,0 +1,88 @@
+---
+title: 写技能和插件
+description: SKILL.md 的格式，以及怎么把几个技能打包成插件。
+sidebar:
+  order: 1
+---
+
+import { FileTree, Aside } from '@astrojs/starlight/components';
+
+技能是一段写给模型的说明，插件是几个技能打成的包。两者都是普通文件，放进对应目录就能用。
+
+## 写一个技能
+
+一个目录，里面一个 `SKILL.md`：开头是 YAML，后面是 Markdown 正文。
+
+```markdown title=".lyra/skills/changelog/SKILL.md"
+---
+name: changelog
+description: 从提交记录整理一份更新说明。要写 release notes，或者总结这一轮改了什么时用。
+---
+
+读 `git log`，按 conventional commit 的类型分组……
+```
+
+| 字段 | 作用 |
+| --- | --- |
+| `name` | 小写字母、数字和短横线，也是斜杠命令的名字。省略则用目录名 |
+| `description` | 必填，最多 1024 个字符。写清楚做什么、什么时候用 |
+| `allowed-tools` | 只让它用列出的工具，省略则不限制 |
+| `disable-model-invocation` | 设为 `true` 后模型看不到它，只能你用 `/名字` 调用 |
+
+技能目录里可以放 `scripts/`、`assets/` 之类的资源，正文里的相对路径按技能目录解析。
+
+| 放在 | 作用范围 |
+| --- | --- |
+| `<项目>/.lyra/skills/<名字>/` | 这个项目，可以跟着仓库提交 |
+| `~/.lyra/skills/<名字>/` | 你所有的项目 |
+
+<Aside type="tip">
+`description` 最要紧：模型只看它决定用不用。「处理文件」没用；「把一批截图按拍摄时间重命名，并按月份归档」才有用。
+</Aside>
+
+## 打包成插件
+
+插件就是一组技能，外加一个清单：
+
+<FileTree>
+- my-plugin/
+  - .lyra-plugin/
+    - plugin.json 名字、版本、描述
+    - icon.svg 可选
+  - skills/
+    - changelog/
+      - SKILL.md
+    - release-check/
+      - SKILL.md
+      - scripts/
+</FileTree>
+
+```json title=".lyra-plugin/plugin.json"
+{
+  "name": "my-plugin",
+  "version": "1.0.0",
+  "description": "一句话说清这个插件做什么",
+  "author": { "name": "你的名字" },
+  "interface": {
+    "displayName": "My Plugin",
+    "category": "开发",
+    "defaultPrompt": ["帮我整理这一版的更新说明"]
+  }
+}
+```
+
+- 只有 `name` 必填。没有清单时，带 `skills/` 的目录也会被当成插件，名字取目录名。
+- `interface` 是给市场展示用的显示名和分类。`defaultPrompt` 是示例提问，「立即试用」会开一个新对话，把它填进输入框。
+- 图标放在 `.lyra-plugin/icon.svg`，也认 `png`、`webp`、`jpg`，最好在 128 KB 以内。
+
+写好后放进 `~/.lyra/plugins/`，或者项目的 `.lyra/plugins/`，就能在「设置 → 插件」里看到它。
+
+<Aside type="caution">
+插件里只放技能，不放 MCP 服务。只有 `.mcp.json` 的目录会被当作 MCP 服务，见[接入 MCP 服务器](/docs/extend/mcp-servers/)。
+</Aside>
+
+## 同名时谁生效
+
+越具体的越优先：项目的 `.lyra/skills/` → 用户的 `~/.lyra/skills/` → 插件带的 → 内置的。所以在项目里放一个同名技能目录，就能盖过插件里的那个。
+
+写好了想分享给别人，见[发布到插件市场](/docs/extend/publish/)。

@@ -1,0 +1,158 @@
+---
+title: Connect an MCP server
+description: Add an MCP server by hand in Settings, or package it so others can install it in one click.
+sidebar:
+  order: 2
+---
+
+import { Steps, Tabs, TabItem, FileTree, Aside, Badge } from '@astrojs/starlight/components';
+
+Can't find the MCP server you need in the market? Add it by hand, or package it for others.
+
+## Add it in Settings
+
+<Tabs>
+<TabItem label="Local (stdio)">
+
+<Steps>
+
+1. Settings → Plugins → MCP → the `⋯` on the right → **Add a stdio server**.
+2. Fill in the command and arguments, separated by spaces:
+
+   | Field | Example |
+   | --- | --- |
+   | Command | `npx` |
+   | Arguments | `-y @modelcontextprotocol/server-filesystem /Users/me/code` |
+
+3. If it needs a key, add an environment variable under **How it starts, and its environment** on its card. Anything named like a secret (containing `KEY`, `TOKEN`, `SECRET`, `PASSWORD` and so on) is stored encrypted <Badge text="Next release" variant="note" size="small" />
+4. A new server starts out switched on. Once it's filled in, check its card: it shows how many tools it provides when connected, or the error when not.
+
+</Steps>
+
+</TabItem>
+<TabItem label="Remote (HTTP)">
+
+<Steps>
+
+1. Settings → Plugins → MCP → the `⋯` on the right → **Add an HTTP server**.
+2. Enter the URL and choose **Streamable HTTP** or **SSE** as the transport, per the server's docs.
+3. A new server starts out switched on; once it's filled in, check the status on its card.
+
+</Steps>
+
+</TabItem>
+</Tabs>
+
+<Aside type="caution">
+A stdio server runs on your machine with your permissions. Only add commands you trust.
+</Aside>
+
+## Package it as an MCP bundle
+
+For a one-click install, make a folder with a `.mcp.json` describing the server and a manifest with its name and description.
+
+<FileTree>
+- playwright/
+  - .lyra-plugin/
+    - plugin.json
+    - icon.svg optional
+  - .mcp.json
+</FileTree>
+
+`.mcp.json` uses the same format as Claude Code. A local server takes a command and arguments:
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    }
+  }
+}
+```
+
+A remote server takes a `type` and a `url`:
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "deepwiki": {
+      "type": "http",
+      "url": "https://mcp.deepwiki.com/mcp"
+    }
+  }
+}
+```
+
+Point the manifest's `mcpServers` at the file:
+
+```json title=".lyra-plugin/plugin.json"
+{
+  "name": "playwright",
+  "version": "1.0.0",
+  "description": "Drive a browser through its accessibility tree",
+  "mcpServers": ".mcp.json"
+}
+```
+
+<Aside>
+A bundle with only a `.mcp.json` and no skills is an MCP server. It installs into Settings → Plugins → MCP, switched off.
+</Aside>
+
+### Values the user supplies&nbsp;<Badge text="Next release" variant="note" size="small" />
+
+For values like keys that each user has to supply, write a `${NAME}` placeholder in `.mcp.json` — in `env` for a local server, in `headers` for a remote one.
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "brave-search": {
+      "command": "npx",
+      "args": ["-y", "@brave/brave-search-mcp-server@latest"],
+      "env": { "BRAVE_API_KEY": "${BRAVE_API_KEY}" }
+    }
+  }
+}
+```
+
+```json title=".mcp.json"
+{
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": { "Authorization": "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}" }
+    }
+  }
+}
+```
+
+Then describe each placeholder in the manifest's `env`, and Lyra asks for it in the interface after installing:
+
+```json title=".lyra-plugin/plugin.json"
+{
+  "name": "brave-search",
+  "version": "1.0.0",
+  "description": "Web search on Brave's own index",
+  "mcpServers": ".mcp.json",
+  "env": [
+    {
+      "name": "BRAVE_API_KEY",
+      "description": "Your Brave Search API key",
+      "url": "https://brave.com/search/api/",
+      "secret": true
+    }
+  ]
+}
+```
+
+| `env` field | Purpose |
+| --- | --- |
+| `name` | The placeholder's name |
+| `description` | One line on what it is |
+| `url` | Where to get one; shown as **Get one** |
+| `secret` | Whether it's secret. If left out, Lyra guesses from the name |
+| `optional` | May be left empty; if it is, the variable isn't passed at all |
+
+Values come from what the user entered in Lyra first, then from their login shell's environment. If a required value is missing, the server doesn't start and its card lists what's missing.

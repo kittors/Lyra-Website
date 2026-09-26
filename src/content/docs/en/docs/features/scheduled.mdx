@@ -1,0 +1,41 @@
+---
+title: Scheduled tasks
+description: Scheduled starts a fresh conversation on a timer and sends the prompt you wrote.
+sidebar:
+  order: 8
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import scheduleLight from '../../../../../assets/shots/schedule-light.png';
+import scheduleDark from '../../../../../assets/shots/schedule-dark.png';
+
+**Scheduled** in the sidebar starts a fresh conversation on a timer and sends the prompt you wrote. Good for reviewing uncommitted changes every morning, or running the tests every hour and reporting what failed.
+
+<Image src={scheduleLight} alt="The Scheduled page in the Chinese interface: three tasks, each with its prompt, a schedule (daily at a set time, or every so many minutes) and an on/off switch" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={scheduleDark} alt="The Scheduled page in the Chinese interface: three tasks, each with its prompt, a schedule (daily at a set time, or every so many minutes) and an on/off switch" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## Creating a task
+
+<Steps>
+
+1. Open the project the task should use first. A new task runs in that project's main folder.
+2. Sidebar → **Scheduled** → New.
+3. Rename it and write the prompt.
+4. Choose **Daily** at a time of day, or **Every** so many minutes.
+5. Switch it on. New tasks start out paused.
+
+</Steps>
+
+## Good to know
+
+- **A fresh conversation every time.** Runs don't pile onto one long history.
+- **It uses your default model and the current permission mode.** An action that needs approval waits for you, and counts as refused if nobody answers within 5 minutes — so think about permissions before leaving a task unattended.
+- **Lyra has to be running.** Nothing runs while it's closed; when you open it again, a task that came due in the meantime runs once.
+- **Run it now** to try a task without waiting.
+- **Open the last conversation** to see what the latest run produced.
+- **Deleting a task** keeps the conversations it already produced.
+
+<Aside>
+Lyra tells you in the window when a task starts or fails. A failed task isn't retried every minute; it waits for its next slot.
+</Aside>

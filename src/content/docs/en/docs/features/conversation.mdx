@@ -1,0 +1,58 @@
+---
+title: Chat and tools
+description: Say what you want done in the composer; Lyra uses its built-in tools to read code, edit files and run commands.
+sidebar:
+  order: 1
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Tell Lyra what you want in the composer. It works through the task with its tools and shows every step in the conversation.
+
+## The composer
+
+| Input | What it does |
+| --- | --- |
+| `/` | Built-in commands, your own commands, skills |
+| `@` | Reference a file, folder, skill, agent or past chat |
+| Drag, paste or `+` | Attach files and images — see [Attachments and panes](/en/docs/features/files-and-panels/) |
+| Model name | Switch model and reasoning effort for this chat only |
+| Bottom left | Switch the permission mode |
+
+You can keep typing while a turn runs. New messages queue up and go out when the turn ends; **Send now** delivers one right away without interrupting the turn.
+
+## Permission modes
+
+| Mode | Behaviour |
+| --- | --- |
+| Ask for approval | Asks before every file write, command and network call |
+| Auto approve (default) | Read-only commands run on their own; everything else still asks |
+| Full access | Everything runs without asking |
+
+When asked, you can **Allow once** or **Stop asking**. Anything you've stopped being asked about can be taken back under Settings → Access. A request nobody answers is treated as a refusal after 5 minutes.
+
+## Built-in tools
+
+| Group | Tools |
+| --- | --- |
+| Files and code | `read` `write` `edit` `ls` `glob` `grep` `symbol` `lsp` |
+| Commands | `bash` `bash_output` |
+| Session and memory | `todo_write` `task` `skill` `rule` `recall` `learn` `ask_user` |
+| Web and preview | `web_fetch` `web_search` `preview` |
+
+On top of these come the tools that drive the built-in browser, plus whatever your [MCP servers](/en/docs/features/mcp/) provide.
+
+`web_search` works out of the box through keyless DuckDuckGo, but results are limited. For better search, add a key for Tavily, Brave or Exa under Settings → Web search — all three have a free tier.
+
+## What shows up in replies
+
+- **Markdown**: tables and code blocks render as usual, and a `mermaid` block becomes a diagram.
+- **File links**: a local path turns into a compact chip with the file name. Click to open it.
+- **File changes**: see which files a turn touched, review each diff, or undo the turn's direct edits.
+- **Questions**: when the model is unsure, it asks you with a set of options. Even in Full access it won't answer for you.
+
+You can edit and resend a message, or undo it. A turn that failed or was interrupted can **Carry on** from where it stopped.
+
+<Aside type="tip">
+Want to ask something without disturbing the main conversation while it works? Press `⌥⌘S` for a **side chat**. It can read the main conversation but never writes into it.
+</Aside>
