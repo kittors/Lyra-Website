@@ -1,0 +1,27 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "lyra-website",
+	"main": "worker/index.ts",
+	"compatibility_date": "2026-09-20",
+	"account_id": "c7eb0898bb161f0101a28e745372ca12",
+	// The built site. Pages are served straight from the edge; the Worker only runs for the paths
+	// that have to be decided per request — the release feed and the downloads.
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "404-page",
+		"run_worker_first": ["/api/*", "/dl/*"]
+	},
+	// Every release's installers, mirrored from GitHub for readers in mainland China, where GitHub's
+	// download hosts are slow or unreachable. Served publicly from `dl.07230805.xyz`.
+	"r2_buckets": [{ "binding": "RELEASES", "bucket_name": "lyra-releases" }],
+	// How a new release reaches the site without anybody redeploying it.
+	"triggers": { "crons": ["*/10 * * * *"] },
+	"routes": [{ "pattern": "lyra.07230805.xyz", "custom_domain": true }],
+	"vars": {
+		"REPOSITORY": "kittors/Lyra",
+		"MIRROR_ORIGIN": "https://dl.07230805.xyz"
+	},
+	"observability": { "enabled": true }
+}

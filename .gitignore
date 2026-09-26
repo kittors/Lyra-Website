@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+.dev.vars
+.DS_Store
+*.log
+# Raw captures before optimisation; the committed shots live in src/assets/shots.
+scripts/capture/out/
