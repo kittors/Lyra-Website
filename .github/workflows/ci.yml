@@ -26,3 +26,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm build
+        env:
+          # The pages are built with the latest release; the API is rate-limited without a token.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
