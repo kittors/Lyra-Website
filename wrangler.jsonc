@@ -23,5 +23,20 @@
 		"REPOSITORY": "kittors/Lyra",
 		"MIRROR_ORIGIN": "https://dl.07230805.xyz"
 	},
-	"observability": { "enabled": true }
+	"observability": { "enabled": true },
+	// A copy on workers.dev with no domain and no cron, for trying a change against the real bucket
+	// and the real GitHub before it goes to lyra.07230805.xyz: `wrangler deploy --env staging`.
+	"env": {
+		"staging": {
+			"name": "lyra-website-staging",
+			"workers_dev": true,
+			"routes": [],
+			"r2_buckets": [{ "binding": "RELEASES", "bucket_name": "lyra-releases" }],
+			"triggers": { "crons": [] },
+			"vars": {
+				"REPOSITORY": "kittors/Lyra",
+				"MIRROR_ORIGIN": "https://dl.07230805.xyz"
+			}
+		}
+	}
 }

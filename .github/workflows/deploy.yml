@@ -1,0 +1,51 @@
+# Publish the site to lyra.07230805.xyz on every push to main.
+#
+# Needs a Cloudflare API token in the `CLOUDFLARE_API_TOKEN` secret (Workers Scripts: Edit, Workers
+# Routes: Edit, Workers R2 Storage: Edit, Account Settings: Read, Zone: Read for 07230805.xyz). Without
+# it the job says so and stops, and the site is published from a checkout with `pnpm run deploy`.
+#
+# A new Lyra release does not need a deploy: the Worker serves the latest release at runtime and
+# mirrors its files itself. See `worker/mirror.ts`.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.token.outputs.ready }}
+    steps:
+      - id: token
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then echo "ready=yes" >> "$GITHUB_OUTPUT"; else echo "ready=no" >> "$GITHUB_OUTPUT"; echo "::notice::CLOUDFLARE_API_TOKEN is not set, so this push was not deployed. Run 'pnpm run deploy' from a checkout instead."; fi
+
+  deploy:
+    needs: gate
+    if: needs.gate.outputs.ready == 'yes'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm build
+      - run: pnpm exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
