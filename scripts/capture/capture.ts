@@ -33,13 +33,13 @@ const SCENES: Record<string, Scene> = {
 	"split-view": { langs: ["zh", "en"], run: splitScene },
 	"sub-agents": { langs: ["zh", "en"], run: subAgentsScene },
 	"plugin-market": { langs: ["zh", "en"], run: pluginMarketScene },
-	"plugin-detail": { langs: ["zh"], run: pluginDetailScene },
-	schedule: { langs: ["zh"], run: scheduleScene },
-	"settings-models": { langs: ["zh"], run: settingsScene },
-	"file-preview": { langs: ["zh"], run: filePreviewScene },
-	"workspace-panels": { langs: ["zh"], run: workspaceScene },
-	mobile: { langs: ["zh"], run: mobileScene },
-	"pull-requests": { langs: ["zh"], run: pullsScene },
+	"plugin-detail": { langs: ["zh", "en"], run: pluginDetailScene },
+	schedule: { langs: ["zh", "en"], run: scheduleScene },
+	"settings-models": { langs: ["zh", "en"], run: settingsScene },
+	"file-preview": { langs: ["zh", "en"], run: filePreviewScene },
+	"workspace-panels": { langs: ["zh", "en"], run: workspaceScene },
+	mobile: { langs: ["zh", "en"], run: mobileScene },
+	"pull-requests": { langs: ["zh", "en"], run: pullsScene },
 };
 
 const args = process.argv.slice(2);

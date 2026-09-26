@@ -15,6 +15,8 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import { loadHarness, OUT, pause, PORTS, type Grabber, type RunningApp } from "./env.ts";
+import { installEnglishStandIns } from "./english.ts";
+import { privateMarkerIn } from "./privacy.ts";
 import { enterWorld, type World } from "./world.ts";
 import type { Lang } from "../content/types.ts";
 
@@ -223,13 +225,22 @@ export class LyraWindow {
 	 */
 	async capture(rest: Point): Promise<Buffer> {
 		await this.rest(rest);
+		let png = await this.png();
 		for (let attempt = 0; attempt < 6; attempt++) {
-			const png = await this.png();
-			if ((await this.moving()) === 0) return png;
+			if ((await this.moving()) === 0) break;
 			await pause(350);
 			await this.settle();
+			png = await this.png();
 		}
-		return this.png();
+		await this.assertNothingPrivate();
+		return png;
+	}
+
+	/** Fail the capture when the page shows anything of the machine it really runs on. */
+	async assertNothingPrivate(): Promise<void> {
+		const text = await this.$<string>(`document.body.innerText + String.fromCharCode(10) + [...document.querySelectorAll('input, textarea')].map((field) => field.value).join(String.fromCharCode(10))`);
+		const found = privateMarkerIn(text);
+		if (found) throw new Error(`画面里出现了${found}，这张不能用：检查场景的数据`);
 	}
 
 	/** Everything the page says, to check two captures show the same words. */
@@ -281,6 +292,7 @@ export async function openLyra({ world, lang, seed, port = PORTS.desktop }: Open
 	});
 	const window = new LyraWindow(app, grab, lang, world);
 	await window.until(`innerWidth === ${VIEWPORT.width} && innerHeight === ${VIEWPORT.height}`, 10_000);
+	if (lang === "en") await installEnglishStandIns(grab);
 	/*
 	 * Let the running line's rotating phrase be paused for a picture.
 	 *

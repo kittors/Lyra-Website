@@ -8,8 +8,9 @@
  *   mobile-3  a finished conversation from the desktop, read on the phone: the answer and the files
  *             it changed
  *
- * `mobile-N-light.png` and `mobile-N-dark.png`, like every other scene: the site looks a phone shot up
- * by theme first, and a bare `mobile-N.png` would lose to the dark one on a light page.
+ * `mobile-N-light.png` and `mobile-N-dark.png` (with `-en` for the English interface), like every
+ * other scene: the site looks a phone shot up by theme first, and a bare `mobile-N.png` would lose to
+ * the dark one on a light page.
  */
 
 import { atlasAsk, atlasScript } from "../content/atlas.ts";
@@ -29,8 +30,9 @@ import { buildWorld, commitAndPush } from "../lib/world.ts";
 
 const SYNC = { port: 4596, token: "5c4e7a11d05e1f0e5e9c0de0000a11ce" };
 
-/** A light and a dark picture of the phone as it is now. */
+/** A light and a dark picture of the phone as it is now: `<name>-<theme>[-en].png`. */
 async function pair(phone: PhoneWindow, name: string): Promise<string[]> {
+	const suffix = phone.lang === "en" ? "-en" : "";
 	await freezeClock(phone);
 	try {
 		await phone.setAppearance({ theme: "light" });
@@ -39,7 +41,7 @@ async function pair(phone: PhoneWindow, name: string): Promise<string[]> {
 		await phone.setAppearance({ theme: "dark" });
 		const dark = await phone.capture(PHONE_REST);
 		if ((await phone.words()) !== lightWords) console.log(`   ${name}：深浅两张的文字不一致，检查一下`);
-		return [await phone.save(`${name}-light`, light), await phone.save(`${name}-dark`, dark)];
+		return [await phone.save(`${name}-light${suffix}`, light), await phone.save(`${name}-dark${suffix}`, dark)];
 	} finally {
 		await thawClock(phone).catch(() => {});
 		await phone.setAppearance({ theme: "light" }).catch(() => {});

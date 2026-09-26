@@ -12,6 +12,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { LYRA, loadHarness, pause, PORTS } from "./env.ts";
+import { installEnglishStandIns } from "./english.ts";
 import { LyraWindow, type Point } from "./window.ts";
 import { enterWorld, type World } from "./world.ts";
 
@@ -75,6 +76,7 @@ export async function openPhone(desktop: LyraWindow, world: World, port: number,
 	const app = { home: desktop.app.home, evaluate: phone.evaluate, send: phone.send, stop: phone.stop };
 	const win = new PhoneWindow(app, grab, desktop.lang, world);
 	await win.until(`innerWidth === ${PHONE.width}`, 10_000);
+	if (desktop.lang === "en") await installEnglishStandIns(grab);
 	await win.$(`(() => {
 		if (window.__shotIntervals) return true;
 		window.__shotIntervals = true;

@@ -88,7 +88,6 @@ async function openMarket(lang: Lang) {
 	await win.until(`document.querySelectorAll('[data-market] [data-card]').length > 20`, 40_000, "市场卡片出现");
 	await sourcesRead(win, lang);
 	await logosLoaded(win, "[data-market]");
-	await pinLogoScheme(win);
 	return { world, win };
 }
 
@@ -110,26 +109,6 @@ async function sourcesRead(win: LyraWindow, lang: Lang): Promise<void> {
 		await win.until(`document.querySelectorAll('[data-market] [data-card]').length > 20`, 40_000, "市场卡片出现");
 	}
 	throw new Error("插件市场的来源一直读不下来，检查网络后重拍");
-}
-
-/**
- * Keep card logos drawn in their light scheme — a stand-in for a fix Lyra still needs.
- *
- * Some market icons are SVGs that restyle themselves under `prefers-color-scheme: dark` (Matt
- * Pocock Skills turns its black mark white). Lyra puts such a mark on a white tile, so in the dark
- * theme the tile comes out blank. `color-scheme: light` on the image is the one-line fix; until it
- * lands in Lyra, the capture applies it to the card logos only. `SHOTS_NO_LOGO_FIX=1` turns it off.
- */
-async function pinLogoScheme(win: LyraWindow): Promise<void> {
-	if (process.env.SHOTS_NO_LOGO_FIX) return;
-	await win.$(`(() => {
-		const style = document.createElement('style');
-		style.dataset.shots = 'logo-scheme';
-		style.textContent = '[data-card] img { color-scheme: light; }';
-		document.head.appendChild(style);
-		return true;
-	})()`);
-	await pause(300);
 }
 
 export async function pluginMarketScene(lang: Lang): Promise<string[]> {

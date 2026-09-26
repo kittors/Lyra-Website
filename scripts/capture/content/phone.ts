@@ -18,7 +18,7 @@ const words = {
 	},
 	en: {
 		ask: "Reword the last commit properly and push it.",
-		title: "Reword the last commit and push",
+		title: "Reword last commit",
 		amend: "The last commit is “wip tests”. Rewording it in Conventional Commits style:",
 		push: "That commit is already on the remote, so replacing it takes a force push:",
 	},

@@ -89,7 +89,7 @@ const words = {
 		done: [
 			"## Wired up",
 			"",
-			"`/v2/search` is now limited per API key: one token bucket per key, and over the limit it answers **429** with `Retry-After`.",
+			"`/v2/search` now has a token bucket per API key; over the limit it answers **429** with `Retry-After`.",
 			"",
 			"| Setting | Value |",
 			"| --- | --- |",
@@ -102,7 +102,7 @@ const words = {
 			"mux.Handle(\"GET /v2/search\", limit(search))",
 			"```",
 			"",
-			"The buckets live in a `sync.Map`, so concurrent requests for one key share a bucket.",
+			"The buckets live in a `sync.Map`, one per key.",
 		].join("\n"),
 	},
 } as const;
