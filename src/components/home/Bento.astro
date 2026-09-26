@@ -1,0 +1,585 @@
+---
+import { Image } from "astro:assets";
+
+import appIcon from "../../assets/brand/app-icon.png";
+import { HOME_TEXT } from "../../i18n/home.ts";
+import type { Locale } from "../../i18n/index.ts";
+import Phrases from "../Phrases.astro";
+import SplitHeading from "../SplitHeading.astro";
+
+/**
+ * The rest of what Lyra does, one tile each, every tile with a small true picture of its feature:
+ * the permission switch, the context ring and its breakdown (the README's own numbers), the side
+ * chat, MCP's three transports and a namespaced tool, the agent's cursor in the built-in browser,
+ * a skill's frontmatter, the formatters that ship in the app, and the finished-task notification.
+ */
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = HOME_TEXT[locale].bento;
+const zh = locale === "zh-CN";
+const RING = 2 * Math.PI * 30;
+const breakdown = zh
+	? [
+			{ label: "对话消息", value: "8.6k" },
+			{ label: "内置工具", value: "2.5k" },
+			{ label: "系统提示词", value: "1.5k" },
+		]
+	: [
+			{ label: "Messages", value: "8.6k" },
+			{ label: "Built-in tools", value: "2.5k" },
+			{ label: "System prompt", value: "1.5k" },
+		];
+const formatters = ["Prettier", "Go", "Ruff", "C/C++", "Dart", "Swift", "PHP"];
+---
+
+<section class="section surface-alt bento" aria-labelledby="bento-title">
+	<div class="container">
+		<SplitHeading as="h2" text={t.title} id="bento-title" class="t-display bento-title" />
+		<div class="bento-grid" data-bento>
+			<article class="tile tile--wide" data-tile>
+				<div class="tile-art">
+					<div class="segmented" aria-hidden="true">
+						<span class="segmented-thumb"></span>
+						{t.permissions.modes.map((mode) => <span class="segmented-option">{mode}</span>)}
+					</div>
+				</div>
+				<h3>{t.permissions.title}</h3>
+				<p><Phrases text={t.permissions.body} /></p>
+			</article>
+
+			<article class="tile" data-tile>
+				<div class="tile-art tile-art--context" aria-hidden="true">
+					<svg class="ring" viewBox="0 0 72 72">
+						<circle cx="36" cy="36" r="30" class="ring-track" />
+						<circle cx="36" cy="36" r="30" class="ring-used" stroke-dasharray={`${RING * 0.1} ${RING}`} />
+					</svg>
+					<ul class="breakdown">
+						{
+							breakdown.map((row) => (
+								<li>
+									<span>{row.label}</span>
+									<span class="num">{row.value}</span>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+				<h3>{t.context.title}</h3>
+				<p><Phrases text={t.context.body} /></p>
+			</article>
+
+			<article class="tile" data-tile>
+				<div class="tile-art tile-art--center" aria-hidden="true">
+					<span class="switch"><span></span></span>
+				</div>
+				<h3>{t.awake.title}</h3>
+				<p><Phrases text={t.awake.body} /></p>
+			</article>
+
+			<article class="tile" data-tile>
+				<div class="tile-art tile-art--chat" aria-hidden="true">
+					<p class="bubble bubble--me">{t.sidechat.ask}</p>
+					<p class="bubble">{t.sidechat.answer}</p>
+				</div>
+				<h3>{t.sidechat.title}</h3>
+				<p><Phrases text={t.sidechat.body} /></p>
+			</article>
+
+			<article class="tile" data-tile>
+				<div class="tile-art tile-art--mcp" aria-hidden="true">
+					<ul class="chips">
+						<li>stdio</li>
+						<li>Streamable HTTP</li>
+						<li>SSE</li>
+					</ul>
+					<code class="mcp-name">mcp__github__create_issue</code>
+				</div>
+				<h3>{t.mcp.title}</h3>
+				<p><Phrases text={t.mcp.body} /></p>
+			</article>
+
+			<article class="tile tile--wide" data-tile>
+				<div class="tile-art tile-art--browser" aria-hidden="true">
+					<div class="browser">
+						<div class="browser-bar">
+							<span class="browser-lights"><i></i><i></i><i></i></span>
+							<span class="browser-url">{t.browser.url}</span>
+						</div>
+						<div class="browser-page">
+							<span class="skeleton skeleton--title"></span>
+							<span class="skeleton"></span>
+							<span class="skeleton skeleton--short"></span>
+							<span class="browser-button" data-browser-target>{t.browser.button}</span>
+							<span class="agent-cursor" data-agent-cursor>
+								<svg viewBox="0 0 24 24"><path d="M5 3.5 18.5 12 12 13.2 9 19.5z" /></svg>
+								<span class="agent-click"></span>
+							</span>
+						</div>
+					</div>
+				</div>
+				<h3>{t.browser.title}</h3>
+				<p><Phrases text={t.browser.body} /></p>
+			</article>
+
+			<article class="tile tile--wide" data-tile>
+				<div class="tile-art tile-art--code" aria-hidden="true">
+					<pre><code><span class="dim">---</span>
+<span class="key">name</span>: changelog
+<span class="key">description</span>: {zh ? "从提交记录整理一份更新说明。" : "Turn commit history into release notes."}
+<span class="dim">---</span>
+<span class="dim">{zh ? "读 git log，按类型分组……" : "Read git log, group by type…"}</span></code></pre>
+				</div>
+				<h3>{t.skills.title}</h3>
+				<p><Phrases text={t.skills.body} /></p>
+			</article>
+
+			<article class="tile" data-tile>
+				<div class="tile-art tile-art--format" aria-hidden="true">
+					<ul class="chips chips--wrap">
+						{formatters.map((name) => <li>{name}</li>)}
+					</ul>
+				</div>
+				<h3>{t.format.title}</h3>
+				<p><Phrases text={t.format.body} /></p>
+			</article>
+
+			<article class="tile" data-tile>
+				<div class="tile-art tile-art--center" aria-hidden="true">
+					<div class="mini-notice">
+						<Image src={appIcon} alt="" width={36} densities={[1, 2]} loading="lazy" />
+						<span>
+							<b>Lyra</b>
+							<span>{zh ? "任务已完成" : "Task finished"}</span>
+						</span>
+					</div>
+				</div>
+				<h3>{t.notify.title}</h3>
+				<p><Phrases text={t.notify.body} /></p>
+			</article>
+		</div>
+	</div>
+</section>
+
+<style>
+	.bento-title {
+		text-align: center;
+	}
+	.bento-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: clamp(0.875rem, 0.6rem + 0.8vw, 1.25rem);
+		margin-top: clamp(3rem, 2rem + 3vw, 4.5rem);
+	}
+
+	.tile {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		padding: clamp(1.5rem, 1.2rem + 0.8vw, 2rem);
+		border-radius: var(--radius-xl);
+		background: var(--surface-raised);
+		overflow: hidden;
+		isolation: isolate;
+	}
+	.tile--wide {
+		grid-column: span 2;
+	}
+	/* The pointer's light, moved by transform (see `home.ts`). */
+	.tile :global(.tile-spot) {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: -1;
+		width: 28rem;
+		height: 28rem;
+		margin: -14rem 0 0 -14rem;
+		border-radius: 50%;
+		background: radial-gradient(closest-side, var(--accent-soft), transparent);
+		opacity: 0;
+		transition: opacity var(--dur-slow) var(--ease-soft);
+		pointer-events: none;
+	}
+	.tile:hover :global(.tile-spot) {
+		opacity: 1;
+	}
+	.tile h3 {
+		font-size: 1.3125rem;
+		font-weight: var(--weight-bold);
+		line-height: 1.25;
+		letter-spacing: -0.01em;
+	}
+	.tile > p {
+		margin-top: 0.5rem;
+		color: var(--ink-2);
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		text-wrap: pretty;
+	}
+	/* The picture has one height in every tile, so the titles under it line up across a row
+	 * whatever each tile has to say. */
+	.tile-art {
+		display: flex;
+		align-items: center;
+		height: 9.5rem;
+		margin-bottom: 1.75rem;
+	}
+	.tile-art--center {
+		justify-content: center;
+	}
+
+	/* Permissions: three modes, the chosen one moving between them. */
+	.segmented {
+		position: relative;
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		width: 100%;
+		max-width: 28rem;
+		padding: 0.25rem;
+		border-radius: var(--radius-pill);
+		background: var(--surface);
+		box-shadow: inset 0 0 0 0.5px var(--line);
+	}
+	.segmented-option {
+		position: relative;
+		padding: 0.625rem 0.5rem;
+		text-align: center;
+		font-size: 0.875rem;
+		font-weight: var(--weight-medium);
+		color: var(--ink-2);
+		white-space: nowrap;
+	}
+	.segmented-thumb {
+		position: absolute;
+		top: 0.25rem;
+		bottom: 0.25rem;
+		left: 0.25rem;
+		width: calc((100% - 0.5rem) / 3);
+		border-radius: var(--radius-pill);
+		background: var(--bg);
+		box-shadow:
+			0 1px 2px rgb(0 0 0 / 0.08),
+			0 3px 10px -2px rgb(0 0 0 / 0.1),
+			0 0 0 0.5px var(--line);
+		animation: modes 9s var(--ease-out) infinite;
+		animation-play-state: paused;
+	}
+	:global(:root[data-theme="dark"]) .segmented-thumb {
+		background: #2c2c30;
+	}
+	.bento-grid:global(.in-view) .segmented-thumb {
+		animation-play-state: running;
+	}
+	@keyframes modes {
+		0%,
+		28% {
+			transform: translateX(100%);
+		}
+		33%,
+		61% {
+			transform: translateX(200%);
+		}
+		66%,
+		94% {
+			transform: translateX(0%);
+		}
+		100% {
+			transform: translateX(100%);
+		}
+	}
+
+	/* Context: the ring from the composer, and its breakdown. */
+	.tile-art--context {
+		gap: 1rem;
+	}
+	.ring {
+		flex: none;
+		width: 3.75rem;
+		height: 3.75rem;
+		transform: rotate(-90deg);
+	}
+	.ring circle {
+		fill: none;
+		stroke-width: 7;
+	}
+	.ring-track {
+		stroke: var(--surface);
+	}
+	.ring-used {
+		stroke: var(--lyra-blue);
+		stroke-linecap: round;
+	}
+	.breakdown {
+		flex: 1;
+		font-size: 0.8125rem;
+	}
+	.breakdown li {
+		display: flex;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding-block: 0.25rem;
+		color: var(--ink-2);
+		white-space: nowrap;
+	}
+	.breakdown li .num {
+		color: var(--ink);
+		font-weight: var(--weight-medium);
+	}
+
+	/* Awake: the switch, on. */
+	.switch {
+		position: relative;
+		width: 4.25rem;
+		height: 2.5rem;
+		border-radius: var(--radius-pill);
+		background: #30d158;
+	}
+	.switch span {
+		position: absolute;
+		top: 0.1875rem;
+		right: 0.1875rem;
+		width: 2.125rem;
+		height: 2.125rem;
+		border-radius: 50%;
+		background: #fff;
+		box-shadow:
+			0 3px 8px rgb(0 0 0 / 0.15),
+			0 1px 1px rgb(0 0 0 / 0.16);
+	}
+
+	/* Side chat: a question and the start of an answer. */
+	.tile-art--chat {
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: center;
+		gap: 0.5rem;
+		font-size: 0.8125rem;
+		line-height: 1.45;
+	}
+	.bubble {
+		max-width: 88%;
+		padding: 0.5rem 0.75rem;
+		border-radius: 1rem 1rem 1rem 0.3rem;
+		background: var(--surface);
+		color: var(--ink);
+	}
+	.bubble--me {
+		align-self: flex-end;
+		border-radius: 1rem 1rem 0.3rem 1rem;
+		background: var(--lyra-blue);
+		color: #fff;
+	}
+
+	/* MCP: the transports, and what a tool is called. */
+	.tile-art--mcp {
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: center;
+		gap: 0.875rem;
+	}
+	.chips {
+		display: flex;
+		gap: 0.375rem;
+		flex-wrap: wrap;
+	}
+	.chips li {
+		padding: 0.3125rem 0.625rem;
+		border-radius: var(--radius-pill);
+		background: var(--surface);
+		box-shadow: inset 0 0 0 0.5px var(--line);
+		font-size: 0.8125rem;
+		font-weight: var(--weight-medium);
+		white-space: nowrap;
+	}
+	.mcp-name {
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		color: var(--accent);
+		font-size: 0.8125rem;
+	}
+
+	/* Browser: a page, and the agent's own cursor about to click. */
+	.tile-art--browser {
+		align-items: stretch;
+	}
+	.browser {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		border-radius: var(--radius-md);
+		background: var(--bg);
+		box-shadow:
+			0 0 0 0.5px var(--line-strong),
+			0 10px 30px -12px rgb(16 24 40 / 0.25);
+		overflow: hidden;
+	}
+	.browser-bar {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		padding: 0.5rem;
+		background: var(--surface);
+		box-shadow: inset 0 -0.5px 0 var(--line);
+	}
+	.browser-lights {
+		position: absolute;
+		left: 0.625rem;
+		top: 50%;
+		display: flex;
+		gap: 0.3125rem;
+		transform: translateY(-50%);
+	}
+	.browser-lights i {
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 50%;
+		background: var(--line-strong);
+	}
+	.browser-url {
+		padding: 0.1875rem 0.875rem;
+		border-radius: var(--radius-xs);
+		background: var(--bg);
+		color: var(--ink-2);
+		font-size: 0.6875rem;
+	}
+	.browser-page {
+		position: relative;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		padding: 1rem 1.125rem;
+		min-height: 8rem;
+	}
+	.skeleton {
+		height: 0.5rem;
+		width: 70%;
+		border-radius: 999px;
+		background: var(--surface);
+	}
+	.skeleton--title {
+		width: 40%;
+		height: 0.75rem;
+		background: var(--line-strong);
+	}
+	.skeleton--short {
+		width: 50%;
+	}
+	.browser-button {
+		align-self: flex-start;
+		margin-top: 0.375rem;
+		padding: 0.375rem 1rem;
+		border-radius: var(--radius-pill);
+		background: var(--lyra-blue);
+		color: #fff;
+		font-size: 0.75rem;
+		font-weight: var(--weight-bold);
+	}
+	/* Lyra's agent cursor: a rounded black arrow, a white edge and a blue halo, as the app draws it. */
+	.agent-cursor {
+		position: absolute;
+		left: 62%;
+		top: 30%;
+		width: 1.5rem;
+		height: 1.5rem;
+		filter: drop-shadow(0 0 6px rgb(51 156 255 / 0.9)) drop-shadow(0 1px 2px rgb(0 0 0 / 0.3));
+	}
+	.agent-cursor svg {
+		width: 100%;
+		height: 100%;
+	}
+	.agent-cursor path {
+		fill: #111;
+		stroke: #fff;
+		stroke-width: 1.5;
+		stroke-linejoin: round;
+	}
+	.agent-click {
+		position: absolute;
+		left: 0.1rem;
+		top: 0.05rem;
+		width: 1.75rem;
+		height: 1.75rem;
+		margin: -0.875rem 0 0 -0.875rem;
+		border-radius: 50%;
+		box-shadow: 0 0 0 2px var(--lyra-blue-app);
+		opacity: 0;
+	}
+
+	/* Skills: the only part that sits in the prompt. */
+	.tile-art--code pre {
+		width: 100%;
+		padding: 1rem 1.125rem;
+		border-radius: var(--radius-md);
+		background: var(--surface);
+		font-size: 0.8125rem;
+		line-height: 1.7;
+		white-space: pre-wrap;
+	}
+	.tile-art--code .key {
+		color: var(--accent);
+	}
+	.tile-art--code .dim {
+		color: var(--ink-3);
+	}
+
+	.chips--wrap {
+		gap: 0.4375rem;
+	}
+
+	/* Notify: the banner itself. */
+	.mini-notice {
+		display: flex;
+		align-items: center;
+		gap: 0.625rem;
+		padding: 0.625rem 1rem 0.625rem 0.625rem;
+		border-radius: 1rem;
+		background: var(--surface);
+		box-shadow:
+			0 0 0 0.5px var(--line),
+			0 8px 24px -10px rgb(16 24 40 / 0.25);
+		font-size: 0.8125rem;
+		line-height: 1.3;
+	}
+	.mini-notice :global(img) {
+		width: 2.25rem;
+		height: 2.25rem;
+		margin: -0.25rem;
+	}
+	.mini-notice > span {
+		display: flex;
+		flex-direction: column;
+		color: var(--ink-2);
+	}
+	.mini-notice b {
+		color: var(--ink);
+		font-weight: var(--weight-bold);
+	}
+
+	@media (max-width: 64rem) {
+		.bento-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 40rem) {
+		.bento-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.tile--wide {
+			grid-column: auto;
+		}
+		.tile-art {
+			height: auto;
+			min-height: 7rem;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.segmented-thumb {
+			animation: none;
+			transform: translateX(100%);
+		}
+	}
+</style>

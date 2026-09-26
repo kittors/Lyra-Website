@@ -1,0 +1,73 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * Copies a value, or the text of another element (`from`, an id) at the moment of the click — so a
+ * command the page has just rewritten for a newer release is copied as it now reads.
+ */
+interface Props {
+	value?: string;
+	from?: string;
+	label: string;
+	done: string;
+	class?: string;
+	[key: `data-${string}`]: string | boolean | undefined;
+}
+
+const { value, from, label, done, class: className, ...rest } = Astro.props;
+---
+
+<button type="button" class:list={["copy", className]} data-copy={value} data-copy-from={from} data-label={label} data-done={done} {...rest}>
+	<span class="copy-icons" aria-hidden="true">
+		<Icon name="copy" class="copy-idle" />
+		<Icon name="check" class="copy-done" />
+	</span>
+	<span class="copy-label" aria-live="polite">{label}</span>
+</button>
+
+<style>
+	.copy {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3125rem;
+		flex: none;
+		height: 1.75rem;
+		padding-inline: 0.625rem;
+		border-radius: var(--radius-pill);
+		background: var(--button-2);
+		color: var(--ink);
+		font-size: 0.75rem;
+		font-weight: var(--weight-medium);
+		transition: background-color var(--dur-quick) var(--ease-soft);
+	}
+	.copy:hover {
+		background: var(--button-2-hover);
+	}
+	.copy-icons {
+		position: relative;
+		display: inline-grid;
+		width: 0.875rem;
+		height: 0.875rem;
+	}
+	.copy-icons :global(svg) {
+		grid-area: 1 / 1;
+		width: 100%;
+		height: 100%;
+		transition:
+			opacity var(--dur-base) var(--ease-soft),
+			transform var(--dur-slow) var(--ease-out);
+	}
+	.copy :global(.copy-done) {
+		opacity: 0;
+		transform: scale(0.6);
+		color: #30a14e;
+	}
+	.copy[data-copied] :global(.copy-idle) {
+		opacity: 0;
+		transform: scale(0.6);
+	}
+	.copy[data-copied] :global(.copy-done) {
+		opacity: 1;
+		transform: none;
+	}
+</style>

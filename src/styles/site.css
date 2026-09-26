@@ -1,0 +1,444 @@
+/*
+ * The product pages' base: reset, type scale, layout, buttons, and the states things start in
+ * before the motion script moves them. Components style themselves (scoped); this is only what
+ * every page shares. Colours, radii and curves come from `tokens.css`.
+ *
+ * Layered, so a component's own scoped rules win over anything here without a specificity fight.
+ */
+
+@layer reset, base, shared;
+
+@layer reset {
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+	html {
+		-webkit-text-size-adjust: 100%;
+		text-size-adjust: 100%;
+	}
+	body,
+	h1,
+	h2,
+	h3,
+	h4,
+	p,
+	figure,
+	blockquote,
+	ol,
+	ul,
+	dl,
+	dd,
+	pre {
+		margin: 0;
+	}
+	ol,
+	ul {
+		padding: 0;
+		list-style: none;
+	}
+	img,
+	picture,
+	svg,
+	video {
+		display: block;
+		max-width: 100%;
+	}
+	img {
+		height: auto;
+	}
+	button,
+	input,
+	select,
+	textarea {
+		font: inherit;
+		color: inherit;
+		letter-spacing: inherit;
+	}
+	button {
+		background: none;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+	}
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+	summary {
+		cursor: pointer;
+	}
+	summary::-webkit-details-marker {
+		display: none;
+	}
+}
+
+@layer base {
+	:root {
+		/* The type scale. Chinese sets a notch smaller and looser: a Han glyph fills its whole em
+		 * square, so at the same size it reads larger, and it needs the leading to breathe. */
+		--t-hero: clamp(3.25rem, 1.2rem + 7.4vw, 7.5rem);
+		--t-display: clamp(2.5rem, 1.3rem + 4.9vw, 5rem);
+		--t-title: clamp(1.875rem, 1.3rem + 2.2vw, 3rem);
+		--t-headline: clamp(1.3125rem, 1.15rem + 0.65vw, 1.75rem);
+		--t-lead: clamp(1.1875rem, 1.07rem + 0.5vw, 1.5rem);
+		--t-eyebrow: clamp(1.0625rem, 0.98rem + 0.35vw, 1.3125rem);
+		--t-body: 1.0625rem;
+		--t-small: 0.875rem;
+		--t-caption: 0.75rem;
+		--lh-display: 1.04;
+		--ls-display: -0.028em;
+		--ls-title: -0.02em;
+		--lh-body: 1.5;
+		--section-y: clamp(6rem, 3.5rem + 9vw, 11rem);
+	}
+	:root:lang(zh-CN) {
+		--t-hero: clamp(3rem, 1.1rem + 6.9vw, 7rem);
+		--t-display: clamp(2.25rem, 1.2rem + 4.4vw, 4.5rem);
+		--t-title: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+		--lh-display: 1.14;
+		--ls-display: 0;
+		--ls-title: 0;
+		--lh-body: 1.7;
+	}
+
+	html {
+		background: var(--bg);
+		color: var(--ink);
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		text-rendering: optimizeLegibility;
+		font-kerning: normal;
+		scroll-padding-top: calc(var(--nav-height) + 1rem);
+		/* The page never scrolls sideways, however wide a marquee or a tilted window gets. */
+		overflow-x: clip;
+	}
+	body {
+		font-size: var(--t-body);
+		line-height: var(--lh-body);
+		min-height: 100dvh;
+		overflow-x: clip;
+		background: var(--bg);
+	}
+	::selection {
+		background: rgb(10 108 245 / 0.24);
+	}
+	:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+	code,
+	kbd,
+	pre {
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+	}
+}
+
+@layer shared {
+	/* ── Layout ─────────────────────────────────────────────────────────── */
+	.container {
+		width: min(100% - 2 * var(--gutter), var(--page-max));
+		margin-inline: auto;
+	}
+	.container-wide {
+		width: min(100% - 2 * var(--gutter), var(--page-wide));
+		margin-inline: auto;
+	}
+	.section {
+		position: relative;
+		padding-block: var(--section-y);
+	}
+	.surface-night,
+	.surface-alt {
+		background: var(--bg);
+		color: var(--ink);
+	}
+	.surface-alt {
+		background: var(--bg-alt);
+	}
+	.section-head {
+		max-width: 56rem;
+		margin-inline: auto;
+		text-align: center;
+	}
+	.section-head > * + * {
+		margin-top: 1.25rem;
+	}
+	.section-head .t-lead {
+		max-width: 40rem;
+		margin-inline: auto;
+	}
+
+	/* ── Type ───────────────────────────────────────────────────────────── */
+	.t-hero,
+	.t-display,
+	.t-title,
+	.t-headline {
+		font-weight: var(--weight-bold);
+		text-wrap: balance;
+	}
+	.t-hero {
+		font-size: var(--t-hero);
+		line-height: var(--lh-display);
+		letter-spacing: var(--ls-display);
+	}
+	.t-display {
+		font-size: var(--t-display);
+		line-height: var(--lh-display);
+		letter-spacing: var(--ls-display);
+	}
+	.t-title {
+		font-size: var(--t-title);
+		line-height: 1.12;
+		letter-spacing: var(--ls-title);
+	}
+	.t-headline {
+		font-size: var(--t-headline);
+		line-height: 1.25;
+		letter-spacing: var(--ls-title);
+	}
+	.t-lead {
+		font-size: var(--t-lead);
+		line-height: 1.42;
+		color: var(--ink-2);
+		font-weight: var(--weight-regular);
+		text-wrap: pretty;
+	}
+	:lang(zh-CN) .t-lead {
+		line-height: 1.6;
+	}
+	.t-eyebrow {
+		font-size: var(--t-eyebrow);
+		font-weight: var(--weight-bold);
+		line-height: 1.3;
+		color: var(--accent);
+	}
+	.t-body {
+		font-size: var(--t-body);
+		color: var(--ink-2);
+		text-wrap: pretty;
+	}
+	.t-small {
+		font-size: var(--t-small);
+		line-height: 1.5;
+		color: var(--ink-2);
+	}
+	.t-caption {
+		font-size: var(--t-caption);
+		line-height: 1.4;
+		color: var(--ink-3);
+	}
+	.mono {
+		font-family: var(--font-mono);
+		font-feature-settings: "calt" 0;
+	}
+	.num {
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* A headline split into lines that rise out of their own masks. The mask is padded so descenders
+	 * and the bottom of a Han glyph are not clipped while the line is still. */
+	.line {
+		display: block;
+		overflow: clip;
+		padding-block: 0.06em 0.12em;
+		margin-block: -0.06em -0.12em;
+	}
+	.line-inner {
+		display: block;
+	}
+
+	/* ── Buttons ────────────────────────────────────────────────────────── */
+	.btn {
+		--btn-h: 2.75rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5em;
+		height: var(--btn-h);
+		padding-inline: 1.375rem;
+		border-radius: var(--radius-pill);
+		font-size: 1.0625rem;
+		font-weight: var(--weight-medium);
+		line-height: 1;
+		letter-spacing: -0.01em;
+		white-space: nowrap;
+		transition:
+			background-color var(--dur-quick) var(--ease-soft),
+			color var(--dur-quick) var(--ease-soft),
+			box-shadow var(--dur-base) var(--ease-soft),
+			transform var(--dur-base) var(--ease-out);
+		-webkit-tap-highlight-color: transparent;
+		user-select: none;
+	}
+	.btn:active {
+		transform: scale(0.97);
+	}
+	.btn-primary {
+		background: var(--lyra-blue);
+		color: #fff;
+	}
+	.btn-primary:hover {
+		background: var(--lyra-blue-hover);
+	}
+	.btn-primary:active {
+		background: var(--lyra-blue-press);
+	}
+	.btn-secondary {
+		background: var(--button-2);
+		color: var(--ink);
+	}
+	.btn-secondary:hover {
+		background: var(--button-2-hover);
+	}
+	.btn-lg {
+		--btn-h: 3.25rem;
+		padding-inline: 1.75rem;
+		font-size: 1.125rem;
+	}
+	.btn-sm {
+		--btn-h: 2rem;
+		padding-inline: 0.9rem;
+		font-size: 0.875rem;
+		gap: 0.375em;
+	}
+	.btn .platform-icon,
+	.btn .icon {
+		width: 1.1em;
+		height: 1.1em;
+	}
+	.btn:focus-visible {
+		outline-offset: 4px;
+	}
+
+	.link {
+		color: var(--accent);
+		font-weight: var(--weight-medium);
+		text-underline-offset: 0.22em;
+		text-decoration-thickness: 1px;
+	}
+	.link:hover {
+		text-decoration-line: underline;
+	}
+
+	/* ── Access ─────────────────────────────────────────────────────────── */
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
+	}
+	.skip-link {
+		position: fixed;
+		top: 0.75rem;
+		left: 0.75rem;
+		z-index: 100;
+		padding: 0.625rem 1rem;
+		border-radius: var(--radius-sm);
+		background: var(--lyra-blue);
+		color: #fff;
+		font-weight: var(--weight-medium);
+		transform: translateY(-200%);
+		transition: transform var(--dur-base) var(--ease-out);
+	}
+	.skip-link:focus-visible {
+		transform: none;
+	}
+
+	/* ── Magnetic buttons ──────────────────────────────────────────────
+	 * `site.ts` feeds the pointer's pull in as two numbers; the stylesheet keeps the press. */
+	.btn.is-magnetic {
+		transform: translate3d(calc(var(--mx, 0) * 1px), calc(var(--my, 0) * 1px), 0);
+	}
+	.btn.is-magnetic:active {
+		transform: translate3d(calc(var(--mx, 0) * 1px), calc(var(--my, 0) * 1px), 0) scale(0.97);
+	}
+
+	/* ── Rolling numbers (built by `home.ts`) ─────────────────────────── */
+	.odo {
+		display: inline-flex;
+	}
+	.odo-col {
+		display: inline-block;
+		height: 1em;
+		overflow: hidden;
+	}
+	.odo-strip {
+		display: block;
+	}
+	.odo-digit {
+		display: block;
+		height: 1em;
+		line-height: 1;
+	}
+
+	/* ── Motion: where things start ─────────────────────────────────────
+	 * With scripts on, anything marked to arrive starts out of sight, so it can arrive without a
+	 * flash of the finished page first. `site.ts` adds `is-in` as each comes into view. Without
+	 * scripts, or if the scripts never report in (the failsafe in Base.astro), it is all simply
+	 * there. */
+	.js [data-reveal] {
+		opacity: 0;
+		transform: translate3d(0, 1.75rem, 0);
+		transition:
+			opacity 0.9s var(--ease-soft) var(--stagger, 0ms),
+			transform 1.2s var(--ease-out) var(--stagger, 0ms);
+	}
+	.js [data-reveal="fade"] {
+		transform: none;
+	}
+	.js [data-reveal].is-in {
+		opacity: 1;
+		transform: none;
+	}
+	/* Headings rise piece by piece out of their masks. The hero's are left to its own timeline. */
+	.js [data-split]:where(:not([data-hero] [data-split])) :is(.word-inner, .line-inner) {
+		opacity: 1;
+		transform: translate3d(0, 110%, 0);
+		transition: transform 1.15s var(--ease-out) calc(var(--stagger, 0ms) + var(--i, 0) * 70ms);
+	}
+	.js [data-split].is-in :is(.word-inner, .line-inner) {
+		transform: none;
+	}
+	.js [data-hero-part],
+	.js [data-hero] [data-split] :is(.word-inner, .line-inner) {
+		opacity: 0;
+	}
+	.motion-failed [data-reveal],
+	.motion-failed [data-hero-part],
+	.motion-failed [data-split] :is(.word-inner, .line-inner) {
+		opacity: 1 !important;
+		transform: none !important;
+	}
+}
+
+/* Reduced motion: nothing slides or rises; things that arrive only fade in. */
+@media (prefers-reduced-motion: reduce) {
+	.btn,
+	.skip-link {
+		transition-duration: 1ms;
+	}
+	.btn:active {
+		transform: none;
+	}
+	.js [data-reveal] {
+		transform: none;
+		transition: opacity 0.6s var(--ease-soft) var(--stagger, 0ms);
+	}
+	.js [data-split]:where(:not([data-hero] [data-split])) :is(.word-inner, .line-inner) {
+		opacity: 0;
+		transform: none;
+		transition: opacity 0.6s var(--ease-soft) var(--stagger, 0ms);
+	}
+	.js [data-split].is-in :is(.word-inner, .line-inner) {
+		opacity: 1;
+	}
+}

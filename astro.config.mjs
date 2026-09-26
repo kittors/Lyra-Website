@@ -18,6 +18,11 @@ export default defineConfig({
 	trailingSlash: "ignore",
 	build: { format: "directory" },
 	image: { layout: "constrained" },
+	// The docs have no page of their own at their root; send it to the first one.
+	redirects: {
+		"/docs": "/docs/start/intro/",
+		"/en/docs": "/en/docs/start/intro/",
+	},
 	integrations: [
 		starlight({
 			title: { "zh-CN": "Lyra 文档", en: "Lyra Docs" },
@@ -37,6 +42,37 @@ export default defineConfig({
 				{ label: "帮助", translations: { en: "Help" }, items: [{ autogenerate: { directory: "docs/help" } }] },
 			],
 			customCss: ["./src/styles/tokens.css", "./src/styles/docs.css"],
+			// The product pages' wordmark, and a way back to the download page and the market.
+			components: {
+				SiteTitle: "./src/components/docs/SiteTitle.astro",
+				SocialIcons: "./src/components/docs/SocialIcons.astro",
+			},
+			head: [
+				{ tag: "link", attrs: { rel: "apple-touch-icon", href: "/apple-touch-icon.png" } },
+				{ tag: "meta", attrs: { property: "og:image", content: "https://lyra.07230805.xyz/og.png" } },
+				{ tag: "meta", attrs: { name: "twitter:card", content: "summary_large_image" } },
+			],
+			// Code blocks in the site's own terms: GitHub's colours, the system's mono face, the
+			// same corner as the rest of the cards, and no drop shadow under a terminal.
+			expressiveCode: {
+				themes: ["github-dark-default", "github-light-default"],
+				styleOverrides: {
+					borderRadius: "0.875rem",
+					borderColor: "var(--sl-color-hairline-light)",
+					codeFontFamily: 'ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
+					uiFontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif',
+					codeFontSize: "0.8125rem",
+					codeLineHeight: "1.7",
+					codePaddingBlock: "1rem",
+					codePaddingInline: "1.25rem",
+					frames: {
+						shadowColor: "transparent",
+						frameBoxShadowCssValue: "none",
+						editorActiveTabIndicatorTopColor: "#0a6cf5",
+						terminalTitlebarDotsOpacity: "0.55",
+					},
+				},
+			},
 			disable404Route: true,
 			lastUpdated: true,
 			editLink: { baseUrl: "https://github.com/kittors/Lyra-Website/edit/main/" },

@@ -1,0 +1,62 @@
+---
+import { localize, type Locale } from "../i18n/index.ts";
+import { PLATFORM_TEXT } from "../i18n/platform.ts";
+import Icon from "./Icon.astro";
+import PlatformIcon from "./PlatformIcon.astro";
+
+/**
+ * "Download" that becomes "Download for Mac" with the Apple mark once the page knows the reader is
+ * on a Mac. It leads to the download page rather than straight to a file: Lyra is not signed with
+ * a paid certificate, and the download page is where the reader learns how past the first-launch
+ * warning — and where a Mac whose chip Safari will not name gets both choices.
+ *
+ * The labels ride along as data, so the script that picks one needs no copy of its own.
+ */
+interface Props {
+	locale: Locale;
+	label: string;
+	size?: "lg" | "md";
+	class?: string;
+	[key: `data-${string}`]: string | boolean | undefined;
+}
+
+const { locale, label, size = "lg", class: className, ...rest } = Astro.props;
+const OSES = ["macos", "windows", "linux", "android", "ios"] as const;
+const labels = PLATFORM_TEXT[locale].download;
+---
+
+<a
+	class:list={["btn", "btn-primary", "download-cta", { "btn-lg": size === "lg" }, className]}
+	href={localize(locale, "/download/")}
+	data-download-cta
+	data-labels={JSON.stringify(labels)}
+	{...rest}
+>
+	<span class="cta-icons" aria-hidden="true">
+		<Icon name="download" class="cta-icon cta-icon--default" />
+		{OSES.map((os) => <PlatformIcon name={os} class={`cta-icon cta-icon--${os}`} />)}
+	</span>
+	<span data-cta-label>{label}</span>
+</a>
+
+<style>
+	.cta-icons {
+		display: inline-flex;
+	}
+	.download-cta :global(.cta-icon) {
+		display: none;
+	}
+	.download-cta:not([data-os]) :global(.cta-icon--default),
+	.download-cta[data-os="macos"] :global(.cta-icon--macos),
+	.download-cta[data-os="windows"] :global(.cta-icon--windows),
+	.download-cta[data-os="linux"] :global(.cta-icon--linux),
+	.download-cta[data-os="android"] :global(.cta-icon--android),
+	.download-cta[data-os="ios"] :global(.cta-icon--ios) {
+		display: inline-block;
+	}
+	/* The Apple mark's optical centre is higher than its box; nudge it onto the text's midline. */
+	.download-cta[data-os="macos"] :global(.cta-icon--macos),
+	.download-cta[data-os="ios"] :global(.cta-icon--ios) {
+		transform: translateY(-0.06em);
+	}
+</style>

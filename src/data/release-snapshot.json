@@ -1,0 +1,110 @@
+{
+	"version": "0.9.19",
+	"tag": "v0.9.19",
+	"publishedAt": "2026-09-21T18:05:00Z",
+	"notesUrl": "https://github.com/kittors/Lyra/releases/tag/v0.9.19",
+	"assets": [
+		{
+			"id": "mac-arm64",
+			"os": "macos",
+			"arch": "arm64",
+			"format": "dmg",
+			"name": "Lyra-0.9.19-arm64.dmg",
+			"size": 219208008,
+			"sha256": "984008bd8c491329a1dd75d29f67b29f532c8d7c216136c9aaaeba387314d70b",
+			"href": "/dl/mac-arm64"
+		},
+		{
+			"id": "mac-x64",
+			"os": "macos",
+			"arch": "x64",
+			"format": "dmg",
+			"name": "Lyra-0.9.19-x64.dmg",
+			"size": 224205085,
+			"sha256": "7f87bf1d5954454007b3de18a6a7b45d31db4d4a146c2175f4897ca6a35ed940",
+			"href": "/dl/mac-x64"
+		},
+		{
+			"id": "win-x64",
+			"os": "windows",
+			"arch": "x64",
+			"format": "exe",
+			"name": "Lyra-0.9.19-x64.exe",
+			"size": 182943082,
+			"sha256": "f203e2108766f094fb8e5998939e3b3582ccc5fff2e7e698b1a078fd241a80e0",
+			"href": "/dl/win-x64"
+		},
+		{
+			"id": "win-arm64",
+			"os": "windows",
+			"arch": "arm64",
+			"format": "exe",
+			"name": "Lyra-0.9.19-arm64.exe",
+			"size": 174768912,
+			"sha256": "ad681518b838313f3d3a38934b2f3c7dba4b972517663e1ec365c83bb3e9056b",
+			"href": "/dl/win-arm64"
+		},
+		{
+			"id": "linux-x64-appimage",
+			"os": "linux",
+			"arch": "x64",
+			"format": "appimage",
+			"name": "Lyra-0.9.19-x86_64.AppImage",
+			"size": 226541667,
+			"sha256": "2fce518e9531de3b1f323a294db7ee89bb1406a5ed349812700bcebd5372a0a7",
+			"href": "/dl/linux-x64-appimage"
+		},
+		{
+			"id": "linux-arm64-appimage",
+			"os": "linux",
+			"arch": "arm64",
+			"format": "appimage",
+			"name": "Lyra-0.9.19-arm64.AppImage",
+			"size": 225790065,
+			"sha256": "bfb53562b7e713149fb24c79c83c7471ebc853726648764baa349c70e0f3e995",
+			"href": "/dl/linux-arm64-appimage"
+		},
+		{
+			"id": "linux-x64-deb",
+			"os": "linux",
+			"arch": "x64",
+			"format": "deb",
+			"name": "Lyra-0.9.19-amd64.deb",
+			"size": 175807076,
+			"sha256": "a59c9a5cc9ce29473e6db654c676045886712c2da3500c335841d3788010ff8f",
+			"href": "/dl/linux-x64-deb"
+		},
+		{
+			"id": "linux-arm64-deb",
+			"os": "linux",
+			"arch": "arm64",
+			"format": "deb",
+			"name": "Lyra-0.9.19-arm64.deb",
+			"size": 169510056,
+			"sha256": "04ac5d1242c62d275454c52ab3a65ba45fc160fa7509232ca8e3f40e34801269",
+			"href": "/dl/linux-arm64-deb"
+		},
+		{
+			"id": "android",
+			"os": "android",
+			"arch": "universal",
+			"format": "apk",
+			"name": "Lyra-0.9.19-android.apk",
+			"size": 125267388,
+			"sha256": "8308526d74d4cf2f6114ad2b3322363a90ee40890035e4b47a7eb6f012168c03",
+			"href": "/dl/android"
+		},
+		{
+			"id": "ios",
+			"os": "ios",
+			"arch": "universal",
+			"format": "ipa",
+			"name": "Lyra-0.9.19-ios-unsigned.ipa",
+			"size": 13054538,
+			"sha256": "baf8b1f15a0984b940837c217ca4ff99ae68ee28ed9075ddf7312694a601b7da",
+			"href": "/dl/ios"
+		}
+	],
+	"country": null,
+	"source": "github"
+}

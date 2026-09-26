@@ -1,0 +1,240 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import sharp from "sharp";
+
+import mascot from "../assets/brand/mascot.png";
+
+/**
+ * A phone, drawn to an iPhone's own geometry: a 390 × 844 pt screen in a 13 pt bezel, the Dynamic
+ * Island, the status bar and the home indicator.
+ *
+ * The phone captures are the app's content only — no status bar, no home indicator — so the frame
+ * draws both: the status bar sits above the content, the content fills the rest of the screen at its
+ * own proportions, and whatever the screen shows around it takes the content's own edge colours,
+ * sampled from the capture at build time, so there is no seam to see.
+ *
+ * Without a screenshot, the phone shows Lyra's mascot and a line saying it is in sync — a placeholder
+ * that still says something true about the feature.
+ */
+interface Props {
+	image?: ImageMetadata | undefined;
+	alt: string;
+	synced: string;
+	/** How wide the phone is drawn, for choosing the picture's size. */
+	sizes?: string;
+	class?: string;
+	[key: `data-${string}`]: string | boolean | undefined;
+}
+
+const { image, alt, synced, sizes = "(min-width: 64rem) 20rem, 60vw", class: className, ...rest } = Astro.props;
+
+/** The capture's colour along its top row and down its sides, from the file itself. */
+async function edgeColours(picture: ImageMetadata): Promise<{ top: string; side: string; dark: boolean }> {
+	const fallback = { top: "#171717", side: "#141414", dark: true };
+	const path = (picture as ImageMetadata & { fsPath?: string }).fsPath;
+	if (!path) return fallback;
+	try {
+		const { data, info } = await sharp(path).resize(40, 86, { fit: "fill" }).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+		const at = (x: number, y: number) => [0, 1, 2].map((k) => data[(y * info.width + x) * 3 + k]!);
+		const hex = (rgb: number[]) => `#${rgb.map((v) => Math.round(v).toString(16).padStart(2, "0")).join("")}`;
+		const mean = (points: number[][]) => [0, 1, 2].map((k) => points.reduce((sum, p) => sum + p[k]!, 0) / points.length);
+		const top = mean([at(10, 0), at(20, 0), at(30, 0)]);
+		const side = mean(Array.from({ length: 60 }, (_, i) => [at(0, 13 + i), at(info.width - 1, 13 + i)]).flat());
+		const luminance = (0.2126 * top[0]! + 0.7152 * top[1]! + 0.0722 * top[2]!) / 255;
+		return { top: hex(top), side: hex(side), dark: luminance < 0.5 };
+	} catch {
+		return fallback;
+	}
+}
+
+const colours = image ? await edgeColours(image) : null;
+const style = colours ? `--phone-top: ${colours.top}; --phone-side: ${colours.side}` : undefined;
+---
+
+<div class:list={["phone", className]} style={style} {...rest}>
+	<div class="phone-body">
+		<div class:list={["phone-screen", { "phone-screen--light": colours && !colours.dark }]}>
+			{
+				image ? (
+					<>
+						<div class="phone-app">
+							<Image src={image} alt={alt} widths={[390, 780, 1170]} sizes={sizes} loading="lazy" decoding="async" class="phone-shot" />
+						</div>
+						<span class="phone-home" aria-hidden="true" />
+					</>
+				) : (
+					<div class="phone-idle" role="img" aria-label={alt}>
+						<div class="phone-glow" aria-hidden="true" />
+						<Image src={mascot} alt="" width={220} densities={[1, 2]} loading="lazy" decoding="async" class="phone-mascot" />
+						<p class="phone-synced" aria-hidden="true">
+							<span class="dot" />
+							{synced}
+						</p>
+					</div>
+				)
+			}
+			<div class="phone-status" aria-hidden="true">
+				<span class="phone-time">9:41</span>
+				<span class="phone-status-icons">
+					<svg viewBox="0 0 18 12" class="phone-signal"><rect x="0" y="8" width="3" height="4" rx="1" /><rect x="5" y="5.5" width="3" height="6.5" rx="1" /><rect x="10" y="3" width="3" height="9" rx="1" /><rect x="15" y="0" width="3" height="12" rx="1" /></svg>
+					<svg viewBox="0 0 16 12" class="phone-wifi"><path d="M8 11.5 5.6 8.9a3.4 3.4 0 0 1 4.8 0L8 11.5Zm-4.3-4.6L2 5.1a8.5 8.5 0 0 1 12 0l-1.7 1.8a6 6 0 0 0-8.6 0ZM.2 3.2 0 3A11 11 0 0 1 16 3l-.2.2-1.6 1.7a9 9 0 0 0-12.4 0L.2 3.2Z" /></svg>
+					<svg viewBox="0 0 27 12" class="phone-battery"><rect x="0.5" y="0.5" width="23" height="11" rx="3.5" fill="none" stroke="currentColor" stroke-opacity="0.4" /><rect x="2" y="2" width="20" height="8" rx="2" /><path d="M25 4v4a2 2 0 0 0 0-4Z" fill-opacity="0.45" /></svg>
+				</span>
+			</div>
+			<span class="phone-island" aria-hidden="true"></span>
+		</div>
+	</div>
+</div>
+
+<style>
+	/* The outer element is only the container the units measure against; the phone is its child. */
+	.phone {
+		container-type: inline-size;
+		position: relative;
+		aspect-ratio: 416 / 870;
+	}
+	.phone-body {
+		/* 1 pt of the phone: its body is 416 pt wide, a 390 pt screen in a 13 pt bezel. */
+		--pt: calc(100cqw / 416);
+		height: 100%;
+		padding: calc(13 * var(--pt));
+		border-radius: calc(62 * var(--pt));
+		background: #0b0b0d;
+		box-shadow:
+			inset 0 0 0 calc(1.5 * var(--pt)) #3a3a3e,
+			inset 0 0 0 calc(3.5 * var(--pt)) #151517,
+			0 0 0 0.5px rgb(255 255 255 / 0.08),
+			0 30px 80px -20px rgb(0 0 0 / 0.8),
+			0 40px 140px -30px rgb(10 108 245 / 0.35);
+	}
+	.phone-screen {
+		position: relative;
+		height: 100%;
+		overflow: hidden;
+		border-radius: calc(49 * var(--pt));
+		/* The status bar takes the capture's top colour; the rest, its side colour. */
+		background: linear-gradient(var(--phone-top, #000) 0 calc(47 * var(--pt)), var(--phone-side, #000) 0);
+		color: #fff;
+		transform: translateZ(0);
+	}
+	.phone-screen--light {
+		color: #000;
+	}
+
+	/* The capture fills the screen below the status bar at its own proportions (390 × 844, fitted to
+	 * 797 pt of height), centred; the home indicator floats over its foot, as iOS draws it. */
+	.phone-app {
+		position: absolute;
+		inset: calc(47 * var(--pt)) 0 0;
+		display: flex;
+		justify-content: center;
+	}
+	.phone-app :global(.phone-shot) {
+		display: block;
+		width: auto;
+		max-width: none;
+		height: 100%;
+	}
+	.phone-home {
+		position: absolute;
+		left: 50%;
+		bottom: calc(8 * var(--pt));
+		width: calc(134 * var(--pt));
+		height: calc(5 * var(--pt));
+		border-radius: 999px;
+		background: currentColor;
+		opacity: 0.9;
+		transform: translateX(-50%);
+	}
+
+	.phone-status {
+		position: absolute;
+		inset: 0 0 auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: calc(47 * var(--pt));
+		padding-inline: calc(34 * var(--pt)) calc(30 * var(--pt));
+		padding-top: calc(4 * var(--pt));
+	}
+	.phone-time {
+		width: calc(56 * var(--pt));
+		text-align: center;
+		font-size: calc(16 * var(--pt));
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+	.phone-status-icons {
+		display: flex;
+		align-items: center;
+		gap: calc(5 * var(--pt));
+	}
+	.phone-status-icons svg {
+		height: calc(11.5 * var(--pt));
+		width: auto;
+		fill: currentColor;
+	}
+	.phone-status-icons .phone-battery {
+		height: calc(12 * var(--pt));
+	}
+	.phone-island {
+		position: absolute;
+		top: calc(11 * var(--pt));
+		left: 50%;
+		width: calc(122 * var(--pt));
+		height: calc(35 * var(--pt));
+		border-radius: 999px;
+		background: #000;
+		transform: translateX(-50%);
+	}
+
+	/* ── Without a screenshot ── */
+	.phone-idle {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		background: radial-gradient(120% 70% at 50% 0%, #0f2a52 0%, #06101f 55%, #000 100%);
+		color: #f5f5f7;
+	}
+	.phone-glow {
+		position: absolute;
+		top: 22%;
+		left: 50%;
+		width: 110cqw;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: radial-gradient(closest-side, rgb(51 156 255 / 0.45), rgb(51 156 255 / 0.12) 55%, transparent);
+		transform: translateX(-50%);
+	}
+	.phone-mascot {
+		position: relative;
+		width: 74cqw;
+		height: auto;
+		filter: drop-shadow(0 4cqw 8cqw rgb(0 0 0 / 0.45));
+	}
+	.phone-synced {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 2cqw;
+		margin-top: 6cqw;
+		padding: 2.2cqw 4.4cqw;
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.1);
+		box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.16);
+		font-size: 4.2cqw;
+		font-weight: 500;
+		white-space: nowrap;
+	}
+	.dot {
+		width: 2.2cqw;
+		height: 2.2cqw;
+		border-radius: 50%;
+		background: #30d158;
+		box-shadow: 0 0 0 1cqw rgb(48 209 88 / 0.2);
+	}
+</style>

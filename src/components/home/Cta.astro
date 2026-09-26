@@ -1,0 +1,83 @@
+---
+import { Image } from "astro:assets";
+
+import mascot from "../../assets/brand/mascot.png";
+import { HOME_TEXT } from "../../i18n/home.ts";
+import { DOCS_PATH, localize, type Locale } from "../../i18n/index.ts";
+import DownloadButton from "../DownloadButton.astro";
+import Phrases from "../Phrases.astro";
+import SplitHeading from "../SplitHeading.astro";
+
+/** The last word: Lyra's mascot, one line, and the download. */
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = HOME_TEXT[locale].cta;
+---
+
+<section class="section cta" aria-labelledby="cta-title">
+	<div class="cta-glow" aria-hidden="true"></div>
+	<div class="container cta-inner">
+		<div class="cta-mascot" data-mascot>
+			<Image src={mascot} alt={t.mascotAlt} width={260} densities={[1, 1.7]} loading="lazy" decoding="async" />
+		</div>
+		<SplitHeading as="h2" text={t.title} id="cta-title" class="t-display" />
+		<p class="t-lead" data-reveal><Phrases text={t.lead} /></p>
+		<div class="cta-actions" data-reveal>
+			<DownloadButton locale={locale} label={t.download} />
+			<a class="btn btn-secondary btn-lg" href={localize(locale, DOCS_PATH)}>{t.docs}</a>
+		</div>
+	</div>
+</section>
+
+<style>
+	.cta {
+		overflow: clip;
+		text-align: center;
+	}
+	.cta-glow {
+		position: absolute;
+		left: 50%;
+		top: 8%;
+		width: min(110vw, 64rem);
+		aspect-ratio: 1.4;
+		background: radial-gradient(closest-side, var(--glow), transparent 70%);
+		transform: translateX(-50%);
+		pointer-events: none;
+	}
+	.cta-inner {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.cta-mascot {
+		width: clamp(11rem, 8rem + 9vw, 16.25rem);
+		margin-bottom: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+	}
+	.cta-mascot :global(img) {
+		width: 100%;
+		height: auto;
+		filter: drop-shadow(0 24px 40px rgb(10 108 245 / 0.25));
+	}
+	.cta-inner > :global(.t-lead) {
+		margin-top: 1.25rem;
+		max-width: 34rem;
+	}
+	.cta-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.875rem;
+		margin-top: 2.25rem;
+	}
+	@media (max-width: 40rem) {
+		.cta-actions {
+			flex-direction: column;
+			align-items: stretch;
+			width: min(100%, 20rem);
+		}
+	}
+</style>

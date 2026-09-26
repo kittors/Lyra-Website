@@ -1,0 +1,722 @@
+---
+import { Image } from "astro:assets";
+
+import { ASSET_IDS, type Asset, type AssetId, type Os } from "../../../shared/release.ts";
+import appIcon from "../../assets/brand/app-icon.png";
+import { DOWNLOAD_TEXT } from "../../i18n/download.ts";
+import { DOCS_PATH, LINKS, localize, type Locale } from "../../i18n/index.ts";
+import { PLATFORM_TEXT } from "../../i18n/platform.ts";
+import { SITE_TEXT } from "../../i18n/site.ts";
+import Base from "../../layouts/Base.astro";
+import { formatDate, formatSize } from "../../lib/format.ts";
+import { getRelease } from "../../lib/release.ts";
+import { alternative } from "../../scripts/platform.ts";
+import CopyButton from "../CopyButton.astro";
+import Icon from "../Icon.astro";
+import Phrases from "../Phrases.astro";
+import PlatformIcon from "../PlatformIcon.astro";
+import SectionHead from "../SectionHead.astro";
+
+/**
+ * The download page. One big button for the machine the reader is on — chosen in the browser, since
+ * a static page cannot know — then every installer for every platform, their digests, how to get
+ * past each system's first-launch warning, and what to do once it opens.
+ *
+ * Every figure on it (version, sizes, digests, where the files come from) is the build's, and is
+ * replaced in place by the Worker's current answer once the page loads.
+ */
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = DOWNLOAD_TEXT[locale];
+const p = PLATFORM_TEXT[locale];
+const meta = SITE_TEXT[locale].meta.download;
+const release = await getRelease();
+
+const byId = new Map<AssetId, Asset>(release.assets.map((asset) => [asset.id, asset]));
+const OS_ORDER: Os[] = ["macos", "windows", "linux", "android", "ios"];
+const groups = OS_ORDER.map((os) => ({ os, assets: release.assets.filter((asset) => asset.os === os) })).filter((group) => group.assets.length > 0);
+const offered = ASSET_IDS.filter((id) => byId.has(id));
+
+/** The question and the link under the recommendation, for the near miss worth offering. */
+function altFor(id: AssetId): { question: string; asset: Asset; action: string } | null {
+	const os = byId.get(id)?.os;
+	const arch = byId.get(id)?.arch;
+	const other = alternative({ os: os ?? null, version: null, tablet: false, arch: arch === "universal" ? null : (arch ?? null), confidence: "certain", debian: id.endsWith("-deb") });
+	const asset = other ? byId.get(other) : undefined;
+	if (!other || !asset) return null;
+	const question =
+		other.startsWith("mac-") ? t.altMac[other as "mac-x64" | "mac-arm64"]
+		: other.startsWith("win-") ? t.altWin[other as "win-x64" | "win-arm64"]
+		: other.endsWith("-deb") ? t.altLinuxDeb
+		: t.altLinuxAppImage;
+	return { question, asset, action: t.altAction[other] ?? "" };
+}
+
+const linuxNames = {
+	appimage: byId.get("linux-x64-appimage")?.name ?? "Lyra.AppImage",
+	deb: byId.get("linux-x64-deb")?.name ?? "Lyra.deb",
+};
+/** A guide's command, with installer names as spans the page can rewrite. */
+function commandParts(code: string) {
+	return code.split(/(\{appimage\}|\{deb\})/).filter(Boolean).map((part) => {
+		if (part === "{appimage}") return { name: linuxNames.appimage, id: "linux-x64-appimage", kind: "appimage" };
+		if (part === "{deb}") return { name: linuxNames.deb, id: "linux-x64-deb", kind: "deb" };
+		return { text: part };
+	});
+}
+const releaseDate = formatDate(release.publishedAt, locale);
+---
+
+<Base locale={locale} route="/download/" title={meta.title} description={meta.description} notesUrl={release.notesUrl}>
+	<section class="dl-hero" aria-labelledby="download-title">
+		<div class="dl-glow" aria-hidden="true"></div>
+		<div class="container dl-hero-inner">
+			<span class="dl-icon" data-reveal>
+				<Image src={appIcon} alt="" width={112} densities={[1, 2, 3]} loading="eager" decoding="async" />
+			</span>
+			<h1 class="t-display" id="download-title" data-reveal>{t.title}</h1>
+			<p class="t-lead dl-lead" data-reveal><Phrases text={t.lead} /></p>
+			<p class="dl-release" data-reveal>
+				<span>{t.version("")}<span data-release-version>{release.version}</span></span>
+				{releaseDate && <span>{t.released("")}<span data-release-date>{releaseDate}</span></span>}
+			</p>
+
+			<div class="reco" data-reco data-state="pending" data-reveal>
+				<div class="reco-panel" data-reco-panel="none">
+					<p class="reco-caption">{t.chooseTitle}</p>
+					<a class="btn btn-primary btn-lg" href="#all">
+						<Icon name="chevron-down" />
+						<span>{t.chooseAction}</span>
+					</a>
+					<p class="reco-meta">{t.chooseBody}</p>
+					<p class="reco-foot"></p>
+				</div>
+				{
+					offered.map((id) => {
+						const asset = byId.get(id)!;
+						const alt = altFor(id);
+						return (
+							<div class="reco-panel" data-reco-panel={id} hidden>
+								<p class="reco-caption" data-reco-caption>
+									{p.os[asset.os]}
+								</p>
+								<a class="btn btn-primary btn-lg" href={asset.href} data-asset-href={id} data-download-link>
+									<PlatformIcon name={asset.os} />
+									<span>{p.download[asset.os]}</span>
+								</a>
+								<p class="reco-meta">
+									<span>{p.asset[id]}</span>
+									<span>{p.format[id]}</span>
+									<span class="num" data-asset-size={id}>{formatSize(asset.size)}</span>
+								</p>
+								<p class="reco-foot" data-reco-foot>
+									{alt ? (
+										<>
+											{alt.question}{" "}
+											<a class="link" href={alt.asset.href} data-asset-href={alt.asset.id} data-download-link>
+												{alt.action}
+											</a>
+										</>
+									) : id === "ios" ? (
+										<Phrases text={t.iosNote} />
+									) : id === "android" ? (
+										<Phrases text={t.androidNote} />
+									) : null}
+								</p>
+							</div>
+						);
+					})
+				}
+			</div>
+
+			<p class="dl-source" data-reveal>
+				<Icon name="globe" class="dl-source-icon" />
+				<span>{t.source.label}</span><b data-release-source data-label-mirror={t.source.mirror} data-label-github={t.source.github}>{release.source === "mirror" ? t.source.mirror : t.source.github}</b>
+				<button type="button" class="dl-source-switch" data-source-switch data-use-github={t.source.useGithub} data-use-mirror={t.source.useMirror} hidden></button>
+			</p>
+			<p class="dl-links" data-reveal>
+				<a class="link" href={release.notesUrl} data-release-notes>{t.notes}</a>
+				<a class="link" href={LINKS.releases}>{t.releases}</a>
+				<a class="link" href="/dl/sha256sums" data-download-link>{t.checksums}</a>
+			</p>
+		</div>
+	</section>
+
+	<section class="section dl-all" id="all" aria-labelledby="all-title">
+		<div class="container">
+			<SectionHead title={t.allTitle} lead={t.allLead} size="title" id="all-title" />
+			<div class="os-grid">
+				{
+					groups.map(({ os, assets }) => (
+						<article class:list={["os-card", `os-card--${os}`]} id={os} data-os-card={os} data-reveal>
+							<header class="os-head">
+								<span class:list={["os-mark", `os-mark--${os}`]}>
+									<PlatformIcon name={os} size="100%" />
+								</span>
+								<div>
+									<h3>{p.os[os]}</h3>
+									<p><Phrases text={t.osNotes[os]} /></p>
+								</div>
+							</header>
+							<ul class="assets">
+								{assets.map((asset) => (
+									<li class="asset" data-asset-row={asset.id} data-asset-file={asset.name}>
+										<div class="asset-row">
+											<div class="asset-info">
+												<span class="asset-arch">{p.asset[asset.id]}</span>
+												<span class="asset-format">{p.format[asset.id]}</span>
+												<span class="asset-badge">{t.recommended}</span>
+											</div>
+											<span class="asset-size num" data-asset-size={asset.id}>
+												{formatSize(asset.size)}
+											</span>
+											<a class="btn btn-sm btn-secondary asset-get" href={asset.href} data-asset-href={asset.id} data-download-link aria-label={`${t.download} ${p.os[os]} ${p.asset[asset.id]} ${p.format[asset.id]}`}>
+												<Icon name="download" />
+												<span>{t.download}</span>
+											</a>
+										</div>
+										{asset.sha256 && (
+											<details class="asset-sha">
+												<summary>
+													<span>{t.sha}</span>
+													<Icon name="chevron-down" class="chevron" />
+												</summary>
+												<div class="sha-row">
+													<code class="sha-value" id={`sha-${asset.id}`} data-asset-sha={asset.id}>
+														{asset.sha256}
+													</code>
+													<CopyButton from={`sha-${asset.id}`} label={t.copy} done={t.copied} />
+												</div>
+											</details>
+										)}
+									</li>
+								))}
+							</ul>
+						</article>
+					))
+				}
+			</div>
+			<p class="arch-hint" data-reveal><Phrases text={t.archHint} /></p>
+		</div>
+	</section>
+
+	<section class="section surface-alt dl-guides" id="first-launch" aria-labelledby="guides-title">
+		<div class="container dl-narrow">
+			<SectionHead title={t.guidesTitle} lead={t.guidesLead} size="title" id="guides-title" />
+			<div class="guides" data-reveal>
+				{
+					t.guides.map((guide, index) => (
+						<details class="guide" data-guide={guide.os} open={index === 0 ? true : undefined}>
+							<summary>
+								<span class:list={["guide-mark", `guide-mark--${guide.os}`]}>
+									{guide.os === "phone" ? <Icon name="phone" size="100%" /> : <PlatformIcon name={guide.os} size="100%" />}
+								</span>
+								<span class="guide-title">{guide.title}</span>
+								<Icon name="chevron-down" class="chevron" />
+							</summary>
+							<div class="guide-body">
+								{guide.intro && <p class="guide-intro"><Phrases text={guide.intro} /></p>}
+								<ol>
+									{guide.steps.map((step, n) => (
+										<li>
+											<p><Phrases text={step.text} /></p>
+											{step.code && (
+												<div class="command">
+													<code id={`cmd-${guide.os}-${n}`}>
+														{commandParts(step.code).map((part) =>
+															"text" in part ? part.text : (
+																<span data-asset-name={part.id} data-linux-kind={part.kind}>
+																	{part.name}
+																</span>
+															),
+														)}
+													</code>
+													<CopyButton from={`cmd-${guide.os}-${n}`} label={t.copy} done={t.copied} />
+												</div>
+											)}
+										</li>
+									))}
+								</ol>
+								{guide.note && <p class="guide-note"><Phrases text={guide.note} /></p>}
+							</div>
+						</details>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="section dl-next" aria-labelledby="next-title">
+		<div class="container dl-narrow">
+			<div class="next-card" data-reveal>
+				<span class="next-icon"><Icon name="sparkle" size="1.5rem" /></span>
+				<h2 class="t-headline" id="next-title">{t.nextTitle}</h2>
+				<p><Phrases text={t.nextBody} /></p>
+				<a class="link" href={localize(locale, DOCS_PATH)}>{t.nextLink}</a>
+			</div>
+		</div>
+	</section>
+</Base>
+
+<script>
+	import "../../scripts/download.ts";
+</script>
+
+<style>
+	/* ── Top ── */
+	.dl-hero {
+		position: relative;
+		padding: calc(var(--nav-height) + clamp(3rem, 2rem + 4vw, 5.5rem)) 0 clamp(4rem, 3rem + 4vw, 6.5rem);
+		overflow: clip;
+		text-align: center;
+	}
+	.dl-glow {
+		position: absolute;
+		left: 50%;
+		top: 30%;
+		width: min(120vw, 80rem);
+		aspect-ratio: 1.8;
+		opacity: 0.7;
+		background:
+			radial-gradient(closest-side, var(--glow), transparent 70%),
+			radial-gradient(34% 30% at 32% 60%, var(--glow-2), transparent 70%);
+		transform: translate(-50%, -30%);
+		pointer-events: none;
+	}
+	.dl-hero-inner {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.dl-icon {
+		display: block;
+		width: clamp(4.5rem, 3.8rem + 2vw, 5.5rem);
+		aspect-ratio: 1;
+		margin-bottom: 1.5rem;
+	}
+	.dl-icon :global(img) {
+		width: calc(100% * 1024 / 824);
+		max-width: none;
+		height: auto;
+		margin: calc(-100% * 100 / 824);
+		filter: drop-shadow(0 12px 24px rgb(10 108 245 / 0.26)) drop-shadow(0 2px 4px rgb(0 0 0 / 0.08));
+	}
+	.dl-lead {
+		margin-top: 1rem;
+		max-width: 32rem;
+	}
+	.dl-release {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		margin-top: 0.875rem;
+		color: var(--ink-3);
+		font-size: 0.875rem;
+		font-variant-numeric: tabular-nums;
+	}
+	.dl-release > span + span::before,
+	.reco-meta > span + span::before {
+		content: "";
+		display: inline-block;
+		width: 1px;
+		height: 0.75em;
+		margin-inline: 0.625em;
+		background: var(--line-strong);
+		vertical-align: -0.05em;
+	}
+
+	/* The recommendation. Every panel has the same four rows, so whichever one the script shows,
+	 * nothing under it moves. */
+	.reco {
+		display: grid;
+		width: min(100%, 34rem);
+		margin-top: clamp(2.25rem, 1.8rem + 1.5vw, 3rem);
+	}
+	.reco-panel {
+		grid-area: 1 / 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.reco-panel[hidden] {
+		display: none;
+	}
+	:global(.js) .reco[data-state="pending"] .reco-panel {
+		visibility: hidden;
+	}
+	.reco[data-state="ready"] .reco-panel:not([hidden]) {
+		animation: reco-in 0.7s var(--ease-out) both;
+	}
+	@keyframes reco-in {
+		from {
+			opacity: 0;
+			transform: translateY(0.5rem);
+		}
+	}
+	.reco-caption {
+		min-height: 1.5em;
+		color: var(--ink);
+		font-size: 1.0625rem;
+		font-weight: var(--weight-medium);
+	}
+	.reco-panel .btn {
+		margin-top: 1rem;
+		min-width: 15rem;
+	}
+	.reco-meta {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		margin-top: 0.875rem;
+		color: var(--ink-2);
+		font-size: 0.875rem;
+	}
+	.reco-foot {
+		min-height: 2.9em;
+		margin-top: 0.5rem;
+		color: var(--ink-2);
+		font-size: 0.875rem;
+		line-height: 1.45;
+		text-wrap: balance;
+	}
+	.reco-foot .link {
+		white-space: nowrap;
+	}
+	/* When the chip is only a guess (Safari on a Mac), the other chip is a button, not a footnote. */
+	.reco-panel[data-guess] .reco-foot .link {
+		display: inline-flex;
+		align-items: center;
+		height: 1.875rem;
+		margin-left: 0.25rem;
+		padding-inline: 0.875rem;
+		border-radius: var(--radius-pill);
+		background: var(--accent-soft);
+		text-decoration: none;
+	}
+
+	/* Plain inline text, not flex: a flex item trims its trailing space, and "from GitHub" needs it. */
+	.dl-source {
+		margin-top: 0.5rem;
+		color: var(--ink-2);
+		font-size: 0.875rem;
+		text-align: center;
+	}
+	.dl-source :global(.dl-source-icon) {
+		margin-right: 0.375rem;
+		vertical-align: -0.15em;
+	}
+	.dl-source b {
+		color: var(--ink);
+		font-weight: var(--weight-medium);
+	}
+	.dl-source-switch {
+		margin-left: 0.75rem;
+		color: var(--accent);
+		font-size: inherit;
+		font-weight: var(--weight-medium);
+	}
+	.dl-source-switch:hover {
+		text-decoration: underline;
+		text-underline-offset: 0.22em;
+	}
+	.dl-links {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5rem 1.5rem;
+		margin-top: 1.5rem;
+		font-size: 0.9375rem;
+	}
+
+	/* ── Every platform ── */
+	.dl-all {
+		padding-top: clamp(2rem, 1rem + 3vw, 4rem);
+	}
+	.os-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.25rem;
+		margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+	}
+	.os-card {
+		padding: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+		border-radius: var(--radius-xl);
+		background: var(--surface);
+		transition: box-shadow var(--dur-slow) var(--ease-soft);
+	}
+	.os-card--linux {
+		grid-column: 1 / -1;
+	}
+	.os-card--linux .assets {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		column-gap: 2rem;
+	}
+	.os-card.is-recommended {
+		box-shadow: inset 0 0 0 1.5px var(--accent);
+	}
+	.os-head {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.875rem;
+		margin-bottom: 1.25rem;
+	}
+	.os-mark {
+		display: grid;
+		place-items: center;
+		flex: none;
+		width: 2.25rem;
+		height: 2.25rem;
+	}
+	.os-mark--windows {
+		padding: 0.25rem;
+	}
+	.os-head h3 {
+		font-size: 1.3125rem;
+		font-weight: var(--weight-bold);
+		line-height: 1.2;
+	}
+	.os-head p {
+		margin-top: 0.25rem;
+		color: var(--ink-2);
+		font-size: 0.875rem;
+		line-height: 1.5;
+	}
+	.asset {
+		padding-block: 0.875rem;
+		box-shadow: inset 0 0.5px 0 var(--line-strong);
+	}
+	.asset-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto auto;
+		align-items: center;
+		gap: 1rem;
+	}
+	.asset-info {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		min-width: 0;
+	}
+	.asset-arch {
+		font-weight: var(--weight-medium);
+	}
+	.asset-format,
+	.asset-badge {
+		padding: 0.125rem 0.5rem;
+		border-radius: var(--radius-xs);
+		background: var(--button-2);
+		color: var(--ink-2);
+		font-size: 0.75rem;
+		font-weight: var(--weight-medium);
+	}
+	.asset-badge {
+		display: none;
+		background: var(--accent-soft);
+		color: var(--accent);
+	}
+	.asset.is-recommended .asset-badge {
+		display: inline-block;
+	}
+	.asset-size {
+		color: var(--ink-2);
+		font-size: 0.875rem;
+	}
+	.asset-sha {
+		margin-top: 0.375rem;
+	}
+	.asset-sha summary {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		color: var(--ink-3);
+		font-size: 0.75rem;
+		font-weight: var(--weight-medium);
+		list-style: none;
+		border-radius: var(--radius-xs);
+	}
+	.asset-sha summary:hover {
+		color: var(--ink-2);
+	}
+	.sha-row {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-top: 0.5rem;
+		padding: 0.625rem 0.75rem;
+		border-radius: var(--radius-md);
+		background: var(--bg);
+		animation: unfold 0.4s var(--ease-out);
+	}
+	.sha-value {
+		flex: 1;
+		min-width: 0;
+		overflow-wrap: anywhere;
+		color: var(--ink);
+		font-size: 0.75rem;
+		line-height: 1.5;
+	}
+	:global(.chevron) {
+		transition: transform var(--dur-slow) var(--ease-out);
+	}
+	details[open] > summary :global(.chevron) {
+		transform: rotate(180deg);
+	}
+	@keyframes unfold {
+		from {
+			opacity: 0;
+			transform: translateY(-0.25rem);
+		}
+	}
+	.arch-hint {
+		max-width: 44rem;
+		margin: 2rem auto 0;
+		color: var(--ink-3);
+		font-size: 0.8125rem;
+		text-align: center;
+	}
+
+	/* ── First launch ── */
+	.dl-narrow {
+		max-width: 50rem;
+	}
+	.guides {
+		margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+		border-radius: var(--radius-xl);
+		background: var(--surface-raised);
+		overflow: hidden;
+	}
+	.guide + .guide {
+		box-shadow: inset 0 0.5px 0 var(--line-strong);
+	}
+	.guide summary {
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+		padding: 1.25rem 1.5rem;
+		list-style: none;
+		font-size: 1.125rem;
+		font-weight: var(--weight-bold);
+	}
+	.guide summary:focus-visible {
+		outline-offset: -3px;
+	}
+	.guide-mark {
+		display: grid;
+		place-items: center;
+		width: 1.5rem;
+		height: 1.5rem;
+		color: var(--ink);
+	}
+	.guide-mark--windows {
+		padding: 0.1875rem;
+	}
+	.guide-mark--phone {
+		padding: 0;
+	}
+	.guide-title {
+		flex: 1;
+	}
+	.guide summary :global(.chevron) {
+		color: var(--ink-3);
+	}
+	.guide-body {
+		padding: 0 1.5rem 1.5rem calc(1.5rem + 1.5rem + 0.875rem);
+		color: var(--ink-2);
+		font-size: 0.9375rem;
+		line-height: 1.65;
+		animation: unfold 0.45s var(--ease-out);
+	}
+	.guide-body ol {
+		display: grid;
+		gap: 0.625rem;
+		margin-top: 0.625rem;
+		padding-left: 1.25rem;
+		list-style: decimal;
+	}
+	.guide-body li::marker {
+		color: var(--ink-3);
+	}
+	.guide-note {
+		margin-top: 0.875rem;
+		color: var(--ink-3);
+		font-size: 0.875rem;
+	}
+	.command {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-top: 0.5rem;
+		padding: 0.625rem 0.625rem 0.625rem 0.875rem;
+		border-radius: var(--radius-md);
+		background: var(--code-bg);
+		box-shadow: inset 0 0 0 0.5px var(--line);
+	}
+	.command code {
+		flex: 1;
+		min-width: 0;
+		overflow-x: auto;
+		color: var(--ink);
+		font-size: 0.8125rem;
+		white-space: nowrap;
+		scrollbar-width: none;
+	}
+
+	/* ── After installing ── */
+	.next-card {
+		display: grid;
+		justify-items: start;
+		gap: 0.75rem;
+		padding: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+		border-radius: var(--radius-xl);
+		background: var(--surface);
+	}
+	.next-icon {
+		display: grid;
+		place-items: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: var(--radius-md);
+		background: var(--accent-soft);
+		color: var(--accent);
+	}
+	.next-card p {
+		color: var(--ink-2);
+		max-width: 38rem;
+	}
+
+	@media (max-width: 48rem) {
+		.os-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.os-card--linux .assets {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.asset-row {
+			grid-template-columns: minmax(0, 1fr) auto;
+		}
+		.asset-size {
+			grid-column: 1;
+			grid-row: 2;
+		}
+		.asset-get {
+			grid-column: 2;
+			grid-row: 1 / span 2;
+		}
+		.guide-body {
+			padding-left: 1.5rem;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.reco[data-state="ready"] .reco-panel:not([hidden]),
+		.sha-row,
+		.guide-body {
+			animation: none;
+		}
+	}
+</style>

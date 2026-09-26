@@ -1,0 +1,47 @@
+---
+import Phrases from "./Phrases.astro";
+import SplitHeading from "./SplitHeading.astro";
+
+/** The eyebrow, the claim and the one sentence under it that open every feature section. */
+interface Props {
+	eyebrow?: string;
+	title: string | string[];
+	lead?: string;
+	id?: string;
+	size?: "display" | "title";
+	align?: "center" | "start";
+	as?: "h2" | "h3";
+	class?: string;
+	[key: `data-${string}`]: string | boolean | undefined;
+}
+
+const { eyebrow, title, lead, id, size = "display", align = "center", as = "h2", class: className, ...rest } = Astro.props;
+---
+
+<header class:list={["head", `head--${align}`, className]} data-head {...rest}>
+	{eyebrow && <p class="t-eyebrow" data-reveal>{eyebrow}</p>}
+	<SplitHeading as={as} text={title} id={id} class={size === "display" ? "t-display" : "t-title"} />
+	{lead && <p class="t-lead" data-reveal><Phrases text={lead} /></p>}
+	<slot />
+</header>
+
+<style>
+	.head {
+		max-width: 58rem;
+	}
+	/* Zero specificity, so whatever a section slots in can set its own spacing. */
+	:where(.head) > :global(:where(* + *)) {
+		margin-top: 1rem;
+	}
+	:where(.head) > :global(:where(.t-lead)) {
+		margin-top: 1.5rem;
+		max-width: 42rem;
+	}
+	.head--center {
+		margin-inline: auto;
+		text-align: center;
+	}
+	:where(.head--center) > :global(:where(.t-lead)) {
+		margin-inline: auto;
+	}
+</style>

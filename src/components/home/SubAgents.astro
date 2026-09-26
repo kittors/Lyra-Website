@@ -1,0 +1,193 @@
+---
+import { HOME_TEXT } from "../../i18n/home.ts";
+import type { Locale } from "../../i18n/index.ts";
+import Icon from "../Icon.astro";
+import SectionHead from "../SectionHead.astro";
+import WindowFrame from "../WindowFrame.astro";
+
+/**
+ * Parallel sub-agents, on black. Beside the real sub-agent pane floats a small picture of what
+ * "parallel" means: three agents working at their own pace, each finishing, and only their
+ * conclusions coming back (`home.ts` runs it once, when it comes into view).
+ */
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = HOME_TEXT[locale].agents;
+---
+
+<section class="section surface-night agents" aria-labelledby="agents-title" data-night>
+	<div class="agents-glow" aria-hidden="true"></div>
+	<div class="container">
+		<SectionHead eyebrow={t.eyebrow} title={t.title} lead={t.lead} id="agents-title">
+			<ul class="builtins" data-reveal>
+				{t.builtins.map((name) => <li class="mono">{name}</li>)}
+			</ul>
+			<p class="t-small builtins-note" data-reveal>{t.builtinsNote}</p>
+		</SectionHead>
+	</div>
+	<div class="container-wide agents-stage">
+		<div data-rise>
+			<WindowFrame scene="sub-agents" locale={locale} alt={t.shotAlt} surface="night" sizes="(min-width: 87.5rem) 80rem, 94vw" />
+		</div>
+		<div class="lanes" aria-hidden="true" data-lanes>
+			<p class="lanes-title">
+				<span class="lanes-pulse"></span>
+				{t.lanesTitle}
+			</p>
+			<ul>
+				{
+					t.lanes.map((lane, index) => (
+						<li class="lane" data-lane={index}>
+							<span class="lane-name mono">{lane.agent}</span>
+							<span class="lane-track">
+								<span class="lane-bar" data-lane-bar />
+							</span>
+							<span class="lane-done" data-lane-done>
+								<Icon name="check" size="0.875rem" />
+								{lane.done}
+							</span>
+						</li>
+					))
+				}
+			</ul>
+			<p class="lanes-foot" data-lanes-foot>
+				<Icon name="sparkle" size="0.9375rem" />
+				{t.lanesDone}
+			</p>
+		</div>
+	</div>
+</section>
+
+<style>
+	.agents {
+		overflow: clip;
+	}
+	.agents-glow {
+		position: absolute;
+		left: 50%;
+		bottom: -10rem;
+		width: min(130vw, 100rem);
+		aspect-ratio: 2.2;
+		background: radial-gradient(closest-side, rgb(10 108 245 / 0.3), rgb(10 108 245 / 0.06) 62%, transparent);
+		transform: translateX(-50%);
+		pointer-events: none;
+	}
+	.builtins {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5rem;
+		margin-top: 2rem;
+	}
+	.builtins li {
+		padding: 0.3125rem 0.75rem;
+		border-radius: var(--radius-pill);
+		background: rgb(255 255 255 / 0.07);
+		box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.14);
+		color: #e8e8ed;
+		font-size: 0.875rem;
+	}
+	.builtins-note {
+		margin-top: 0.875rem;
+		color: var(--ink-3);
+	}
+
+	.agents-stage {
+		position: relative;
+		margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+	}
+
+	/* A small floating card, frosted like a macOS panel, overlapping the window's lower left. */
+	/* Over the sidebar's lower corner and just past it — clear of the app's own composer. */
+	.lanes {
+		position: absolute;
+		left: -1.5rem;
+		bottom: clamp(-3.5rem, -2vw, -1.5rem);
+		width: min(21.5rem, 36%);
+		padding: 1.125rem 1.25rem 1rem;
+		border-radius: var(--radius-lg);
+		background: rgb(28 28 31 / 0.72);
+		box-shadow: var(--shadow-float);
+		-webkit-backdrop-filter: saturate(160%) blur(24px);
+		backdrop-filter: saturate(160%) blur(24px);
+		color: var(--ink);
+		font-size: 0.8125rem;
+	}
+	.lanes-title {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 0.875rem;
+		font-weight: var(--weight-bold);
+		font-size: 0.875rem;
+	}
+	.lanes-pulse {
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 50%;
+		background: var(--lyra-blue-app);
+		box-shadow: 0 0 0 0.25rem rgb(51 156 255 / 0.2);
+	}
+	.lane {
+		display: grid;
+		grid-template-columns: 4.25rem 1fr;
+		grid-template-rows: auto auto;
+		align-items: center;
+		column-gap: 0.75rem;
+		row-gap: 0.25rem;
+		padding-block: 0.4375rem;
+	}
+	.lane + .lane {
+		box-shadow: inset 0 0.5px 0 var(--line);
+	}
+	.lane-name {
+		grid-row: span 2;
+		color: var(--ink-2);
+		font-size: 0.8125rem;
+	}
+	.lane-track {
+		position: relative;
+		height: 0.3125rem;
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.1);
+		overflow: hidden;
+	}
+	.lane-bar {
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background: linear-gradient(90deg, #0a6cf5, #4ea8ff);
+		transform-origin: 0 50%;
+	}
+	.lane-done {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3125rem;
+		color: #30d158;
+		font-size: 0.75rem;
+		font-weight: var(--weight-medium);
+	}
+	.lanes-foot {
+		display: flex;
+		align-items: center;
+		gap: 0.4375rem;
+		margin-top: 0.625rem;
+		padding-top: 0.75rem;
+		box-shadow: inset 0 0.5px 0 var(--line);
+		color: var(--accent);
+		font-weight: var(--weight-medium);
+	}
+
+	@media (max-width: 48rem) {
+		.lanes {
+			position: relative;
+			left: auto;
+			bottom: auto;
+			width: min(100%, 24rem);
+			margin: -2.5rem auto 0;
+		}
+	}
+</style>

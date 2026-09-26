@@ -1,0 +1,235 @@
+---
+import { HOME_TEXT } from "../../i18n/home.ts";
+import type { Locale } from "../../i18n/index.ts";
+import Phrases from "../Phrases.astro";
+import SectionHead from "../SectionHead.astro";
+import SplitHeading from "../SplitHeading.astro";
+import WindowFrame from "../WindowFrame.astro";
+
+/**
+ * "Not a wrapper." — the claim that sets Lyra apart, on black. The twenty built-in tools are laid
+ * out by the groups the code uses, and as the reader scrolls they light up in the order an agent
+ * might call them (`home.ts`). Then the models: yours, on any provider.
+ */
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = HOME_TEXT[locale].kernel;
+const toolCount = t.toolGroups.reduce((sum, group) => sum + group.tools.length, 0);
+/** The order the tools light up in: a plausible turn, not the order they are listed in. */
+const CALLS = ["read", "grep", "glob", "symbol", "lsp", "edit", "write", "bash", "bash_output", "todo_write", "task", "skill", "rule", "recall", "learn", "web_search", "web_fetch", "preview", "ls", "ask_user"];
+---
+
+<section class="section surface-night kernel" id="features" aria-labelledby="kernel-title" data-night>
+	<div class="kernel-glow" aria-hidden="true"></div>
+	<div class="container">
+		<SectionHead eyebrow={t.eyebrow} title={t.title} lead={t.lead} id="kernel-title" />
+
+		<div class="tools" data-tools>
+			<p class="tools-count" data-reveal>
+				<span class="tools-number num" data-count={toolCount}>{toolCount}</span>
+				<span class="tools-label">{t.toolsLabel}</span>
+			</p>
+			<div class="tools-groups">
+				{
+					t.toolGroups.map((group) => (
+						<section class="tools-group" data-reveal>
+							<h3>{group.name}</h3>
+							<ul>
+								{group.tools.map((tool) => (
+									<li class="tool mono" data-tool data-call={CALLS.indexOf(tool)}>
+										<span class="tool-light" aria-hidden="true" />
+										{tool}
+									</li>
+								))}
+							</ul>
+						</section>
+					))
+				}
+			</div>
+		</div>
+
+		<div class="models">
+			<div class="models-copy">
+				<SplitHeading as="h3" text={t.modelsTitle} class="t-title" />
+				<p class="t-lead" data-reveal><Phrases text={t.modelsLead} /></p>
+				<ul class="protocols" data-reveal>
+					{
+						t.protocols.map((protocol) => (
+							<li>
+								<span class="protocol-name">{protocol.name}</span>
+								<span class="protocol-hint">{protocol.hint}</span>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+			<div class="models-shot" data-rise>
+				<WindowFrame scene="settings-models" locale={locale} alt={t.shotAlt} surface="night" sizes="(min-width: 64rem) 58rem, 94vw" />
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.kernel {
+		overflow: clip;
+	}
+	.kernel-glow {
+		position: absolute;
+		left: 50%;
+		top: -12rem;
+		width: min(120vw, 90rem);
+		aspect-ratio: 2;
+		background: radial-gradient(closest-side, rgb(10 108 245 / 0.28), rgb(10 108 245 / 0.06) 60%, transparent);
+		transform: translateX(-50%);
+		pointer-events: none;
+	}
+
+	/* ── The twenty tools ── */
+	.tools {
+		margin-top: clamp(4.5rem, 3rem + 5vw, 7.5rem);
+	}
+	.tools-count {
+		display: flex;
+		align-items: baseline;
+		justify-content: center;
+		gap: 0.75rem;
+	}
+	.tools-number {
+		font-size: clamp(4.5rem, 3rem + 6vw, 8.5rem);
+		font-weight: var(--weight-bold);
+		line-height: 1;
+		letter-spacing: -0.04em;
+		background: linear-gradient(180deg, #fff 30%, #8ccaff);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+	/* Rolled by `home.ts`: the gradient moves onto each digit, since the strips move under it. */
+	.tools-number:global(.has-odo) {
+		background: none;
+		color: #fff;
+	}
+	.tools-number :global(.odo-digit) {
+		background: linear-gradient(180deg, #fff 30%, #8ccaff);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+	.tools-label {
+		font-size: var(--t-headline);
+		font-weight: var(--weight-bold);
+		color: var(--ink);
+	}
+	.tools-groups {
+		display: grid;
+		grid-template-columns: 1.6fr 0.8fr 1.4fr 1fr;
+		gap: 2rem clamp(1.5rem, 1rem + 2vw, 3rem);
+		max-width: 64rem;
+		margin: clamp(2.5rem, 2rem + 2vw, 3.5rem) auto 0;
+	}
+	.tools-group h3 {
+		margin-bottom: 0.875rem;
+		color: var(--ink-3);
+		font-size: 0.8125rem;
+		font-weight: var(--weight-medium);
+	}
+	.tools-group ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.tool {
+		position: relative;
+		isolation: isolate;
+		padding: 0.375rem 0.75rem;
+		border-radius: var(--radius-sm);
+		background: rgb(255 255 255 / 0.05);
+		box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.12);
+		color: #e8e8ed;
+		font-size: 0.875rem;
+		line-height: 1.4;
+		opacity: 0.55;
+	}
+	/* The light a tool gets while it is "being called" — its own element under the text, so
+	 * lighting it up is a change of opacity and nothing else. */
+	.tool-light {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		border-radius: inherit;
+		background: rgb(51 156 255 / 0.22);
+		box-shadow:
+			inset 0 0 0 1px rgb(78 168 255 / 0.7),
+			0 0 24px rgb(51 156 255 / 0.35);
+		opacity: 0;
+	}
+
+	/* ── Models ── */
+	.models {
+		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		align-items: center;
+		gap: clamp(2rem, 1rem + 4vw, 5rem);
+		margin-top: clamp(7rem, 4rem + 8vw, 11rem);
+	}
+	.models-copy > :global(* + *) {
+		margin-top: 1.25rem;
+	}
+	/* The three API formats as a short spec list: the format, then where it usually fits. */
+	.protocols {
+		max-width: 26rem;
+		padding-top: 0.75rem;
+	}
+	.protocols li {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-block: 0.75rem;
+		box-shadow: inset 0 -0.5px 0 var(--line-strong);
+		font-size: 0.9375rem;
+	}
+	.protocols li:first-child {
+		box-shadow:
+			inset 0 0.5px 0 var(--line-strong),
+			inset 0 -0.5px 0 var(--line-strong);
+	}
+	.protocol-name {
+		font-weight: var(--weight-medium);
+		color: var(--ink);
+	}
+	.protocol-hint {
+		color: var(--ink-3);
+		font-size: 0.8125rem;
+		text-align: right;
+	}
+	/* The window runs past the right edge of the page, as if the app were open beside the text:
+	 * its column, plus the margin out to the edge of the screen, plus a little more to be cut off. */
+	.models {
+		--page: min(100vw - 2 * var(--gutter), var(--page-max));
+	}
+	.models-shot {
+		width: calc(100% + (100vw - var(--page)) / 2 + 6rem);
+	}
+
+	@media (max-width: 64rem) {
+		.tools-groups {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.models {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.models-shot {
+			width: 100%;
+		}
+	}
+	@media (max-width: 30rem) {
+		.tools-groups {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

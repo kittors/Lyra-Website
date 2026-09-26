@@ -1,0 +1,160 @@
+---
+import { Image } from "astro:assets";
+
+import appIcon from "../assets/brand/app-icon.png";
+import mascot from "../assets/brand/mascot.png";
+import { DOCS_PATH, localize, type Locale } from "../i18n/index.ts";
+import { SITE_TEXT } from "../i18n/site.ts";
+import Base from "../layouts/Base.astro";
+import { getRelease } from "../lib/release.ts";
+
+/**
+ * One 404 for the whole site — the host serves `/404.html` for any path it does not have — so it
+ * speaks both languages and picks one from the address before it is drawn: an `/en/` path reads
+ * English, anything else Chinese.
+ */
+const release = await getRelease();
+const TEXT: Record<Locale, { title: string; lead: string; home: string; docs: string; alt: string }> = {
+	"zh-CN": { title: "这一页走丢了。", lead: "链接可能写错了，或者页面已经搬走。", home: "回到首页", docs: "看看文档", alt: "Lyra 的吉祥物：抱着白兔的蓝发女孩。" },
+	en: { title: "This page wandered off.", lead: "The link may be mistyped, or the page has moved.", home: "Back to home", docs: "Browse the docs", alt: "Lyra’s mascot: a blue-haired girl holding a white rabbit." },
+};
+const meta = SITE_TEXT["zh-CN"].meta.notFound;
+---
+
+<Base locale="zh-CN" route={null} title={meta.title} description={meta.description} notesUrl={release.notesUrl} bare>
+	<Fragment slot="head">
+		<meta name="robots" content="noindex" />
+		<script is:inline>
+			if (/^\/en(\/|$)/.test(location.pathname)) {
+				document.documentElement.lang = "en";
+				document.documentElement.classList.add("in-en");
+				document.title = "Page not found — Lyra";
+			}
+		</script>
+	</Fragment>
+	<header class="nf-bar" slot="header">
+		<a class="nf-brand" href="/" data-home-link>
+			<span class="nf-logo" aria-hidden="true"><Image src={appIcon} alt="" width={36} densities={[1, 2, 3]} loading="eager" /></span>
+			<span>Lyra</span>
+		</a>
+	</header>
+	<section class="nf">
+		<div class="nf-glow" aria-hidden="true"></div>
+		{
+			(["zh-CN", "en"] as const).map((locale) => (
+				<div class="nf-copy" data-lang={locale} lang={locale}>
+					<div class="nf-mascot">
+						<Image src={mascot} alt={TEXT[locale].alt} width={240} densities={[1, 1.8]} loading="eager" />
+					</div>
+					<h1 class="t-display">{TEXT[locale].title}</h1>
+					<p class="t-lead">{TEXT[locale].lead}</p>
+					<div class="nf-actions">
+						<a class="btn btn-primary btn-lg" href={localize(locale, "/")}>{TEXT[locale].home}</a>
+						<a class="btn btn-secondary btn-lg" href={localize(locale, DOCS_PATH)}>{TEXT[locale].docs}</a>
+					</div>
+				</div>
+			))
+		}
+	</section>
+</Base>
+
+<script is:inline>
+	if (document.documentElement.classList.contains("in-en")) {
+		for (const link of document.querySelectorAll("[data-home-link]")) link.setAttribute("href", "/en/");
+	}
+</script>
+
+<style>
+	.nf-bar {
+		position: absolute;
+		inset: 0 0 auto;
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		height: var(--nav-height);
+		padding-inline: var(--gutter);
+	}
+	.nf-brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 1.0625rem;
+		font-weight: var(--weight-bold);
+	}
+	.nf-logo {
+		display: block;
+		width: 1.75rem;
+		height: 1.75rem;
+		overflow: hidden;
+		border-radius: 22.5%;
+	}
+	.nf-logo :global(img) {
+		width: calc(1.75rem * 1024 / 824);
+		max-width: none;
+		height: calc(1.75rem * 1024 / 824);
+		margin: calc(1.75rem * -100 / 824);
+	}
+	.nf {
+		position: relative;
+		display: grid;
+		place-items: center;
+		min-height: 100svh;
+		padding: calc(var(--nav-height) + 2rem) var(--gutter) 4rem;
+		overflow: clip;
+		text-align: center;
+	}
+	.nf-glow {
+		position: absolute;
+		left: 50%;
+		top: 34%;
+		width: min(120vw, 64rem);
+		aspect-ratio: 1.3;
+		background: radial-gradient(closest-side, var(--glow), transparent 70%);
+		transform: translate(-50%, -50%);
+		pointer-events: none;
+	}
+	.nf-copy {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.nf-copy[data-lang="en"],
+	:global(.in-en) .nf-copy[data-lang="zh-CN"] {
+		display: none;
+	}
+	:global(.in-en) .nf-copy[data-lang="en"] {
+		display: flex;
+	}
+	.nf-mascot {
+		width: clamp(10rem, 8rem + 7vw, 15rem);
+		margin-bottom: 2rem;
+		animation: bob 5.6s ease-in-out infinite;
+	}
+	.nf-mascot :global(img) {
+		width: 100%;
+		height: auto;
+		filter: drop-shadow(0 24px 40px rgb(10 108 245 / 0.25));
+	}
+	@keyframes bob {
+		50% {
+			transform: translateY(-10px);
+		}
+	}
+	.nf .t-lead {
+		margin-top: 1rem;
+		max-width: 30rem;
+	}
+	.nf-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.875rem;
+		margin-top: 2.25rem;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.nf-mascot {
+			animation: none;
+		}
+	}
+</style>

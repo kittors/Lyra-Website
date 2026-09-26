@@ -1,4 +1,111 @@
-/* Design tokens shared by the product pages and the docs. Filled in by the site's design. */
+/*
+ * Design tokens, shared by the product pages and the docs (Starlight loads this file too), so moving
+ * from the home page into the documentation does not feel like leaving the site.
+ *
+ * Tokens only — no element is styled here. The product pages' styles are in `site.css`, the docs'
+ * in `docs.css`, and both read these.
+ *
+ * Two palettes, chosen by `data-theme` on <html>: light, and dark. The docs' theme switch writes the
+ * same attribute (and remembers it under the same key the product pages read), so a reader who picks
+ * dark in the docs finds the home page dark too. `.surface-night` borrows the dark palette for one
+ * section at a time — the cinematic stretches of the home page are dark in either theme.
+ */
+
 :root {
-	--lyra-accent: #339cff;
+	/* ── Brand ───────────────────────────────────────────────────────────
+	 * The icon's blue is the brand. It is more saturated than the app's accent (#339cff), which is
+	 * tuned for small controls on a dark window; on a white page the icon's blue is the one that
+	 * reads as Lyra. It carries white text at 4.7:1. */
+	--lyra-blue: #0a6cf5;
+	--lyra-blue-hover: #2379f6;
+	--lyra-blue-press: #0860dc;
+	--lyra-blue-app: #339cff;
+	--lyra-sky: #8ccaff;
+
+	/* ── Type ────────────────────────────────────────────────────────────
+	 * The system's own faces, so nothing is downloaded and every reader gets the best CJK face their
+	 * system has. PingFang stops at 600: anything heavier renders at 600 and says nothing, so the
+	 * hierarchy is carried by size and colour, never by 700. */
+	--font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Hiragino Sans GB",
+		"Microsoft YaHei", "Segoe UI", sans-serif;
+	--font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+	--weight-regular: 400;
+	--weight-medium: 500;
+	--weight-bold: 600;
+
+	/* ── Radii ───────────────────────────────────────────────────────────
+	 * By the size of the thing, so a chip inside a card and the card do not share a curve. */
+	--radius-xs: 6px;
+	--radius-sm: 10px;
+	--radius-md: 14px;
+	--radius-lg: 20px;
+	--radius-xl: 28px;
+	--radius-pill: 999px;
+
+	/* ── Motion ──────────────────────────────────────────────────────────
+	 * The app's three durations and curves, so the site moves the way Lyra does. */
+	--dur-quick: 150ms;
+	--dur-base: 220ms;
+	--dur-slow: 340ms;
+	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	--ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+	--ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+	/* ── Layout ──────────────────────────────────────────────────────── */
+	--gutter: clamp(1.25rem, 0.6rem + 3.2vw, 3rem);
+	--page-max: 75rem;
+	--page-wide: 87.5rem;
+	--nav-height: 3.25rem;
+
+	/* ── Light palette ───────────────────────────────────────────────── */
+	color-scheme: light;
+	--bg: #ffffff;
+	--bg-alt: #f5f5f7;
+	--surface: #f5f5f7;
+	--surface-raised: #ffffff;
+	/* Both greys carry small text at 4.5:1 or better on white and on the alternate grey. */
+	--ink: #1d1d1f;
+	--ink-2: #636366;
+	--ink-3: #6e6e73;
+	--line: rgb(0 0 0 / 0.08);
+	--line-strong: rgb(0 0 0 / 0.14);
+	/* Text in the brand blue, a shade deeper than the buttons so a link on the grey still reads at 4.5:1. */
+	--accent: #0866e8;
+	--accent-soft: rgb(10 108 245 / 0.1);
+	--button-2: rgb(0 0 0 / 0.05);
+	--button-2-hover: rgb(0 0 0 / 0.09);
+	--glow: rgb(10 108 245 / 0.16);
+	--glow-2: rgb(140 202 255 / 0.28);
+	--code-bg: #f5f5f7;
+	--shadow-window: 0 0 0 0.5px rgb(0 0 0 / 0.1), 0 2px 4px rgb(0 0 0 / 0.04), 0 16px 32px -8px rgb(16 24 40 / 0.12),
+		0 48px 96px -24px rgb(16 24 40 / 0.24);
+	--shadow-float: 0 0 0 0.5px rgb(0 0 0 / 0.08), 0 8px 24px -6px rgb(16 24 40 / 0.16), 0 24px 56px -16px rgb(16 24 40 / 0.18);
+	--frame-edge: rgb(0 0 0 / 0.1);
+	--frame-highlight: rgb(255 255 255 / 0);
+}
+
+:root[data-theme="dark"],
+.surface-night {
+	color-scheme: dark;
+	--bg: #000000;
+	--bg-alt: #0a0a0c;
+	--surface: #151518;
+	--surface-raised: #1c1c1f;
+	--ink: #f5f5f7;
+	--ink-2: #a1a1a6;
+	--ink-3: #86868b;
+	--line: rgb(255 255 255 / 0.1);
+	--line-strong: rgb(255 255 255 / 0.18);
+	--accent: #4ea8ff;
+	--accent-soft: rgb(78 168 255 / 0.14);
+	--button-2: rgb(255 255 255 / 0.08);
+	--button-2-hover: rgb(255 255 255 / 0.14);
+	--glow: rgb(10 108 245 / 0.34);
+	--glow-2: rgb(51 156 255 / 0.18);
+	--code-bg: #151518;
+	--shadow-window: 0 0 0 0.5px rgb(255 255 255 / 0.12), 0 24px 64px -16px rgb(0 0 0 / 0.9),
+		0 40px 140px -40px rgb(10 108 245 / 0.35);
+	--shadow-float: 0 0 0 0.5px rgb(255 255 255 / 0.12), 0 12px 32px -8px rgb(0 0 0 / 0.7), 0 32px 72px -24px rgb(0 0 0 / 0.6);
+	--frame-edge: rgb(255 255 255 / 0.14);
+	--frame-highlight: rgb(255 255 255 / 0.08);
 }

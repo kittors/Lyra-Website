@@ -1,0 +1,156 @@
+---
+import { Image } from "astro:assets";
+
+import type { Release } from "../../../shared/release.ts";
+import appIcon from "../../assets/brand/app-icon.png";
+import { HOME_TEXT } from "../../i18n/home.ts";
+import { LINKS, type Locale } from "../../i18n/index.ts";
+import DownloadButton from "../DownloadButton.astro";
+import Phrases from "../Phrases.astro";
+import PlatformIcon from "../PlatformIcon.astro";
+import SplitHeading from "../SplitHeading.astro";
+import WindowFrame from "../WindowFrame.astro";
+
+/**
+ * The first screen: the icon, the name, one claim, the two buttons, and the app itself leaning back
+ * in perspective. It rises with the page's opening timeline and stands up straight as the reader
+ * scrolls towards it (`scripts/home.ts`).
+ */
+interface Props {
+	locale: Locale;
+	release: Release;
+}
+
+const { locale, release } = Astro.props;
+const t = HOME_TEXT[locale].hero;
+const [before, after] = t.version("{v}").split("{v}");
+---
+
+<section class="hero" aria-labelledby="hero-title" data-hero>
+	<div class="hero-glow" aria-hidden="true" data-hero-glow></div>
+	<div class="hero-copy container" data-hero-copy>
+		<span class="hero-icon" data-hero-part="icon">
+			<Image src={appIcon} alt="" width={132} densities={[1, 2, 3]} loading="eager" fetchpriority="high" decoding="async" />
+		</span>
+		<h1 class="hero-heading" id="hero-title">
+			<span class="hero-name" data-hero-part="name">{t.name}</span>
+			<SplitHeading as="span" text={t.tagline} class="t-hero hero-tagline" />
+		</h1>
+		<p class="t-lead hero-lead" data-hero-part="lead"><Phrases text={t.lead} /></p>
+		<div class="hero-actions" data-hero-part="actions">
+			<DownloadButton locale={locale} label={t.download} />
+			<a class="btn btn-secondary btn-lg" href={LINKS.github}>
+				<PlatformIcon name="github" />
+				<span>{t.github}</span>
+			</a>
+		</div>
+		<p class="hero-meta" data-hero-part="meta">
+			{before}<span data-release-version>{release.version}</span>{after}
+		</p>
+	</div>
+	<div class="hero-stage container-wide" data-hero-stage>
+		<div class="hero-rise" data-hero-part="stage">
+			<div class="hero-tilt" data-hero-tilt>
+				<WindowFrame scene="hero-conversation" locale={locale} alt={t.shotAlt} priority sizes="(min-width: 87.5rem) 80rem, 92vw" />
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hero {
+		position: relative;
+		padding-top: calc(var(--nav-height) + clamp(3rem, 1rem + 6vh, 5.5rem));
+		padding-bottom: clamp(4rem, 2rem + 6vw, 8rem);
+		overflow: clip;
+		text-align: center;
+	}
+	/* A wash of the icon's blue behind the window, fading to the page — light enough on white to
+	 * read as air, strong enough on black to read as light. */
+	.hero-glow {
+		position: absolute;
+		left: 50%;
+		top: 38%;
+		width: min(140vw, 110rem);
+		aspect-ratio: 1.6;
+		border-radius: 50%;
+		background:
+			radial-gradient(closest-side, var(--glow), transparent 72%),
+			radial-gradient(40% 36% at 30% 58%, var(--glow-2), transparent 70%),
+			radial-gradient(38% 34% at 72% 54%, var(--glow-2), transparent 70%);
+		transform: translateX(-50%);
+		pointer-events: none;
+	}
+	.hero-copy {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	/* The tile is 824 of the file's 1024 px; the box shows the tile at 104 px and lets the
+	 * transparent margin fall outside. */
+	.hero-icon {
+		display: block;
+		width: clamp(5rem, 4rem + 3vw, 6.5rem);
+		aspect-ratio: 1;
+		margin-bottom: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+	}
+	.hero-icon :global(img) {
+		width: calc(100% * 1024 / 824);
+		max-width: none;
+		height: auto;
+		margin: calc(-100% * 100 / 824);
+		filter: drop-shadow(0 12px 24px rgb(10 108 245 / 0.28)) drop-shadow(0 2px 4px rgb(0 0 0 / 0.08));
+	}
+	.hero-heading {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		font-weight: inherit;
+	}
+	.hero-name {
+		font-size: clamp(1.3125rem, 1.1rem + 0.9vw, 1.875rem);
+		font-weight: var(--weight-bold);
+		letter-spacing: -0.01em;
+		color: var(--ink);
+		margin-bottom: 0.35em;
+	}
+	.hero-tagline {
+		display: block;
+		color: var(--ink);
+	}
+	.hero-lead {
+		max-width: 40rem;
+		margin-top: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+		text-wrap: balance;
+	}
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.875rem;
+		margin-top: clamp(1.75rem, 1.4rem + 1vw, 2.5rem);
+	}
+	.hero-meta {
+		margin-top: 1.125rem;
+		color: var(--ink-3);
+		font-size: 0.875rem;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.hero-stage {
+		position: relative;
+		margin-top: clamp(2.75rem, 1.5rem + 3.5vw, 4.5rem);
+	}
+	.hero-tilt {
+		transform-origin: 50% 0%;
+	}
+
+	@media (max-width: 40rem) {
+		.hero-actions {
+			flex-direction: column;
+			align-items: stretch;
+			width: min(100%, 20rem);
+		}
+	}
+</style>

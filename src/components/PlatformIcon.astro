@@ -1,0 +1,57 @@
+---
+import { siAndroid, siApple, siGithub, siLinux } from "simple-icons";
+
+/**
+ * A platform's official mark, drawn in the current text colour.
+ *
+ * iOS wears the Apple mark, as Apple's own pages do: everywhere Lyra shows a platform mark it names
+ * the platform beside it, and Simple Icons' iOS mark is the word "iOS", which would say it twice.
+ *
+ * Every mark but one is Simple Icons' (CC0), which draws them from each brand's own assets. Windows
+ * is not in Simple Icons — Microsoft does not allow it — so it is drawn here from the Windows 11
+ * logo's own geometry: four equal squares, each 2311 units of a 4875-unit field, 253 apart.
+ */
+export type PlatformIconName = "macos" | "windows" | "linux" | "android" | "ios" | "github";
+
+interface Props {
+	name: PlatformIconName;
+	/** CSS length; defaults to 1em so the mark sizes with the text beside it. */
+	size?: string;
+	class?: string;
+	/** Omit for a decorative mark (the usual case: the platform is named in text next to it). */
+	label?: string;
+	[key: `data-${string}`]: string | boolean | undefined;
+}
+
+const { name, size = "1em", class: className, label, ...rest } = Astro.props;
+
+const PATHS: Record<Exclude<PlatformIconName, "windows">, string> = {
+	macos: siApple.path,
+	linux: siLinux.path,
+	android: siAndroid.path,
+	ios: siApple.path,
+	github: siGithub.path,
+};
+
+const a11y = label ? { role: "img" as const, "aria-label": label } : { "aria-hidden": "true" as const };
+---
+
+{
+	name === "windows" ? (
+		<svg class:list={["platform-icon", className]} viewBox="0 0 4875 4875" width={size} height={size} fill="currentColor" focusable="false" {...a11y} {...rest}>
+			<path d="M0 0h2311v2310H0zm2564 0h2311v2310H2564zM0 2564h2311v2311H0zm2564 0h2311v2311H2564z" />
+		</svg>
+	) : (
+		<svg class:list={["platform-icon", className]} viewBox="0 0 24 24" width={size} height={size} fill="currentColor" focusable="false" {...a11y} {...rest}>
+			<path d={PATHS[name]} />
+		</svg>
+	)
+}
+
+<style>
+	.platform-icon {
+		flex: none;
+		display: inline-block;
+		vertical-align: -0.125em;
+	}
+</style>

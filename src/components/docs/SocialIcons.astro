@@ -1,0 +1,25 @@
+---
+import Default from "@astrojs/starlight/components/SocialIcons.astro";
+
+/**
+ * The docs header's right side, with the two ways back into the product pages before Starlight's
+ * own GitHub link: the download page and the plugin market.
+ */
+const en = Astro.locals.starlightRoute.lang === "en";
+---
+
+<a class="docs-link" href={en ? "/en/download/" : "/download/"}>{en ? "Download" : "下载"}</a>
+<a class="docs-link" href="https://market.07230805.xyz">{en ? "Plugins" : "插件市场"}</a>
+<Default />
+
+<style>
+	.docs-link {
+		color: var(--sl-color-gray-2);
+		font-size: 0.875rem;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+	.docs-link:hover {
+		color: var(--sl-color-white);
+	}
+</style>

@@ -1,0 +1,267 @@
+---
+import { Image } from "astro:assets";
+
+import appIcon from "../assets/brand/app-icon.png";
+import { DOCS_PATH, LINKS, localize, otherLocale, type Locale } from "../i18n/index.ts";
+import { SITE_TEXT } from "../i18n/site.ts";
+import PlatformIcon from "./PlatformIcon.astro";
+
+/**
+ * The bar across the top. Clear over the hero, frosted once the page moves, and dark over the
+ * page's dark sections (`site.ts` watches which section is under it). Below 52rem the links fold
+ * into a sheet.
+ */
+interface Props {
+	locale: Locale;
+	route: string | null;
+}
+
+const { locale, route } = Astro.props;
+const text = SITE_TEXT[locale].nav;
+const home = localize(locale, "/");
+const other = otherLocale(locale);
+const switchHref = localize(other, route ?? "/");
+const links = [
+	{ href: `${home}#features`, label: text.features, current: false },
+	{ href: LINKS.market, label: text.market, current: false },
+	{ href: localize(locale, DOCS_PATH), label: text.docs, current: false },
+	{ href: localize(locale, "/download/"), label: text.download, current: route === "/download/" },
+];
+---
+
+<header class="nav" data-nav>
+	<div class="nav-bar">
+		<a class="nav-brand" href={home}>
+			<span class="nav-logo" aria-hidden="true">
+				<Image src={appIcon} alt="" width={36} height={36} densities={[1, 2, 3]} loading="eager" decoding="async" />
+			</span>
+			<span class="nav-name">Lyra</span>
+		</a>
+		<nav class="nav-links" aria-label={text.label}>
+			{
+				links.map((link) => (
+					<a href={link.href} aria-current={link.current ? "page" : undefined}>
+						{link.label}
+					</a>
+				))
+			}
+		</nav>
+		<div class="nav-tools">
+			<a class="nav-icon" href={LINKS.github} aria-label={text.github}>
+				<PlatformIcon name="github" size="1.25rem" />
+			</a>
+			<a class="nav-lang" href={switchHref} hreflang={other} lang={other} aria-label={text.switchLabel} data-lang-switch>
+				{text.switchTo}
+			</a>
+			<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-sheet" data-nav-toggle data-open-label={text.menu} data-close-label={text.close} aria-label={text.menu}>
+				<span></span>
+				<span></span>
+			</button>
+		</div>
+	</div>
+	<div class="nav-sheet" id="nav-sheet" data-nav-sheet hidden>
+		<nav aria-label={text.label}>
+			{
+				links.map((link) => (
+					<a href={link.href} aria-current={link.current ? "page" : undefined}>
+						{link.label}
+					</a>
+				))
+			}
+		</nav>
+	</div>
+</header>
+
+<style>
+	.nav {
+		position: fixed;
+		inset: 0 0 auto;
+		z-index: 50;
+		color: var(--ink);
+	}
+	.nav-bar {
+		position: relative;
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		align-items: center;
+		height: var(--nav-height);
+		padding-inline: max(var(--gutter), env(safe-area-inset-left));
+		transition:
+			background-color var(--dur-slow) var(--ease-soft),
+			box-shadow var(--dur-slow) var(--ease-soft),
+			color var(--dur-slow) var(--ease-soft);
+	}
+	/* Frosted once the page has moved, or whenever the sheet is open. */
+	.nav[data-scrolled] .nav-bar,
+	.nav[data-open] .nav-bar {
+		background: color-mix(in srgb, var(--bg) 72%, transparent);
+		box-shadow: inset 0 -0.5px 0 var(--line-strong);
+		-webkit-backdrop-filter: saturate(180%) blur(20px);
+		backdrop-filter: saturate(180%) blur(20px);
+	}
+
+	.nav-brand {
+		justify-self: start;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 1.0625rem;
+		font-weight: var(--weight-bold);
+		letter-spacing: -0.01em;
+		border-radius: var(--radius-sm);
+	}
+	/* The icon file keeps macOS's transparent margin: the tile is 824 of its 1024 pixels, 100 in
+	 * from each edge. The box crops that margin so the tile itself is 28px, the height of the text
+	 * beside it, and rounds to the tile's own corner. */
+	.nav-logo {
+		display: block;
+		width: 1.75rem;
+		height: 1.75rem;
+		overflow: hidden;
+		border-radius: 22.5%;
+	}
+	.nav-logo :global(img) {
+		width: calc(1.75rem * 1024 / 824);
+		max-width: none;
+		height: calc(1.75rem * 1024 / 824);
+		margin: calc(1.75rem * -100 / 824);
+	}
+
+	.nav-links {
+		display: flex;
+		align-items: center;
+		gap: clamp(1.5rem, 1rem + 1.6vw, 2.5rem);
+		font-size: 0.875rem;
+	}
+	.nav-links a,
+	.nav-icon,
+	.nav-lang {
+		opacity: 0.78;
+		transition: opacity var(--dur-quick) var(--ease-soft);
+	}
+	.nav-links a:hover,
+	.nav-links a[aria-current="page"],
+	.nav-icon:hover,
+	.nav-lang:hover {
+		opacity: 1;
+	}
+	.nav-links a {
+		padding-block: 0.5rem;
+	}
+
+	.nav-tools {
+		justify-self: end;
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+	}
+	.nav-icon {
+		display: grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: var(--radius-pill);
+	}
+	.nav-lang {
+		display: inline-flex;
+		align-items: center;
+		height: 1.625rem;
+		padding-inline: 0.625rem;
+		border-radius: var(--radius-pill);
+		box-shadow: inset 0 0 0 1px var(--line-strong);
+		font-size: 0.75rem;
+		font-weight: var(--weight-bold);
+		letter-spacing: 0.02em;
+	}
+
+	.nav-toggle {
+		display: none;
+		position: relative;
+		width: 2rem;
+		height: 2rem;
+		margin-right: -0.375rem;
+		border-radius: var(--radius-pill);
+	}
+	.nav-toggle span {
+		position: absolute;
+		left: 0.5rem;
+		width: 1rem;
+		height: 1.5px;
+		border-radius: 1px;
+		background: currentColor;
+		transition: transform var(--dur-slow) var(--ease-out);
+	}
+	.nav-toggle span:first-child {
+		transform: translateY(-3.5px);
+	}
+	.nav-toggle span:last-child {
+		transform: translateY(3.5px);
+	}
+	.nav[data-open] .nav-toggle span:first-child {
+		transform: rotate(45deg);
+	}
+	.nav[data-open] .nav-toggle span:last-child {
+		transform: rotate(-45deg);
+	}
+
+	.nav-sheet {
+		position: fixed;
+		inset: var(--nav-height) 0 0;
+		padding: 1.5rem max(var(--gutter), env(safe-area-inset-left));
+		background: color-mix(in srgb, var(--bg) 92%, transparent);
+		-webkit-backdrop-filter: saturate(180%) blur(20px);
+		backdrop-filter: saturate(180%) blur(20px);
+		overflow-y: auto;
+	}
+	.nav-sheet nav {
+		display: flex;
+		flex-direction: column;
+	}
+	.nav-sheet a {
+		padding-block: 0.625rem;
+		font-size: 1.75rem;
+		font-weight: var(--weight-bold);
+		letter-spacing: -0.015em;
+		animation: sheet-in var(--dur-slow) var(--ease-out) both;
+	}
+	.nav-sheet a:nth-child(2) {
+		animation-delay: 30ms;
+	}
+	.nav-sheet a:nth-child(3) {
+		animation-delay: 60ms;
+	}
+	.nav-sheet a:nth-child(4) {
+		animation-delay: 90ms;
+	}
+	@keyframes sheet-in {
+		from {
+			opacity: 0;
+			transform: translateY(-0.5rem);
+		}
+	}
+
+	@media (max-width: 52rem) {
+		.nav-links {
+			display: none;
+		}
+		.nav-bar {
+			grid-template-columns: 1fr auto;
+		}
+		.nav-toggle {
+			display: block;
+		}
+	}
+	@media (min-width: 52.01rem) {
+		.nav-sheet {
+			display: none;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.nav-sheet a {
+			animation: none;
+		}
+		.nav-toggle span {
+			transition-duration: 1ms;
+		}
+	}
+</style>

@@ -1,0 +1,122 @@
+---
+import { HOME_TEXT } from "../../i18n/home.ts";
+import { LINKS, type Locale } from "../../i18n/index.ts";
+import { MARKET_TOTAL } from "../../lib/market.ts";
+import Icon from "../Icon.astro";
+import SectionHead from "../SectionHead.astro";
+import WindowFrame from "../WindowFrame.astro";
+import LogoWall from "./LogoWall.astro";
+
+/**
+ * The plugin market: its logos drifting past, how many entries it has, and the market inside the
+ * app with one entry's page lifted out in front of it.
+ */
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = HOME_TEXT[locale].market;
+---
+
+<section class="section surface-alt market" aria-labelledby="market-title">
+	<div class="container">
+		<SectionHead eyebrow={t.eyebrow} title={t.title} lead={t.lead} id="market-title" />
+	</div>
+
+	<div class="market-wall" data-reveal="fade">
+		<LogoWall label={t.wallLabel} />
+	</div>
+
+	<div class="container market-count" data-reveal>
+		<p>
+			<span class="market-number num" data-count={MARKET_TOTAL}>{MARKET_TOTAL}</span>
+			<span class="market-label">{t.countLabel}</span>
+		</p>
+		<a class="link" href={LINKS.market}>
+			{t.link}
+			<Icon name="arrow-up-right" size="0.9em" />
+		</a>
+	</div>
+
+	<div class="container-wide market-stage">
+		<div class="market-main" data-rise>
+			<WindowFrame scene="plugin-market" locale={locale} alt={t.shotAlt} sizes="(min-width: 87.5rem) 68rem, 86vw" />
+		</div>
+		<div class="market-detail" data-parallax="-0.12">
+			<WindowFrame scene="plugin-detail" locale={locale} alt={t.detailAlt} sizes="(min-width: 87.5rem) 44rem, 50vw" />
+		</div>
+	</div>
+</section>
+
+<style>
+	.market {
+		overflow: clip;
+	}
+	.market-wall {
+		margin-top: clamp(3.5rem, 2.5rem + 3vw, 5rem);
+	}
+	.market-count {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.75rem;
+		margin-top: clamp(3rem, 2rem + 2.5vw, 4.5rem);
+		text-align: center;
+	}
+	.market-count p {
+		display: flex;
+		align-items: baseline;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 0.25rem 0.625rem;
+	}
+	.market-number {
+		font-size: clamp(3rem, 2.2rem + 3vw, 4.5rem);
+		font-weight: var(--weight-bold);
+		line-height: 1;
+		letter-spacing: -0.03em;
+		color: var(--ink);
+	}
+	.market-label {
+		font-size: var(--t-headline);
+		font-weight: var(--weight-bold);
+		color: var(--ink);
+	}
+	.market-count .link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		font-size: 1.0625rem;
+	}
+
+	/* The market fills most of the width; one entry's page overlaps its lower right, a step closer. */
+	.market-stage {
+		position: relative;
+		margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+		padding-bottom: clamp(3rem, 1rem + 7vw, 9rem);
+	}
+	.market-main {
+		width: 80%;
+	}
+	.market-detail {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 50%;
+	}
+
+	@media (max-width: 48rem) {
+		.market-main {
+			width: 100%;
+		}
+		.market-detail {
+			position: relative;
+			width: 78%;
+			margin: -18% 0 0 auto;
+		}
+		.market-stage {
+			padding-bottom: 0;
+		}
+	}
+</style>

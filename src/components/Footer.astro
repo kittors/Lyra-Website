@@ -1,0 +1,165 @@
+---
+import { Image } from "astro:assets";
+
+import appIcon from "../assets/brand/app-icon.png";
+import { DOCS_PATH, LINKS, localize, otherLocale, type Locale } from "../i18n/index.ts";
+import { SITE_TEXT, type FooterLink } from "../i18n/site.ts";
+import Icon from "./Icon.astro";
+
+interface Props {
+	locale: Locale;
+	route: string | null;
+	notesUrl: string;
+}
+
+const { locale, route, notesUrl } = Astro.props;
+const text = SITE_TEXT[locale].footer;
+const other = otherLocale(locale);
+
+const HREF: Record<FooterLink, string> = {
+	features: `${localize(locale, "/")}#features`,
+	download: localize(locale, "/download/"),
+	notes: notesUrl,
+	docs: localize(locale, DOCS_PATH),
+	market: LINKS.market,
+	releases: LINKS.releases,
+	github: LINKS.github,
+	issues: LINKS.issues,
+	contributing: LINKS.contributing,
+};
+---
+
+<footer class="footer">
+	<div class="container">
+		<div class="footer-top">
+			<a class="footer-brand" href={localize(locale, "/")}>
+				<span class="footer-logo" aria-hidden="true">
+					<Image src={appIcon} alt="" width={30} height={30} densities={[1, 2, 3]} loading="lazy" decoding="async" />
+				</span>
+				<span>Lyra</span>
+			</a>
+			<p class="footer-tagline">{text.tagline}</p>
+		</div>
+		<div class="footer-columns">
+			{
+				text.columns.map((column) => (
+					<section class="footer-column">
+						<h2>{column.title}</h2>
+						<ul>
+							{column.links.map((key) => (
+								<li>
+									<a href={HREF[key as FooterLink]} data-release-notes={key === "notes" ? "" : undefined}>
+										{text.links[key as FooterLink]}
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				))
+			}
+		</div>
+		<div class="footer-bottom">
+			<p>{text.copyright}</p>
+			<a class="footer-lang" href={localize(other, route ?? "/")} hreflang={other} lang={other} aria-label={text.languageLabel} data-lang-switch>
+				<Icon name="globe" size="0.9375rem" />
+				<span>{text.language}</span>
+			</a>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		padding-block: 3.5rem 2.5rem;
+		background: var(--bg-alt);
+		color: var(--ink-2);
+		font-size: 0.8125rem;
+		line-height: 1.5;
+		box-shadow: inset 0 0.5px 0 var(--line);
+	}
+	.footer-top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-bottom: 2rem;
+		border-bottom: 0.5px solid var(--line-strong);
+	}
+	.footer-brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.625rem;
+		color: var(--ink);
+		font-size: 1rem;
+		font-weight: var(--weight-bold);
+	}
+	.footer-logo {
+		display: block;
+		width: 1.5rem;
+		height: 1.5rem;
+		overflow: hidden;
+		border-radius: 22.5%;
+	}
+	.footer-logo :global(img) {
+		width: calc(1.5rem * 1024 / 824);
+		max-width: none;
+		height: calc(1.5rem * 1024 / 824);
+		margin: calc(1.5rem * -100 / 824);
+	}
+	.footer-tagline {
+		color: var(--ink-3);
+	}
+	.footer-columns {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 12rem));
+		gap: 2rem;
+		padding-block: 2rem 2.5rem;
+	}
+	.footer-column h2 {
+		margin-bottom: 0.75rem;
+		color: var(--ink);
+		font-size: 0.8125rem;
+		font-weight: var(--weight-bold);
+	}
+	.footer-column li + li {
+		margin-top: 0.5rem;
+	}
+	.footer-column a,
+	.footer-lang {
+		transition: color var(--dur-quick) var(--ease-soft);
+	}
+	.footer-column a:hover,
+	.footer-lang:hover {
+		color: var(--ink);
+	}
+	.footer-bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-top: 1.25rem;
+		border-top: 0.5px solid var(--line-strong);
+		color: var(--ink-3);
+	}
+	.footer-lang {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		color: var(--ink-2);
+	}
+
+	@media (max-width: 40rem) {
+		.footer-top {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+		.footer-columns {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			row-gap: 1.75rem;
+		}
+		.footer-bottom {
+			flex-direction: column-reverse;
+			align-items: flex-start;
+		}
+	}
+</style>

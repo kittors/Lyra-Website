@@ -1,0 +1,251 @@
+{
+	"fetchedAt": "2026-09-26",
+	"total": 70,
+	"counts": {
+		"plugin": 10,
+		"mcp": 42,
+		"skill": 18
+	},
+	"icons": [
+		{
+			"id": "github",
+			"name": "GitHub",
+			"kind": "mcp",
+			"brandColor": "#181717",
+			"file": "github.svg",
+			"filled": false
+		},
+		{
+			"id": "notion",
+			"name": "Notion",
+			"kind": "mcp",
+			"brandColor": "#000000",
+			"file": "notion.webp",
+			"filled": true
+		},
+		{
+			"id": "figma",
+			"name": "Figma",
+			"kind": "mcp",
+			"brandColor": "#f24e1e",
+			"file": "figma.svg",
+			"filled": false
+		},
+		{
+			"id": "slack",
+			"name": "Slack",
+			"kind": "mcp",
+			"brandColor": "#4a154b",
+			"file": "slack.webp",
+			"filled": false
+		},
+		{
+			"id": "stripe",
+			"name": "Stripe",
+			"kind": "mcp",
+			"brandColor": "#635bff",
+			"file": "stripe.svg",
+			"filled": true
+		},
+		{
+			"id": "cloudflare",
+			"name": "Cloudflare Skills",
+			"kind": "plugin",
+			"brandColor": "#f38020",
+			"file": "cloudflare.svg",
+			"filled": false
+		},
+		{
+			"id": "supabase",
+			"name": "Supabase",
+			"kind": "mcp",
+			"brandColor": "#3fcf8e",
+			"file": "supabase.webp",
+			"filled": false
+		},
+		{
+			"id": "mongodb",
+			"name": "MongoDB",
+			"kind": "mcp",
+			"brandColor": "#47a248",
+			"file": "mongodb.webp",
+			"filled": false
+		},
+		{
+			"id": "redis",
+			"name": "Redis",
+			"kind": "mcp",
+			"brandColor": "#ff4438",
+			"file": "redis.webp",
+			"filled": true
+		},
+		{
+			"id": "sentry",
+			"name": "Sentry",
+			"kind": "mcp",
+			"brandColor": "#362d59",
+			"file": "sentry.webp",
+			"filled": false
+		},
+		{
+			"id": "grafana",
+			"name": "Grafana",
+			"kind": "mcp",
+			"brandColor": "#f46800",
+			"file": "grafana.webp",
+			"filled": false
+		},
+		{
+			"id": "kubernetes",
+			"name": "Kubernetes",
+			"kind": "mcp",
+			"brandColor": "#326ce5",
+			"file": "kubernetes.webp",
+			"filled": false
+		},
+		{
+			"id": "playwright",
+			"name": "Playwright",
+			"kind": "mcp",
+			"brandColor": "#2ead33",
+			"file": "playwright.svg",
+			"filled": false
+		},
+		{
+			"id": "chrome-devtools",
+			"name": "Chrome DevTools",
+			"kind": "mcp",
+			"brandColor": "#4285f4",
+			"file": "chrome-devtools.webp",
+			"filled": false
+		},
+		{
+			"id": "hugging-face",
+			"name": "Hugging Face",
+			"kind": "mcp",
+			"brandColor": "#ffd21e",
+			"file": "hugging-face.svg",
+			"filled": false
+		},
+		{
+			"id": "obsidian",
+			"name": "Obsidian",
+			"kind": "mcp",
+			"brandColor": "#7c3aed",
+			"file": "obsidian.svg",
+			"filled": false
+		},
+		{
+			"id": "excel",
+			"name": "Excel",
+			"kind": "mcp",
+			"brandColor": "#217346",
+			"file": "excel.svg",
+			"filled": false
+		},
+		{
+			"id": "atlassian",
+			"name": "Atlassian",
+			"kind": "mcp",
+			"brandColor": "#0052cc",
+			"file": "atlassian.svg",
+			"filled": false
+		},
+		{
+			"id": "aws-documentation",
+			"name": "AWS Documentation",
+			"kind": "mcp",
+			"brandColor": "#ff9900",
+			"file": "aws-documentation.svg",
+			"filled": false
+		},
+		{
+			"id": "microsoft-learn",
+			"name": "Microsoft Learn",
+			"kind": "mcp",
+			"brandColor": "#0078d4",
+			"file": "microsoft-learn.svg",
+			"filled": false
+		},
+		{
+			"id": "brave-search",
+			"name": "Brave Search",
+			"kind": "mcp",
+			"brandColor": "#fb542b",
+			"file": "brave-search.svg",
+			"filled": false
+		},
+		{
+			"id": "duckduckgo",
+			"name": "DuckDuckGo",
+			"kind": "mcp",
+			"brandColor": "#de5833",
+			"file": "duckduckgo.svg",
+			"filled": false
+		},
+		{
+			"id": "expo",
+			"name": "Expo",
+			"kind": "plugin",
+			"brandColor": "#000020",
+			"file": "expo.png",
+			"filled": true
+		},
+		{
+			"id": "vercel-skills",
+			"name": "Vercel Agent Skills",
+			"kind": "skill",
+			"brandColor": "#111111",
+			"file": "vercel-skills.webp",
+			"filled": true
+		},
+		{
+			"id": "firecrawl",
+			"name": "Firecrawl",
+			"kind": "mcp",
+			"brandColor": "#fa5d19",
+			"file": "firecrawl.webp",
+			"filled": false
+		},
+		{
+			"id": "context7",
+			"name": "Context7",
+			"kind": "mcp",
+			"brandColor": "#8b5cf6",
+			"file": "context7.svg",
+			"filled": true
+		},
+		{
+			"id": "zotero",
+			"name": "Zotero",
+			"kind": "mcp",
+			"brandColor": "#cc2936",
+			"file": "zotero.webp",
+			"filled": false
+		},
+		{
+			"id": "arxiv",
+			"name": "arXiv",
+			"kind": "mcp",
+			"brandColor": "#b31b1b",
+			"file": "arxiv.webp",
+			"filled": false
+		},
+		{
+			"id": "drawio",
+			"name": "draw.io",
+			"kind": "mcp",
+			"brandColor": "#f08705",
+			"file": "drawio.svg",
+			"filled": true
+		},
+		{
+			"id": "google-cloud-skills",
+			"name": "Google Cloud Skills",
+			"kind": "skill",
+			"brandColor": "#4285f4",
+			"file": "google-cloud-skills.webp",
+			"filled": false
+		}
+	]
+}

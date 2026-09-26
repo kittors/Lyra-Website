@@ -1,1 +1,221 @@
-/* Starlight, restyled to match the rest of the site. */
+/*
+ * Starlight, restyled to read as the same site as the product pages: the system type, Lyra's blue,
+ * Apple's neutral greys, rounder corners, a frosted header, and quieter chrome around the words.
+ *
+ * Starlight keeps its own styles in cascade layers, so these unlayered rules win without having to
+ * out-specify anything. Colours come from `tokens.css`, loaded just before this file.
+ */
+
+:root {
+	--sl-font: var(--font-sans);
+	--sl-font-mono: var(--font-mono);
+	--sl-content-width: 46rem;
+	--sl-line-height: 1.75;
+	--sl-line-height-headings: 1.25;
+}
+
+/* ── Dark (Starlight's default) ────────────────────────────────────── */
+:root,
+::backdrop {
+	--sl-color-accent-low: #0b2a55;
+	--sl-color-accent: #339cff;
+	--sl-color-accent-high: #b7dbff;
+	--sl-color-white: #f5f5f7;
+	--sl-color-gray-1: #e5e5ea;
+	--sl-color-gray-2: #c7c7cc;
+	--sl-color-gray-3: #98989d;
+	--sl-color-gray-4: #636366;
+	--sl-color-gray-5: #38383a;
+	--sl-color-gray-6: #1c1c1e;
+	--sl-color-black: #000000;
+	--sl-color-bg-nav: rgb(0 0 0 / 0.72);
+	--sl-color-bg-sidebar: #000000;
+	--sl-color-bg-inline-code: #1c1c1e;
+	--sl-color-hairline: rgb(255 255 255 / 0.1);
+	--sl-color-hairline-light: rgb(255 255 255 / 0.14);
+	--sl-color-hairline-shade: rgb(255 255 255 / 0.08);
+	--sl-color-backdrop-overlay: rgb(0 0 0 / 0.6);
+}
+
+/* ── Light ──────────────────────────────────────────────────────────── */
+:root[data-theme="light"],
+[data-theme="light"] ::backdrop {
+	--sl-color-accent-low: #e3efff;
+	--sl-color-accent: #0a6cf5;
+	--sl-color-accent-high: #0650b8;
+	--sl-color-white: #1d1d1f;
+	--sl-color-gray-1: #2c2c2e;
+	--sl-color-gray-2: #3a3a3c;
+	--sl-color-gray-3: #6e6e73;
+	--sl-color-gray-4: #86868b;
+	--sl-color-gray-5: #d2d2d7;
+	--sl-color-gray-6: #f5f5f7;
+	--sl-color-gray-7: #fbfbfd;
+	--sl-color-black: #ffffff;
+	--sl-color-bg-nav: rgb(255 255 255 / 0.72);
+	--sl-color-bg-sidebar: #ffffff;
+	--sl-color-bg-inline-code: #f2f2f5;
+	--sl-color-hairline: rgb(0 0 0 / 0.08);
+	--sl-color-hairline-light: rgb(0 0 0 / 0.1);
+	--sl-color-hairline-shade: rgb(0 0 0 / 0.08);
+	--sl-color-backdrop-overlay: rgb(0 0 0 / 0.3);
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+}
+::selection {
+	background: rgb(10 108 245 / 0.24);
+}
+:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: 2px;
+}
+
+/* ── Header: frosted, a hairline under it, the page scrolling beneath ── */
+.header {
+	border-bottom: 0.5px solid var(--sl-color-hairline-light);
+	-webkit-backdrop-filter: saturate(180%) blur(20px);
+	backdrop-filter: saturate(180%) blur(20px);
+}
+site-search button[data-open-modal] {
+	border-radius: var(--radius-pill);
+	border-color: var(--sl-color-hairline-light);
+	background: var(--sl-color-gray-6);
+}
+site-search button[data-open-modal]:hover {
+	border-color: var(--sl-color-gray-4);
+}
+starlight-theme-select select,
+starlight-lang-select select {
+	border-radius: var(--radius-sm);
+}
+/* Header links and the GitHub mark in the quiet grey of the product pages' navigation. */
+.social-icons a {
+	color: var(--sl-color-gray-2);
+}
+.social-icons a:hover {
+	color: var(--sl-color-white);
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────── */
+.sidebar-pane {
+	border-inline-end: 0.5px solid var(--sl-color-hairline-light);
+}
+.sidebar-content a {
+	border-radius: var(--radius-sm);
+	transition: background-color var(--dur-quick) var(--ease-soft);
+}
+.sidebar-content a:hover {
+	background-color: var(--sl-color-gray-6);
+}
+.sidebar-content a[aria-current="page"],
+.sidebar-content a[aria-current="page"]:hover,
+.sidebar-content a[aria-current="page"]:focus {
+	background-color: var(--sl-color-accent-low);
+	color: var(--sl-color-accent-high);
+	font-weight: 600;
+}
+.sidebar-content summary {
+	border-radius: var(--radius-sm);
+}
+.sidebar-content .group-label .large {
+	font-weight: 600;
+}
+
+/* ── Words ─────────────────────────────────────────────────────────── */
+h1#_top {
+	font-weight: 600;
+	letter-spacing: -0.02em;
+}
+:root:lang(zh-CN) h1#_top {
+	letter-spacing: 0;
+}
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
+	font-weight: 600;
+	letter-spacing: -0.015em;
+}
+:root:lang(zh-CN) .sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
+	letter-spacing: 0;
+}
+.sl-markdown-content a:not(:where(.not-content *)) {
+	color: var(--sl-color-text-accent);
+	text-underline-offset: 0.22em;
+	text-decoration-thickness: 1px;
+}
+.sl-markdown-content :not(pre) > code:not(:where(.not-content *)) {
+	padding: 0.125em 0.375em;
+	border: 0;
+	border-radius: var(--radius-xs);
+	font-size: 0.875em;
+}
+/* Screenshots are mostly white on a white page; a hairline and a soft shadow give them an edge,
+ * the way the home page's window frames do. */
+.sl-markdown-content :is(img, video):not(:where(.not-content *)) {
+	border-radius: var(--radius-md);
+	box-shadow:
+		0 0 0 0.5px var(--line-strong),
+		0 12px 32px -14px rgb(16 24 40 / 0.22);
+}
+.sl-markdown-content hr {
+	border-color: var(--sl-color-hairline-light);
+}
+.sl-markdown-content table:not(:where(.not-content *)) {
+	border-radius: var(--radius-md);
+	overflow: hidden;
+}
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+	border-color: var(--sl-color-hairline-light);
+}
+.sl-markdown-content th:not(:where(.not-content *)) {
+	background: var(--sl-color-gray-6);
+	font-weight: 600;
+}
+
+/* Asides: soft rounded cards, the kind carried by a tint rather than a heavy border. */
+.starlight-aside {
+	border: 0;
+	border-radius: var(--radius-lg);
+	padding: 1rem 1.25rem;
+	box-shadow: inset 0 0 0 0.5px var(--sl-color-asides-border);
+}
+.starlight-aside__title {
+	font-weight: 600;
+}
+
+/* Cards and link cards from Starlight's component set. */
+.card,
+.sl-link-card {
+	border-radius: var(--radius-lg);
+	border-color: var(--sl-color-hairline-light);
+}
+.sl-link-card:hover {
+	border-color: var(--sl-color-accent);
+	background: var(--sl-color-gray-6);
+}
+
+/* Previous / next. */
+.pagination-links a {
+	border-radius: var(--radius-lg);
+	border-color: var(--sl-color-hairline-light);
+	box-shadow: none;
+}
+.pagination-links a:hover {
+	border-color: var(--sl-color-accent);
+}
+
+/* Tabs and steps. */
+starlight-tabs .tab > [role="tab"][aria-selected="true"] {
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-white);
+}
+.sl-steps > li::before {
+	font-weight: 600;
+}
+
+/* Right-hand contents. */
+starlight-toc a[aria-current="true"] {
+	color: var(--sl-color-accent);
+}

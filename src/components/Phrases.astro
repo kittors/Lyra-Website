@@ -1,0 +1,26 @@
+---
+/**
+ * Chinese text that only breaks between phrases.
+ *
+ * A browser will break a Chinese line between any two characters, which is how "手机" ends up as
+ * "手" at the end of one line and "机" at the start of the next. Here the text is cut after each
+ * clause-ending punctuation mark and each clause is kept whole (an inline block), so lines break
+ * where a reader would pause. A clause longer than the line still wraps inside itself; nothing
+ * overflows. Text without Han characters passes through untouched.
+ */
+interface Props {
+	text: string;
+}
+
+const { text } = Astro.props;
+const HAN = /[㐀-鿿]/;
+const phrases = HAN.test(text) ? text.split(/(?<=[，。、；：！？）])/).filter(Boolean) : null;
+---
+
+{phrases ? phrases.map((phrase) => <span class="phrase">{phrase}</span>) : text}
+
+<style>
+	.phrase {
+		display: inline-block;
+	}
+</style>

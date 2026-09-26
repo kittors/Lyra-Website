@@ -1,0 +1,33 @@
+---
+import { HOME_TEXT } from "../../i18n/home.ts";
+import type { Locale } from "../../i18n/index.ts";
+import SectionHead from "../SectionHead.astro";
+import WindowFrame from "../WindowFrame.astro";
+
+/**
+ * Several conversations in one window (up to four). The screenshot starts close on the first
+ * conversation and pulls back as the reader scrolls until the whole window is in view (`home.ts`).
+ */
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = HOME_TEXT[locale].split;
+---
+
+<section class="section split" aria-labelledby="split-title">
+	<div class="container">
+		<SectionHead eyebrow={t.eyebrow} title={t.title} lead={t.lead} id="split-title" />
+	</div>
+	<div class="container-wide split-stage" data-split-stage>
+		{/* It opens 1.75× zoomed, so it asks for a source that stays sharp at that size. */}
+		<WindowFrame scene="split-view" locale={locale} alt={t.shotAlt} moving sizes="(min-width: 87.5rem) 140rem, 165vw" data-split-window />
+	</div>
+</section>
+
+<style>
+	.split-stage {
+		margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+	}
+</style>

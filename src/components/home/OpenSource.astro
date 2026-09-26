@@ -1,0 +1,150 @@
+---
+import { HOME_TEXT } from "../../i18n/home.ts";
+import { LINKS, localize, type Locale } from "../../i18n/index.ts";
+import { PLATFORM_TEXT } from "../../i18n/platform.ts";
+import PlatformIcon from "../PlatformIcon.astro";
+import SectionHead from "../SectionHead.astro";
+
+/** Open source, and on every platform: the five marks, the repository, and how to run it from source. */
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = HOME_TEXT[locale].open;
+const names = PLATFORM_TEXT[locale].os;
+const PLATFORMS = ["macos", "windows", "linux", "android", "ios"] as const;
+const commands = ["git clone https://github.com/kittors/Lyra.git", "cd Lyra", "pnpm install", "pnpm dev"];
+---
+
+<section class="section open" aria-labelledby="open-title">
+	<div class="container">
+		<SectionHead eyebrow={t.eyebrow} title={t.title} lead={t.lead} id="open-title" />
+
+		<ul class="platforms" aria-label={t.platforms}>
+			{
+				PLATFORMS.map((os) => (
+					<li data-pop>
+						<span class:list={["platform-mark", `platform-mark--${os}`]}>
+							<PlatformIcon name={os} size="100%" />
+						</span>
+						<span class="platform-name">{names[os]}</span>
+					</li>
+				))
+			}
+		</ul>
+
+		<div class="open-actions" data-reveal>
+			<a class="btn btn-primary" href={LINKS.github}>
+				<PlatformIcon name="github" />
+				<span>{t.github}</span>
+			</a>
+			<a class="btn btn-secondary" href={localize(locale, "/download/")}>{t.downloads}</a>
+		</div>
+
+		<figure class="terminal" data-rise>
+			<figcaption class="terminal-bar">
+				<span class="terminal-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+				<span>{t.fromSource}</span>
+			</figcaption>
+			<pre><code>{commands.map((command) => <span class="terminal-line"><span class="terminal-prompt" aria-hidden="true">$ </span>{command}</span>)}</code></pre>
+		</figure>
+	</div>
+</section>
+
+<style>
+	.platforms {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: clamp(1.75rem, 1rem + 3.5vw, 4.5rem);
+		margin-top: clamp(3.5rem, 2.5rem + 3vw, 5rem);
+	}
+	.platforms li {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.875rem;
+	}
+	/* One optical size for five very different marks: each gets the box its shape needs to look
+	 * as heavy as the others. */
+	.platform-mark {
+		display: grid;
+		place-items: center;
+		width: clamp(2.75rem, 2.2rem + 1.6vw, 3.5rem);
+		height: clamp(2.75rem, 2.2rem + 1.6vw, 3.5rem);
+		color: var(--ink);
+	}
+	.platform-mark--windows {
+		padding: 14%;
+	}
+	.platform-name {
+		color: var(--ink-2);
+		font-size: 0.9375rem;
+		font-weight: var(--weight-medium);
+	}
+
+	.open-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.875rem;
+		margin-top: clamp(3rem, 2.5rem + 2vw, 4rem);
+	}
+
+	.terminal {
+		max-width: 36rem;
+		margin: clamp(3.5rem, 2.5rem + 3vw, 5rem) auto 0;
+		border-radius: var(--radius-lg);
+		background: #111114;
+		box-shadow:
+			0 0 0 0.5px rgb(0 0 0 / 0.2),
+			inset 0 0 0 0.5px rgb(255 255 255 / 0.1),
+			0 24px 60px -24px rgb(16 24 40 / 0.45);
+		color: #e8e8ed;
+		overflow: hidden;
+	}
+	.terminal-bar {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		padding: 0.75rem 1rem;
+		color: #8e8e93;
+		font-size: 0.8125rem;
+		font-weight: var(--weight-medium);
+		box-shadow: inset 0 -0.5px 0 rgb(255 255 255 / 0.08);
+	}
+	.terminal-lights {
+		position: absolute;
+		left: 1rem;
+		top: 50%;
+		display: flex;
+		gap: 0.5rem;
+		transform: translateY(-50%);
+	}
+	.terminal-lights i {
+		width: 0.75rem;
+		height: 0.75rem;
+		border-radius: 50%;
+		background: #ff5f57;
+	}
+	.terminal-lights i:nth-child(2) {
+		background: #febc2e;
+	}
+	.terminal-lights i:nth-child(3) {
+		background: #28c840;
+	}
+	.terminal pre {
+		padding: 1.125rem 1.375rem 1.375rem;
+		overflow-x: auto;
+		font-size: 0.875rem;
+		line-height: 1.8;
+	}
+	.terminal-line {
+		display: block;
+	}
+	.terminal-prompt {
+		color: #4ea8ff;
+		user-select: none;
+	}
+</style>
