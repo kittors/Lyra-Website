@@ -80,6 +80,12 @@ const durations = ["120s", "140s", "108s"];
 		--gap: clamp(0.875rem, 0.6rem + 0.8vw, 1.25rem);
 		display: grid;
 		gap: var(--gap);
+		/*
+		 * The rows' room for a lifted tile, again at the wall: a mask paints nothing outside the box it
+		 * is on, so a hovered tile in the first row lost its top where the wall's box ends.
+		 */
+		padding-block: 1.25rem;
+		margin-block: -1.25rem;
 		/* Rows fade out at both edges instead of being cut off. */
 		-webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
 		mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
@@ -117,13 +123,19 @@ const durations = ["120s", "140s", "108s"];
 		height: var(--tile);
 		transition: transform var(--dur-base) var(--ease-out);
 	}
-	/* The brand's own colour, glowing behind a tile under the pointer. */
+	/*
+	 * The brand's own colour, glowing behind a tile under the pointer.
+	 *
+	 * It is clear by 82% of its radius: lifted and scaled, the largest tile's glow then ends inside the
+	 * row's 1.25rem of room. Fading out at 100% it reached past that, and the row cut it off in a
+	 * straight line above the tile.
+	 */
 	.tile::before {
 		content: "";
 		position: absolute;
 		inset: -28%;
 		border-radius: 50%;
-		background: radial-gradient(closest-side, color-mix(in srgb, var(--brand, #0a6cf5) 42%, transparent), transparent);
+		background: radial-gradient(closest-side, color-mix(in srgb, var(--brand, #0a6cf5) 42%, transparent), transparent 82%);
 		opacity: 0;
 		transition: opacity var(--dur-slow) var(--ease-soft);
 		pointer-events: none;
