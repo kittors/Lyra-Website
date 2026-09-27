@@ -81,8 +81,12 @@ body {
 	outline-offset: 2px;
 }
 
-/* ── Header: frosted, a hairline under it, the page scrolling beneath ── */
-.header {
+/*
+ * ── Header: frosted, a hairline under it, the page scrolling beneath ──
+ * `header.header`, not `.header`: Starlight's header holds a `div.header` too, and the bare class
+ * drew a second hairline inside the first, inset by the header's padding.
+ */
+header.header {
 	border-bottom: 0.5px solid var(--sl-color-hairline-light);
 	-webkit-backdrop-filter: saturate(180%) blur(20px);
 	backdrop-filter: saturate(180%) blur(20px);
