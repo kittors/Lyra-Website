@@ -1,0 +1,175 @@
+/*
+ * What both halves of the site share beyond the tokens: how one page gives way to the next, how a
+ * new theme spreads across the page, the tooltip, and the scrollbars of the panels that scroll on
+ * their own. Loaded by the product pages (`Base.astro`) and by Starlight (`customCss`), after
+ * `tokens.css`.
+ */
+
+/* ── Between pages ─────────────────────────────────────────────────────
+ * Following a link within the site is a view transition, where the browser has cross-document view
+ * transitions and motion is welcome. The bar at the top and the docs' sidebar keep their places;
+ * only the page under them changes — the old one lifts away in 160ms, the new one rises into place
+ * in 300ms. Browsers without them get `page-fade` from the head script (`scripts/arrival.ts`): the
+ * new page's content fades up on its own. With reduced motion, neither. */
+
+/* The opt-in itself (`@view-transition`) is inline in each page's head — see `scripts/arrival.ts`. */
+
+/* The product pages' bar and the docs' header are one bar as far as a transition is concerned: going
+ * from one to the other, it stays put and its contents cross-fade. The name sits on the element that
+ * draws the frosted glass, so nothing inside it loses what is behind the glass. */
+[data-nav] > .nav-bar,
+.page > .header {
+	view-transition-name: site-header;
+}
+/* The docs' sidebar, where it is a column beside the page rather than the phone menu. */
+@media (min-width: 50rem) {
+	.page .sidebar-pane {
+		view-transition-name: docs-sidebar;
+	}
+}
+
+@keyframes lyra-page-out {
+	to {
+		opacity: 0;
+		transform: translateY(-0.375rem);
+	}
+}
+@keyframes lyra-page-in {
+	from {
+		opacity: 0;
+		transform: translateY(0.625rem);
+	}
+}
+@keyframes lyra-fade-out {
+	to {
+		opacity: 0;
+	}
+}
+@keyframes lyra-fade-in {
+	from {
+		opacity: 0;
+	}
+}
+
+::view-transition-old(root) {
+	animation: 160ms cubic-bezier(0.55, 0, 1, 0.45) both lyra-page-out;
+}
+::view-transition-new(root) {
+	animation: 300ms cubic-bezier(0.22, 1, 0.36, 1) 40ms both lyra-page-in;
+}
+::view-transition-group(site-header),
+::view-transition-group(docs-sidebar) {
+	animation-duration: 300ms;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* The sidebar, on the way to or from a page that has none, goes and comes with the page. */
+::view-transition-old(docs-sidebar):only-child {
+	animation: 160ms cubic-bezier(0.55, 0, 1, 0.45) both lyra-fade-out;
+}
+::view-transition-new(docs-sidebar):only-child {
+	animation: 300ms cubic-bezier(0.22, 1, 0.36, 1) 40ms both lyra-fade-in;
+}
+
+/* Without cross-document transitions: only the new page's content moves, and only on the way in.
+ * `backwards`, so that once it is over nothing is left holding a transform — a transformed <main>
+ * would become the frame of every fixed element inside it. */
+@keyframes lyra-page-fade {
+	from {
+		opacity: 0;
+		transform: translateY(0.625rem);
+	}
+}
+.page-fade main {
+	animation: lyra-page-fade 300ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* ── A new theme ───────────────────────────────────────────────────────
+ * Choosing a theme is a same-page view transition (`scripts/theme.ts`): the old page holds still and
+ * the new one is uncovered in a circle growing from the control. The whole page is one picture for
+ * it, so nothing keeps a name of its own and nothing fades. */
+:root.theme-transition::view-transition-old(root),
+:root.theme-transition::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+:root.theme-transition :is([data-nav] > .nav-bar, .page > .header, .page .sidebar-pane) {
+	view-transition-name: none;
+}
+/* And inside the new picture every colour is already the new one: a bar still easing from the old
+ * theme's colours would show up inside the circle as a grey band. */
+:root.theme-transition *,
+:root.theme-transition *::before,
+:root.theme-transition *::after {
+	transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.page-fade main {
+		animation: none;
+	}
+}
+
+/* ── Tooltip ───────────────────────────────────────────────────────────
+ * The site's own, for anything with `data-tip` (`scripts/tooltip.ts`), in place of the browser's
+ * `title` bubble. */
+.lyra-tip {
+	position: fixed;
+	z-index: 1000;
+	max-width: 16rem;
+	padding: 0.375rem 0.625rem;
+	border-radius: 0.5rem;
+	background: var(--surface-raised);
+	box-shadow: var(--shadow-float);
+	color: var(--ink);
+	font: var(--weight-medium) 0.75rem/1.35 var(--font-sans);
+	white-space: nowrap;
+	pointer-events: none;
+	opacity: 0;
+	transform: translateY(0.1875rem);
+	transition:
+		opacity 120ms cubic-bezier(0.4, 0, 0.2, 1),
+		transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lyra-tip[data-side="bottom"] {
+	transform: translateY(-0.1875rem);
+}
+.lyra-tip[data-side="left"] {
+	transform: translateX(0.1875rem);
+}
+.lyra-tip.is-shown {
+	opacity: 1;
+	transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+	.lyra-tip {
+		transform: none;
+		transition-duration: 1ms;
+	}
+}
+
+/* ── Scrollbars ────────────────────────────────────────────────────────
+ * Panels that scroll on their own — the docs' sidebar, contents and search results, the phone
+ * menu — get a thin bar in the page's own grey on no track, rather than the system's gutter. The
+ * page's own scrollbar is the browser's; code blocks style theirs themselves. */
+.page .sidebar-pane,
+.right-sidebar,
+site-search .dialog-frame,
+.nav-sheet {
+	scrollbar-width: thin;
+	scrollbar-color: var(--line-strong) transparent;
+}
+/* Engines without `scrollbar-color` (Safari) take the same bar through their own pseudo-elements. */
+@supports not (scrollbar-color: auto) {
+	:is(.page .sidebar-pane, .right-sidebar, site-search .dialog-frame, .nav-sheet)::-webkit-scrollbar {
+		width: 0.625rem;
+		height: 0.625rem;
+	}
+	:is(.page .sidebar-pane, .right-sidebar, site-search .dialog-frame, .nav-sheet)::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	:is(.page .sidebar-pane, .right-sidebar, site-search .dialog-frame, .nav-sheet)::-webkit-scrollbar-thumb {
+		border: 0.1875rem solid transparent;
+		border-radius: var(--radius-pill);
+		background: var(--line-strong) padding-box;
+	}
+}

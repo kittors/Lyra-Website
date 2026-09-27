@@ -61,6 +61,13 @@
 	--sl-color-backdrop-overlay: rgb(0 0 0 / 0.3);
 }
 
+/* A link to a heading on the same page glides there. */
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
 body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -88,9 +95,47 @@ site-search button[data-open-modal] {
 site-search button[data-open-modal]:hover {
 	border-color: var(--sl-color-gray-4);
 }
-starlight-theme-select select,
-starlight-lang-select select {
-	border-radius: var(--radius-sm);
+/* The theme and language menus (`components/docs/`), in the header's quiet grey. */
+.docs-dropdown {
+	color: var(--sl-color-gray-2);
+}
+.docs-dropdown .dropdown-trigger:hover,
+.docs-dropdown .dropdown-trigger[aria-expanded="true"] {
+	color: var(--sl-color-white);
+}
+/* In the phone menu the links take a row of their own, and the two menus share the row under it. */
+.mobile-preferences > .social-icons {
+	flex-basis: 100%;
+}
+/* The search panel: the site's own card — rounder, a soft shadow instead of an outline — and it
+ * arrives rather than appears. */
+@media (min-width: 50rem) {
+	site-search dialog {
+		border: 0;
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-float);
+	}
+}
+#starlight__search {
+	--pagefind-ui-border-radius: var(--radius-sm);
+}
+/* One ring on the focused field — the outline laid over its own border, not a second ring outside. */
+#starlight__search .pagefind-ui__search-input:focus-visible {
+	outline-offset: -1px;
+}
+@keyframes lyra-dialog-in {
+	from {
+		opacity: 0;
+		transform: translateY(-0.5rem) scale(0.98);
+	}
+}
+@media (prefers-reduced-motion: no-preference) {
+	site-search dialog[open] {
+		animation: lyra-dialog-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+	site-search dialog[open]::backdrop {
+		animation: lyra-fade-in 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	}
 }
 /* Header links and the GitHub mark in the quiet grey of the product pages' navigation. */
 .social-icons a {
@@ -123,6 +168,24 @@ starlight-lang-select select {
 }
 .sidebar-content .group-label .large {
 	font-weight: 600;
+}
+
+/* Sidebar groups, the phone's contents list and file trees slide open and shut, where the browser
+ * can animate to `auto`; elsewhere they simply open. Their disclosure marks are Starlight's own. */
+@media (prefers-reduced-motion: no-preference) {
+	:root {
+		interpolate-size: allow-keywords;
+	}
+	:is(.sidebar-content, mobile-starlight-toc, starlight-file-tree, .sl-markdown-content) details::details-content {
+		block-size: 0;
+		overflow-y: clip;
+		transition:
+			block-size 0.32s var(--ease-out),
+			content-visibility 0.32s allow-discrete;
+	}
+	:is(.sidebar-content, mobile-starlight-toc, starlight-file-tree, .sl-markdown-content) details[open]::details-content {
+		block-size: auto;
+	}
 }
 
 /* ── Words ─────────────────────────────────────────────────────────── */

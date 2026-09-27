@@ -1,0 +1,23 @@
+---
+import Dropdown from "../Dropdown.astro";
+
+/**
+ * Starlight's theme picker, drawn as the site's own dropdown instead of a system <select>. It stores
+ * the choice under Starlight's key, so the docs and the product pages share it, and the new theme
+ * spreads from the button in a circle.
+ */
+const en = Astro.locals.starlightRoute.lang === "en";
+const text = en ? { label: "Appearance", auto: "System", light: "Light", dark: "Dark" } : { label: "外观", auto: "跟随系统", light: "浅色", dark: "深色" };
+---
+
+<Dropdown
+	kind="theme"
+	label={text.label}
+	showLabel
+	class="docs-dropdown"
+	options={[
+		{ value: "auto", label: text.auto, icon: "display", selected: true },
+		{ value: "light", label: text.light, icon: "sun" },
+		{ value: "dark", label: text.dark, icon: "moon" },
+	]}
+/>

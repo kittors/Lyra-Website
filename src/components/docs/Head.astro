@@ -1,0 +1,22 @@
+---
+import Default from "@astrojs/starlight/components/Head.astro";
+
+import { ARRIVAL_SCRIPT, VIEW_TRANSITION_OPT_IN } from "../../scripts/arrival.ts";
+
+/**
+ * Starlight's head, plus what every page of this site has in its head: the opt-in to page
+ * transitions, and the script that tells whether the reader arrived from another page of the site,
+ * which decides how the page comes in.
+ */
+---
+
+<Default />
+<style is:inline set:html={VIEW_TRANSITION_OPT_IN} />
+<script is:inline set:html={ARRIVAL_SCRIPT} />
+<script>
+	import { replaceTitles, wireTooltips } from "../../scripts/tooltip.ts";
+
+	// Expressive Code's copy buttons carry a native `title`; they get the site's tooltip instead.
+	replaceTitles();
+	wireTooltips();
+</script>

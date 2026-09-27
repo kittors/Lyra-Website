@@ -1,6 +1,7 @@
 import type { Release } from "../../shared/release.ts";
 import { recommendedFor } from "../i18n/platform.ts";
 import { wireCopyButtons } from "./copy.ts";
+import { setDisclosure } from "./disclosure.ts";
 import { detectPlatform, recommend, type Platform } from "./platform.ts";
 import { fullHints } from "./platform-hints.ts";
 import { loadRelease, pageLocale } from "./release-client.ts";
@@ -36,11 +37,14 @@ async function recommendFor(platform: Platform): Promise<void> {
 		if (platform.os) document.querySelector(`[data-os-card="${platform.os}"]`)?.classList.add("is-recommended");
 	}
 
-	// The first-launch guide for this system is the one to have open.
+	// The first-launch guide for this system is the one to have open. Out of sight the change is
+	// simply made; in sight (a reader who came straight to the guides) it is animated.
 	const guide = platform.os === "android" || platform.os === "ios" ? "phone" : platform.os;
-	const mine = guide ? document.querySelector<HTMLDetailsElement>(`details[data-guide="${guide}"]`) : null;
+	const mine = guide ? document.querySelector<HTMLElement>(`.disclosure[data-guide="${guide}"]`) : null;
 	if (mine) {
-		for (const each of document.querySelectorAll<HTMLDetailsElement>("details[data-guide]")) each.open = each === mine;
+		const guidesBox = mine.parentElement?.getBoundingClientRect();
+		const inView = guidesBox ? guidesBox.top < innerHeight && guidesBox.bottom > 0 : false;
+		for (const each of document.querySelectorAll<HTMLElement>(".disclosure[data-guide]")) setDisclosure(each, each === mine, inView);
 	}
 	reco.dataset.state = "ready";
 

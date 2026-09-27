@@ -4,6 +4,7 @@ import { Image } from "astro:assets";
 import appIcon from "../assets/brand/app-icon.png";
 import { DOCS_PATH, LINKS, localize, otherLocale, type Locale } from "../i18n/index.ts";
 import { SITE_TEXT } from "../i18n/site.ts";
+import Dropdown from "./Dropdown.astro";
 import PlatformIcon from "./PlatformIcon.astro";
 
 /**
@@ -50,6 +51,16 @@ const links = [
 			<a class="nav-icon" href={LINKS.github} aria-label={text.github}>
 				<PlatformIcon name="github" size="1.25rem" />
 			</a>
+			<Dropdown
+				kind="theme"
+				label={text.theme}
+				class="nav-theme"
+				options={[
+					{ value: "auto", label: text.themeAuto, icon: "display", selected: true },
+					{ value: "light", label: text.themeLight, icon: "sun" },
+					{ value: "dark", label: text.themeDark, icon: "moon" },
+				]}
+			/>
 			<a class="nav-lang" href={switchHref} hreflang={other} lang={other} aria-label={text.switchLabel} data-lang-switch>
 				{text.switchTo}
 			</a>
@@ -135,14 +146,17 @@ const links = [
 	}
 	.nav-links a,
 	.nav-icon,
-	.nav-lang {
+	.nav-lang,
+	.nav-tools :global(.nav-theme .dropdown-trigger) {
 		opacity: 0.78;
 		transition: opacity var(--dur-quick) var(--ease-soft);
 	}
 	.nav-links a:hover,
 	.nav-links a[aria-current="page"],
 	.nav-icon:hover,
-	.nav-lang:hover {
+	.nav-lang:hover,
+	.nav-tools :global(.nav-theme .dropdown-trigger:hover),
+	.nav-tools :global(.nav-theme .dropdown-trigger[aria-expanded="true"]) {
 		opacity: 1;
 	}
 	.nav-links a {
@@ -153,7 +167,7 @@ const links = [
 		justify-self: end;
 		display: flex;
 		align-items: center;
-		gap: 0.875rem;
+		gap: 0.625rem;
 	}
 	.nav-icon {
 		display: grid;

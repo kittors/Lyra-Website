@@ -1,16 +1,18 @@
 ---
 import "../styles/tokens.css";
+import "../styles/shared.css";
 import "../styles/site.css";
 
 import Footer from "../components/Footer.astro";
 import Nav from "../components/Nav.astro";
 import { localize, type Locale } from "../i18n/index.ts";
 import { SITE_TEXT } from "../i18n/site.ts";
+import { ARRIVAL_SCRIPT, VIEW_TRANSITION_OPT_IN } from "../scripts/arrival.ts";
 
 /**
- * Every product page: the head, the navigation, the footer, and the two scripts that must run
- * before the first frame — the theme, and the failsafe that shows the page if the motion script
- * never does.
+ * Every product page: the head, the navigation, the footer, and the scripts that must run before
+ * the first frame — the theme, the failsafe that shows the page if the motion script never does,
+ * and whether the reader arrived from another page of the site (`scripts/arrival.ts`).
  */
 interface Props {
 	locale: Locale;
@@ -32,10 +34,11 @@ const og = new URL("/og.png", site).href;
 ---
 
 <!doctype html>
-<html lang={locale} data-theme="light">
+<html lang={locale} data-theme="light" data-site="product">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<style is:inline set:html={VIEW_TRANSITION_OPT_IN} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		{canonical && <link rel="canonical" href={canonical} />}
@@ -87,6 +90,7 @@ const og = new URL("/og.png", site).href;
 				}, 1500);
 			})();
 		</script>
+		<script is:inline set:html={ARRIVAL_SCRIPT} />
 		<slot name="head" />
 	</head>
 	<body>

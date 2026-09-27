@@ -39,12 +39,12 @@ const t = HOME_TEXT[locale].market;
 		</a>
 	</div>
 
-	<div class="container-wide market-stage">
+	<div class="market-stage">
 		<div class="market-main" data-rise>
-			<WindowFrame scene="plugin-market" locale={locale} alt={t.shotAlt} sizes="(min-width: 87.5rem) 68rem, 86vw" />
+			<WindowFrame scene="plugin-market" locale={locale} alt={t.shotAlt} sizes="(min-width: 68rem) 49rem, 74vw" />
 		</div>
 		<div class="market-detail" data-parallax="-0.12">
-			<WindowFrame scene="plugin-detail" locale={locale} alt={t.detailAlt} sizes="(min-width: 87.5rem) 44rem, 50vw" />
+			<WindowFrame scene="plugin-detail" locale={locale} alt={t.detailAlt} sizes="(min-width: 68rem) 28rem, 44vw" />
 		</div>
 	</div>
 </section>
@@ -72,7 +72,7 @@ const t = HOME_TEXT[locale].market;
 		gap: 0.25rem 0.625rem;
 	}
 	.market-number {
-		font-size: clamp(3rem, 2.2rem + 3vw, 4.5rem);
+		font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem);
 		font-weight: var(--weight-bold);
 		line-height: 1;
 		letter-spacing: -0.03em;
@@ -91,19 +91,22 @@ const t = HOME_TEXT[locale].market;
 	}
 
 	/* The market fills most of the width; one entry's page overlaps its lower right, a step closer. */
+	/* Both windows inside one 1000px footprint: the market, and one entry's page lifted out in
+	 * front of its lower right. The padding (a share of the width) sets how far down it hangs. */
 	.market-stage {
 		position: relative;
-		margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
-		padding-bottom: clamp(3rem, 1rem + 7vw, 9rem);
+		width: min(100% - 2 * var(--gutter), var(--shot-max));
+		margin: clamp(3rem, 2rem + 3vw, 5rem) auto 0;
+		padding-bottom: 14%;
 	}
 	.market-main {
-		width: 80%;
+		width: 78%;
 	}
 	.market-detail {
 		position: absolute;
 		right: 0;
 		bottom: 0;
-		width: 50%;
+		width: 45%;
 	}
 
 	@media (max-width: 48rem) {

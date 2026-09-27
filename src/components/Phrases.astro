@@ -6,7 +6,8 @@
  * "手" at the end of one line and "机" at the start of the next. Here the text is cut after each
  * clause-ending punctuation mark and each clause is kept whole (an inline block), so lines break
  * where a reader would pause. A clause longer than the line still wraps inside itself; nothing
- * overflows. Text without Han characters passes through untouched.
+ * overflows. Text without Han characters passes through untouched. A clause that ends in a closing
+ * mark is marked `closes`, for headings that tighten the mark (`site.css`).
  */
 interface Props {
 	text: string;
@@ -14,10 +15,12 @@ interface Props {
 
 const { text } = Astro.props;
 const HAN = /[㐀-鿿]/;
+/** Full-width closing marks, whose glyph fills only the left half of its square. */
+const CLOSING = /[，。、）」』】》]$/;
 const phrases = HAN.test(text) ? text.split(/(?<=[，。、；：！？）])/).filter(Boolean) : null;
 ---
 
-{phrases ? phrases.map((phrase) => <span class="phrase">{phrase}</span>) : text}
+{phrases ? phrases.map((phrase) => <span class:list={["phrase", { closes: CLOSING.test(phrase) }]}>{phrase}</span>) : text}
 
 <style>
 	.phrase {

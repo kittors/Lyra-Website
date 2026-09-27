@@ -69,6 +69,12 @@ const odometers = $$("[data-count]").map((host) => ({ host, strips: buildOdomete
 
 // ── The opening ──────────────────────────────────────────────────────
 
+/**
+ * The opening plays once: not again when the layout crosses a breakpoint, and not at all when the
+ * reader followed a link from another page of the site — the page transition was the entrance.
+ */
+let opened = root.classList.contains("nav-arrival");
+
 function hero(full: boolean, reduce: boolean): void {
 	const section = $("[data-hero]");
 	if (!section) return;
@@ -84,23 +90,30 @@ function hero(full: boolean, reduce: boolean): void {
 		return;
 	}
 
-	gsap.set(words, { yPercent: 115, opacity: 1 });
-	const opening = gsap.timeline({ defaults: { ease: EASE } });
-	opening
-		.fromTo(glow, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 2.4, ease: "power2.out" }, 0)
-		.fromTo(icon, { opacity: 0, y: 28, scale: 0.84 }, { opacity: 1, y: 0, scale: 1, duration: 1.4 }, 0.05)
-		.fromTo(name, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 1.2 }, 0.18)
-		.to(words, { yPercent: 0, duration: 1.3, stagger: 0.09 }, 0.26)
-		.fromTo(lead, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 1.2 }, 0.58)
-		.fromTo(actions, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 1.2 }, 0.68)
-		.fromTo(meta, { opacity: 0 }, { opacity: 1, duration: 1.2 }, 0.86)
-		.fromTo(stage, { opacity: 0, y: full ? 160 : 90 }, { opacity: 1, y: 0, duration: 2, ease: "expo.out" }, 0.5);
+	if (opened) {
+		gsap.set([icon, name, lead, actions, meta, stage], { opacity: 1 });
+		gsap.set(words, { opacity: 1, yPercent: 0 });
+	} else {
+		opened = true;
+		gsap.set(words, { yPercent: 115, opacity: 1 });
+		const opening = gsap.timeline({ defaults: { ease: EASE } });
+		opening
+			.fromTo(glow, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 2.4, ease: "power2.out" }, 0)
+			.fromTo(icon, { opacity: 0, y: 28, scale: 0.84 }, { opacity: 1, y: 0, scale: 1, duration: 1.4 }, 0.05)
+			.fromTo(name, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 1.2 }, 0.18)
+			.to(words, { yPercent: 0, duration: 1.3, stagger: 0.09 }, 0.26)
+			.fromTo(lead, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 1.2 }, 0.58)
+			.fromTo(actions, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 1.2 }, 0.68)
+			.fromTo(meta, { opacity: 0 }, { opacity: 1, duration: 1.2 }, 0.86)
+			.fromTo(stage, { opacity: 0, y: full ? 110 : 70 }, { opacity: 1, y: 0, duration: 2, ease: "expo.out" }, 0.5);
+	}
 
-	// The window leans back and stands up as the reader scrolls to it.
+	// The window leans back from its bottom edge and stands up as the reader scrolls to it. It
+	// starts a little smaller and grows to its own size, never past it.
 	if (tilt && stage) {
 		gsap.fromTo(
 			tilt,
-			{ transformPerspective: 1600, rotateX: full ? 24 : 14, scale: full ? 0.9 : 0.96, transformOrigin: "50% 0%" },
+			{ transformPerspective: 1800, rotateX: full ? 14 : 8, scale: full ? 0.92 : 0.96, transformOrigin: "50% 100%" },
 			{
 				rotateX: 0,
 				scale: 1,
@@ -180,17 +193,14 @@ function counters(instant: boolean): void {
 	}
 }
 
-/**
- * The split view starts close on the first conversation — the origin sits where its column is in
- * the capture, a quarter of the way across — and pulls back until every pane is in view.
- */
-function splitZoom(full: boolean): void {
+/** The split view settles into its window: a touch close at first, then the whole of it. */
+function splitZoom(): void {
 	const frame = $("[data-split-window]");
 	const picture = frame && $("[data-window-picture]", frame);
 	if (!frame || !picture) return;
 	gsap.fromTo(
 		picture,
-		{ scale: full ? 1.75 : 1.35, transformOrigin: "24% 12%" },
+		{ scale: 1.06, transformOrigin: "50% 30%" },
 		{ scale: 1, ease: "none", scrollTrigger: { trigger: frame, start: "top 90%", end: "center 55%", scrub: 0.7 } },
 	);
 }
@@ -366,7 +376,7 @@ media.add(
 		rises(full);
 		parallax();
 		tools();
-		splitZoom(full);
+		splitZoom();
 		lanes();
 		pops();
 		agentCursor();

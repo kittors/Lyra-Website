@@ -1,0 +1,81 @@
+---
+/**
+ * A show-and-hide section drawn by the site, in place of <details>: a button that says whether it is
+ * open, and a panel that grows to its content's height and shrinks back rather than appearing and
+ * vanishing. The button is the `summary` slot; the panel is the default slot.
+ *
+ * Without scripts every panel is simply open — nothing is ever locked away behind a button that
+ * cannot work. Behaviour is in `scripts/disclosure.ts`.
+ */
+interface Props {
+	/** Unique on the page: the button and the panel are named after it. */
+	id: string;
+	open?: boolean;
+	/** Announce the panel as a region. For a few large panels, not for every row of a list. */
+	region?: boolean;
+	class?: string;
+	[key: `data-${string}`]: string | boolean | undefined;
+}
+
+const { id, open = false, region = false, class: className, ...rest } = Astro.props;
+---
+
+<lyra-disclosure class:list={["disclosure", className]} data-open={open ? "" : undefined} {...rest}>
+	<button type="button" class="disclosure-trigger" id={`${id}-button`} aria-expanded={open ? "true" : "false"} aria-controls={`${id}-panel`}>
+		<slot name="summary" />
+	</button>
+	<div class="disclosure-panel" id={`${id}-panel`} role={region ? "region" : undefined} aria-labelledby={region ? `${id}-button` : undefined}>
+		<div class="disclosure-content">
+			<slot />
+		</div>
+	</div>
+</lyra-disclosure>
+
+<script>
+	import "../scripts/disclosure.ts";
+</script>
+
+<style>
+	.disclosure {
+		display: block;
+	}
+	.disclosure-trigger {
+		cursor: pointer;
+		text-align: start;
+	}
+	/* The panel's height moves between none of its content and all of it: a grid row going from
+	 * 0fr to 1fr, which the browser can animate where it cannot animate `height: auto`. */
+	.disclosure-panel {
+		display: grid;
+		grid-template-rows: 1fr;
+	}
+	.disclosure-content {
+		min-height: 0;
+	}
+	:global(.js) .disclosure-panel {
+		transition:
+			grid-template-rows 0.42s var(--ease-out),
+			opacity 0.3s var(--ease-soft) 0.06s,
+			visibility 0s;
+	}
+	:global(.js) .disclosure:not([data-open]) > .disclosure-panel {
+		grid-template-rows: 0fr;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			grid-template-rows 0.36s var(--ease-out),
+			opacity 0.18s var(--ease-soft),
+			visibility 0s linear 0.36s;
+	}
+	/* Clipped only while it moves, so a focus ring inside an open panel is never cut. */
+	:global(.js) .disclosure:is(:not([data-open]), [data-moving]) > .disclosure-panel > .disclosure-content {
+		overflow: hidden;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(.js) .disclosure-panel,
+		:global(.js) .disclosure:not([data-open]) > .disclosure-panel {
+			transition: none;
+		}
+	}
+</style>

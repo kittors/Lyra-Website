@@ -48,10 +48,10 @@ const [before, after] = t.version("{v}").split("{v}");
 			{before}<span data-release-version>{release.version}</span>{after}
 		</p>
 	</div>
-	<div class="hero-stage container-wide" data-hero-stage>
+	<div class="hero-stage" data-hero-stage>
 		<div class="hero-rise" data-hero-part="stage">
 			<div class="hero-tilt" data-hero-tilt>
-				<WindowFrame scene="hero-conversation" locale={locale} alt={t.shotAlt} priority sizes="(min-width: 87.5rem) 80rem, 92vw" />
+				<WindowFrame scene="hero-conversation" locale={locale} alt={t.shotAlt} priority sizes="(min-width: 70rem) 65rem, 92vw" />
 			</div>
 		</div>
 	</div>
@@ -91,9 +91,9 @@ const [before, after] = t.version("{v}").split("{v}");
 	 * transparent margin fall outside. */
 	.hero-icon {
 		display: block;
-		width: clamp(5rem, 4rem + 3vw, 6.5rem);
+		width: clamp(4.25rem, 3.6rem + 2vw, 5.5rem);
 		aspect-ratio: 1;
-		margin-bottom: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+		margin-bottom: clamp(1.125rem, 0.9rem + 0.8vw, 1.5rem);
 	}
 	.hero-icon :global(img) {
 		width: calc(100% * 1024 / 824);
@@ -109,7 +109,7 @@ const [before, after] = t.version("{v}").split("{v}");
 		font-weight: inherit;
 	}
 	.hero-name {
-		font-size: clamp(1.3125rem, 1.1rem + 0.9vw, 1.875rem);
+		font-size: clamp(1.1875rem, 1.05rem + 0.5vw, 1.5rem);
 		font-weight: var(--weight-bold);
 		letter-spacing: -0.01em;
 		color: var(--ink);
@@ -140,10 +140,12 @@ const [before, after] = t.version("{v}").split("{v}");
 
 	.hero-stage {
 		position: relative;
-		margin-top: clamp(2.75rem, 1.5rem + 3.5vw, 4.5rem);
+		width: min(100% - 2 * var(--gutter), var(--hero-shot-max));
+		margin: clamp(3rem, 1.5rem + 4vw, 5.25rem) auto 0;
 	}
+	/* Leans back from its bottom edge, so the tilt only ever makes it smaller, never wider. */
 	.hero-tilt {
-		transform-origin: 50% 0%;
+		transform-origin: 50% 100%;
 	}
 
 	@media (max-width: 40rem) {

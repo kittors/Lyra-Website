@@ -20,14 +20,14 @@ const t = HOME_TEXT[locale].split;
 	<div class="container">
 		<SectionHead eyebrow={t.eyebrow} title={t.title} lead={t.lead} id="split-title" />
 	</div>
-	<div class="container-wide split-stage" data-split-stage>
-		{/* It opens 1.75× zoomed, so it asks for a source that stays sharp at that size. */}
-		<WindowFrame scene="split-view" locale={locale} alt={t.shotAlt} moving sizes="(min-width: 87.5rem) 140rem, 165vw" data-split-window />
+	<div class="split-stage" data-split-stage>
+		<WindowFrame scene="split-view" locale={locale} alt={t.shotAlt} moving sizes="(min-width: 68rem) 62.5rem, 94vw" data-split-window />
 	</div>
 </section>
 
 <style>
 	.split-stage {
-		margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+		width: min(100% - 2 * var(--gutter), var(--shot-max));
+		margin: clamp(3rem, 2rem + 3vw, 5rem) auto 0;
 	}
 </style>

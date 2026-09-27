@@ -33,13 +33,13 @@ const [approval, list, reading] = phones;
 		phones.length >= 3 ? (
 			<div class="container mobile-trio">
 				<div class="trio-side trio-side--left" data-parallax="0.1">
-					<PhoneFrame image={list} alt={t.listAlt} synced={t.synced} sizes="(min-width: 64rem) 17rem, 44vw" />
+					<PhoneFrame image={list} alt={t.listAlt} synced={t.synced} sizes="(min-width: 48rem) 14.375rem, 42vw" />
 				</div>
 				<div class="trio-center" data-rise="solid">
-					<PhoneFrame image={approval} alt={t.approvalAlt} synced={t.synced} sizes="(min-width: 64rem) 20rem, 56vw" />
+					<PhoneFrame image={approval} alt={t.approvalAlt} synced={t.synced} sizes="(min-width: 48rem) 16.75rem, 56vw" />
 				</div>
 				<div class="trio-side trio-side--right" data-parallax="0.1">
-					<PhoneFrame image={reading} alt={t.readingAlt} synced={t.synced} sizes="(min-width: 64rem) 17rem, 44vw" />
+					<PhoneFrame image={reading} alt={t.readingAlt} synced={t.synced} sizes="(min-width: 48rem) 14.375rem, 42vw" />
 				</div>
 			</div>
 		) : (
@@ -93,7 +93,7 @@ const [approval, list, reading] = phones;
 		position: absolute;
 		right: 4%;
 		bottom: 0;
-		width: clamp(10rem, 6rem + 12vw, 18.5rem);
+		width: min(16.75rem, 30%);
 	}
 
 	/* Three phones on a shallow podium: the approval in front, the other two a step back and lower,
@@ -105,16 +105,17 @@ const [approval, list, reading] = phones;
 		gap: clamp(1rem, 0.5rem + 2vw, 2.5rem);
 		margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
 	}
+	/* The front phone is at most 560px tall (268px wide), the other two 480px. */
 	.trio-center {
 		position: relative;
 		z-index: 1;
 		flex: none;
-		width: clamp(12.5rem, 8rem + 12vw, 20rem);
+		width: min(16.75rem, 56%);
 	}
 	.trio-side {
 		flex: none;
-		width: clamp(10.5rem, 6.5rem + 10vw, 17rem);
-		margin-top: clamp(3rem, 1.5rem + 5vw, 6rem);
+		width: min(14.375rem, 42%);
+		margin-top: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
 		opacity: 0.92;
 	}
 
@@ -154,10 +155,10 @@ const [approval, list, reading] = phones;
 			gap: 0;
 		}
 		.trio-center {
-			width: 56%;
+			width: min(16.75rem, 56%);
 		}
 		.trio-side {
-			width: 42%;
+			width: min(14.375rem, 42%);
 		}
 		.trio-side--left {
 			margin-right: -12%;

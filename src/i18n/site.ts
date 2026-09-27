@@ -15,6 +15,10 @@ export const SITE_TEXT = {
 			close: "关闭菜单",
 			switchTo: "EN",
 			switchLabel: "Switch to English",
+			theme: "外观",
+			themeAuto: "跟随系统",
+			themeLight: "浅色",
+			themeDark: "深色",
 		},
 		footer: {
 			tagline: "智能体，自成一体。",
@@ -57,6 +61,10 @@ export const SITE_TEXT = {
 			close: "Close menu",
 			switchTo: "中文",
 			switchLabel: "切换到中文",
+			theme: "Appearance",
+			themeAuto: "System",
+			themeLight: "Light",
+			themeDark: "Dark",
 		},
 		footer: {
 			tagline: "An agent of its own.",

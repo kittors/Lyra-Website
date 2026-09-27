@@ -18,6 +18,19 @@ export default defineConfig({
 	trailingSlash: "ignore",
 	build: { format: "directory" },
 	image: { layout: "constrained" },
+	vite: {
+		build: {
+			rollupOptions: {
+				// Astro marks every MDX page with a module-level "use astro:head-inject" directive, and
+				// Rollup warns once per page that bundling may not preserve it. It is Astro's own marker,
+				// consumed before bundling; the warning says nothing about this site.
+				onwarn(warning, warn) {
+					if (warning.code === "MODULE_LEVEL_DIRECTIVE" && String(warning.message).includes("astro:head-inject")) return;
+					warn(warning);
+				},
+			},
+		},
+	},
 	// The docs have no page of their own at their root; send it to the first one.
 	redirects: {
 		"/docs": "/docs/start/intro/",
@@ -41,11 +54,15 @@ export default defineConfig({
 				{ label: "扩展", translations: { en: "Extend" }, items: [{ autogenerate: { directory: "docs/extend" } }] },
 				{ label: "帮助", translations: { en: "Help" }, items: [{ autogenerate: { directory: "docs/help" } }] },
 			],
-			customCss: ["./src/styles/tokens.css", "./src/styles/docs.css"],
-			// The product pages' wordmark, and a way back to the download page and the market.
+			customCss: ["./src/styles/tokens.css", "./src/styles/shared.css", "./src/styles/docs.css"],
+			// The product pages' wordmark, a way back to the download page and the market, drawn
+			// menus instead of the system's <select>, and the page-transition script in the head.
 			components: {
+				Head: "./src/components/docs/Head.astro",
 				SiteTitle: "./src/components/docs/SiteTitle.astro",
 				SocialIcons: "./src/components/docs/SocialIcons.astro",
+				ThemeSelect: "./src/components/docs/ThemeSelect.astro",
+				LanguageSelect: "./src/components/docs/LanguageSelect.astro",
 			},
 			head: [
 				{ tag: "link", attrs: { rel: "apple-touch-icon", href: "/apple-touch-icon.png" } },

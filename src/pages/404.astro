@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 
 import appIcon from "../assets/brand/app-icon.png";
 import mascot from "../assets/brand/mascot.png";
+import Phrases from "../components/Phrases.astro";
 import { DOCS_PATH, localize, type Locale } from "../i18n/index.ts";
 import { SITE_TEXT } from "../i18n/site.ts";
 import Base from "../layouts/Base.astro";
@@ -46,7 +47,7 @@ const meta = SITE_TEXT["zh-CN"].meta.notFound;
 					<div class="nf-mascot">
 						<Image src={mascot} alt={TEXT[locale].alt} width={240} densities={[1, 1.8]} loading="eager" />
 					</div>
-					<h1 class="t-display">{TEXT[locale].title}</h1>
+					<h1 class="t-display"><Phrases text={TEXT[locale].title} /></h1>
 					<p class="t-lead">{TEXT[locale].lead}</p>
 					<div class="nf-actions">
 						<a class="btn btn-primary btn-lg" href={localize(locale, "/")}>{TEXT[locale].home}</a>

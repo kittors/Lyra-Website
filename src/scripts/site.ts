@@ -6,6 +6,7 @@ import Lenis from "lenis";
 import { detectPlatform } from "./platform.ts";
 import { quickHints } from "./platform-hints.ts";
 import { refreshRelease } from "./release-client.ts";
+import { syncTheme, watchTheme } from "./theme.ts";
 
 /**
  * What every product page does once it is on screen: keep the theme and the screenshots in step
@@ -22,36 +23,11 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 // ── Theme ────────────────────────────────────────────────────────────
-// The docs' theme switch stores the choice under this key; the pages honour it, and follow the
-// system while there is none. Screenshots follow too: their dark sources are chosen by media
-// query, which only knows the system's preference, so a stored choice rewrites the query.
+// Shared with the docs (`theme.ts`): the stored choice, the system while there is none, and the
+// screenshots' dark variants following whichever the page is drawn in.
 
-const THEME_KEY = "starlight-theme";
-const systemDark = matchMedia("(prefers-color-scheme: dark)");
-
-function storedTheme(): "light" | "dark" | null {
-	try {
-		const value = localStorage.getItem(THEME_KEY);
-		return value === "light" || value === "dark" ? value : null;
-	} catch {
-		return null;
-	}
-}
-
-function applyTheme(): void {
-	const stored = storedTheme();
-	root.dataset.theme = stored ?? (systemDark.matches ? "dark" : "light");
-	const media = stored === "dark" ? "all" : stored === "light" ? "not all" : "(prefers-color-scheme: dark)";
-	for (const source of document.querySelectorAll<HTMLSourceElement>("source[data-dark-source]")) {
-		if (source.media !== media) source.media = media;
-	}
-}
-
-applyTheme();
-systemDark.addEventListener("change", applyTheme);
-addEventListener("storage", (event) => {
-	if (event.key === THEME_KEY) applyTheme();
-});
+syncTheme();
+watchTheme();
 
 // ── Smooth scrolling ─────────────────────────────────────────────────
 // Lenis smooths the wheel and leaves touch alone. It runs on GSAP's clock so scroll-linked
@@ -214,6 +190,16 @@ function prepareSplits(scope: ParentNode): void {
 
 const arriving = [...document.querySelectorAll<HTMLElement>("[data-reveal], [data-split]")].filter((element) => !element.closest("[data-hero]"));
 prepareSplits(document);
+
+// Followed a link from another page of the site: the page transition has brought the first screen
+// in, so what is already in view is simply there. Whatever is further down still arrives as usual.
+if (root.classList.contains("nav-arrival")) {
+	for (const element of arriving.splice(0)) {
+		const box = element.getBoundingClientRect();
+		if (box.top < innerHeight && box.bottom > 0) element.classList.add("is-in", "is-instant");
+		else arriving.push(element);
+	}
+}
 
 if ("IntersectionObserver" in window) {
 	const arrive = new IntersectionObserver(

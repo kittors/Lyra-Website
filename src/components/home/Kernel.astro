@@ -67,7 +67,7 @@ const CALLS = ["read", "grep", "glob", "symbol", "lsp", "edit", "write", "bash",
 				</ul>
 			</div>
 			<div class="models-shot" data-rise>
-				<WindowFrame scene="settings-models" locale={locale} alt={t.shotAlt} surface="night" sizes="(min-width: 64rem) 58rem, 94vw" />
+				<WindowFrame scene="settings-models" locale={locale} alt={t.shotAlt} surface="night" sizes="(min-width: 75rem) 43rem, (min-width: 64rem) 56vw, 94vw" />
 			</div>
 		</div>
 	</div>
@@ -99,7 +99,7 @@ const CALLS = ["read", "grep", "glob", "symbol", "lsp", "edit", "write", "bash",
 		gap: 0.75rem;
 	}
 	.tools-number {
-		font-size: clamp(4.5rem, 3rem + 6vw, 8.5rem);
+		font-size: clamp(3.5rem, 2.6rem + 3.5vw, 6rem);
 		font-weight: var(--weight-bold);
 		line-height: 1;
 		letter-spacing: -0.04em;
@@ -174,7 +174,7 @@ const CALLS = ["read", "grep", "glob", "symbol", "lsp", "edit", "write", "bash",
 		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
 		align-items: center;
 		gap: clamp(2rem, 1rem + 4vw, 5rem);
-		margin-top: clamp(7rem, 4rem + 8vw, 11rem);
+		margin-top: clamp(5.5rem, 3.5rem + 6vw, 9rem);
 	}
 	.models-copy > :global(* + *) {
 		margin-top: 1.25rem;
@@ -207,13 +207,8 @@ const CALLS = ["read", "grep", "glob", "symbol", "lsp", "edit", "write", "bash",
 		font-size: 0.8125rem;
 		text-align: right;
 	}
-	/* The window runs past the right edge of the page, as if the app were open beside the text:
-	 * its column, plus the margin out to the edge of the screen, plus a little more to be cut off. */
-	.models {
-		--page: min(100vw - 2 * var(--gutter), var(--page-max));
-	}
 	.models-shot {
-		width: calc(100% + (100vw - var(--page)) / 2 + 6rem);
+		width: 100%;
 	}
 
 	@media (max-width: 64rem) {
@@ -222,9 +217,6 @@ const CALLS = ["read", "grep", "glob", "symbol", "lsp", "edit", "write", "bash",
 		}
 		.models {
 			grid-template-columns: minmax(0, 1fr);
-		}
-		.models-shot {
-			width: 100%;
 		}
 	}
 	@media (max-width: 30rem) {

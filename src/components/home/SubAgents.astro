@@ -28,9 +28,9 @@ const t = HOME_TEXT[locale].agents;
 			<p class="t-small builtins-note" data-reveal>{t.builtinsNote}</p>
 		</SectionHead>
 	</div>
-	<div class="container-wide agents-stage">
+	<div class="agents-stage">
 		<div data-rise>
-			<WindowFrame scene="sub-agents" locale={locale} alt={t.shotAlt} surface="night" sizes="(min-width: 87.5rem) 80rem, 94vw" />
+			<WindowFrame scene="sub-agents" locale={locale} alt={t.shotAlt} surface="night" sizes="(min-width: 68rem) 62.5rem, 94vw" />
 		</div>
 		<div class="lanes" aria-hidden="true" data-lanes>
 			<p class="lanes-title">
@@ -97,16 +97,17 @@ const t = HOME_TEXT[locale].agents;
 
 	.agents-stage {
 		position: relative;
-		margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem);
+		width: min(100% - 2 * var(--gutter), var(--shot-max));
+		margin: clamp(3rem, 2rem + 3vw, 5rem) auto 0;
 	}
 
 	/* A small floating card, frosted like a macOS panel, overlapping the window's lower left. */
-	/* Over the sidebar's lower corner and just past it — clear of the app's own composer. */
+	/* Over the sidebar's lower corner, inside the window's width, clear of the app's composer. */
 	.lanes {
 		position: absolute;
-		left: -1.5rem;
-		bottom: clamp(-3.5rem, -2vw, -1.5rem);
-		width: min(21.5rem, 36%);
+		left: clamp(0.75rem, 2%, 1.5rem);
+		bottom: clamp(-2.5rem, -2vw, -1rem);
+		width: min(20rem, 36%);
 		padding: 1.125rem 1.25rem 1rem;
 		border-radius: var(--radius-lg);
 		background: rgb(28 28 31 / 0.72);

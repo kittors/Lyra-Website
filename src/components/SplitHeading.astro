@@ -5,7 +5,8 @@
  * The cutting happens here, at build time, not in the browser: no layout shift when a script
  * rewrites the heading, nothing to undo on resize, and the heading is whole text without scripts.
  * Latin splits at spaces. Chinese has none, so it splits after its punctuation into phrases — a
- * clause rises as a clause, never as a broken word.
+ * clause rises as a clause, never as a broken word. A clause that ends in a closing mark is
+ * marked `closes`, so the stylesheet can give back the mark's blank half where the browser cannot.
  *
  * `text` is one line, or an array for lines that should always break where written.
  */
@@ -25,6 +26,8 @@ const { as: Element = "h2", text, class: className, id, by = "word", ...rest } =
 const lines = Array.isArray(text) ? text : [text];
 
 const HAN = /[㐀-鿿]/;
+/** Full-width closing marks, whose glyph fills only the left half of its square. */
+const CLOSING = /[，。、）」』】》]$/;
 function pieces(line: string): { text: string; space: boolean }[] {
 	if (HAN.test(line)) {
 		return line
@@ -48,7 +51,7 @@ function pieces(line: string): { text: string; space: boolean }[] {
 				<span class="split-line">
 					{pieces(line).map((piece) => (
 						<>
-							<span class="word">
+							<span class:list={["word", { closes: CLOSING.test(piece.text) }]}>
 								<span class="word-inner">{piece.text}</span>
 							</span>
 							{piece.space ? " " : null}

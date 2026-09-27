@@ -1,0 +1,268 @@
+---
+import Icon, { type IconName } from "./Icon.astro";
+
+/**
+ * A drawn dropdown: a button, and a floating list of choices with an icon and a check on the chosen
+ * one. It replaces the system's <select> wherever the site offers a choice — the theme, and in the
+ * docs the language — so no native menu ever pops up over the page.
+ *
+ * It is the ARIA "listbox popup" pattern: the button says it has a listbox and whether it is open;
+ * the list takes focus and moves an active option with the arrow keys, Home and End; Enter or Space
+ * chooses, Escape and Tab close, and so does a click anywhere else. The list lives in the top layer
+ * (a manual popover), so a scrolling or clipping container around the button — Starlight's phone
+ * menu — cannot cut it off. Behaviour is in `scripts/dropdown.ts`.
+ */
+export interface DropdownOption {
+	value: string;
+	label: string;
+	icon?: IconName;
+	/** For a choice that is a page: where it goes. */
+	href?: string;
+	lang?: string;
+	selected?: boolean;
+}
+
+interface Props {
+	/** What the control chooses, for assistive technology: "Theme", "Language". */
+	label: string;
+	options: DropdownOption[];
+	/** `theme` stores the choice and redraws; `link` goes to the option's page. */
+	kind: "theme" | "link";
+	/** Show the chosen option's name on the button, not only its icon. */
+	showLabel?: boolean;
+	/** Icon for the button when it does not show the chosen option's own. */
+	icon?: IconName;
+	class?: string;
+}
+
+const { label, options, kind, showLabel = false, icon, class: className } = Astro.props;
+const selected = options.find((option) => option.selected) ?? options[0]!;
+const id = `dropdown-${kind}-${Math.random().toString(36).slice(2, 9)}`;
+const optionIcons = options.filter((option) => option.icon);
+---
+
+<lyra-dropdown class:list={["dropdown", className]} data-kind={kind} data-value={selected.value}>
+	<button
+		type="button"
+		class:list={["dropdown-trigger", { "dropdown-trigger--icon": !showLabel }]}
+		id={`${id}-button`}
+		aria-haspopup="listbox"
+		aria-expanded="false"
+		aria-controls={`${id}-list`}
+		aria-label={showLabel ? undefined : `${label}: ${selected.label}`}
+		data-label={label}
+	>
+		{
+			icon ? (
+				<Icon name={icon} class="dropdown-trigger-icon" />
+			) : (
+				optionIcons.map((option) => <Icon name={option.icon!} class="dropdown-trigger-icon" data-for={option.value} />)
+			)
+		}
+		{showLabel && <span class="dropdown-trigger-label" data-trigger-label>{selected.label}</span>}
+		{showLabel && <Icon name="chevron-down" class="dropdown-chevron" />}
+	</button>
+	<div class="dropdown-popover" popover="manual" data-dropdown-popover>
+		<ul class="dropdown-list" id={`${id}-list`} role="listbox" aria-label={label} tabindex="-1">
+			{
+				options.map((option, index) => (
+					<li
+						class="dropdown-option"
+						id={`${id}-${index}`}
+						role="option"
+						aria-selected={option.value === selected.value ? "true" : "false"}
+						data-value={option.value}
+						data-href={option.href}
+						lang={option.lang}
+					>
+						{option.icon && <Icon name={option.icon} class="dropdown-option-icon" />}
+						<span class="dropdown-option-label">{option.label}</span>
+						<Icon name="check" class="dropdown-check" />
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</lyra-dropdown>
+
+{/*
+	The theme lives in storage the server cannot see. Before this control is painted, show the
+	reader's own choice rather than the default — the same trick Starlight's picker used.
+*/}
+{
+	kind === "theme" && (
+		<script is:inline>
+			(() => {
+				const menu = document.currentScript.previousElementSibling;
+				let value = "auto";
+				try {
+					const stored = localStorage.getItem("starlight-theme");
+					if (stored === "light" || stored === "dark") value = stored;
+				} catch {}
+				menu.dataset.value = value;
+				for (const option of menu.querySelectorAll("[role=option]")) option.setAttribute("aria-selected", String(option.dataset.value === value));
+				const chosen = menu.querySelector(`[role=option][data-value="${value}"] .dropdown-option-label`);
+				const label = menu.querySelector("[data-trigger-label]");
+				if (chosen && label) label.textContent = chosen.textContent;
+				const button = menu.querySelector(".dropdown-trigger");
+				if (chosen && button.hasAttribute("aria-label")) button.setAttribute("aria-label", `${button.dataset.label}: ${chosen.textContent}`);
+			})();
+		</script>
+	)
+}
+
+<script>
+	import "../scripts/dropdown.ts";
+</script>
+
+<style>
+	.dropdown {
+		position: relative;
+		display: inline-flex;
+	}
+	/* Taken back to nothing first: in the docs no reset has touched the browser's button. */
+	.dropdown-trigger {
+		appearance: none;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		height: 2rem;
+		margin: 0;
+		padding: 0 0.625rem;
+		border: 0;
+		border-radius: var(--radius-pill);
+		background: transparent;
+		color: inherit;
+		font: inherit;
+		font-size: 0.875rem;
+		font-weight: var(--weight-medium);
+		line-height: 1;
+		white-space: nowrap;
+		cursor: pointer;
+		transition:
+			background-color var(--dur-quick) var(--ease-soft),
+			opacity var(--dur-quick) var(--ease-soft);
+	}
+	.dropdown-trigger:hover,
+	.dropdown-trigger[aria-expanded="true"] {
+		background: var(--button-2);
+	}
+	.dropdown-trigger--icon {
+		justify-content: center;
+		width: 2rem;
+		padding: 0;
+	}
+	.dropdown-trigger :global(.dropdown-trigger-icon) {
+		width: 1.125rem;
+		height: 1.125rem;
+	}
+	/* The button wears the chosen option's icon. */
+	.dropdown :global(.dropdown-trigger-icon[data-for]) {
+		display: none;
+	}
+	.dropdown[data-value="auto"] :global(.dropdown-trigger-icon[data-for="auto"]),
+	.dropdown[data-value="light"] :global(.dropdown-trigger-icon[data-for="light"]),
+	.dropdown[data-value="dark"] :global(.dropdown-trigger-icon[data-for="dark"]) {
+		display: inline-block;
+	}
+	.dropdown-trigger :global(.dropdown-chevron) {
+		width: 0.875rem;
+		height: 0.875rem;
+		opacity: 0.6;
+		transition: transform var(--dur-slow) var(--ease-out);
+	}
+	.dropdown-trigger[aria-expanded="true"] :global(.dropdown-chevron) {
+		transform: rotate(180deg);
+	}
+
+	/* The floating list. In the top layer it is positioned by script (fixed coordinates); the UA's
+	 * popover styles — centred, bordered, opaque — are taken back first. */
+	.dropdown-popover {
+		position: fixed;
+		inset: auto;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		overflow: visible;
+		color: var(--ink);
+		opacity: 0;
+		transform: translateY(-0.25rem) scale(0.97);
+		transform-origin: var(--origin, top right);
+		transition:
+			opacity 140ms var(--ease-soft),
+			transform 200ms var(--ease-out);
+	}
+	.dropdown-popover.is-open {
+		opacity: 1;
+		transform: none;
+	}
+	/* Without the popover API it hangs from the button instead. */
+	.dropdown-popover.is-inline {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		right: 0;
+		z-index: 60;
+		display: none;
+	}
+	.dropdown-popover.is-inline.is-shown {
+		display: block;
+	}
+	.dropdown-list {
+		min-width: 11rem;
+		margin: 0;
+		padding: 0.375rem;
+		border-radius: var(--radius-lg);
+		background: color-mix(in srgb, var(--surface-raised) 92%, transparent);
+		box-shadow: var(--shadow-float);
+		-webkit-backdrop-filter: saturate(180%) blur(24px);
+		backdrop-filter: saturate(180%) blur(24px);
+		list-style: none;
+		outline: none;
+		font-size: 0.875rem;
+	}
+	.dropdown-option {
+		display: flex;
+		align-items: center;
+		gap: 0.625rem;
+		min-height: 2.25rem;
+		padding: 0 0.75rem;
+		border-radius: calc(var(--radius-lg) - 0.375rem);
+		cursor: pointer;
+		user-select: none;
+	}
+	.dropdown-option.is-active {
+		background: var(--button-2-hover);
+	}
+	.dropdown-list:focus-visible .dropdown-option.is-active {
+		box-shadow: inset 0 0 0 1.5px var(--accent);
+	}
+	.dropdown-option :global(.dropdown-option-icon) {
+		width: 1rem;
+		height: 1rem;
+		color: var(--ink-2);
+	}
+	.dropdown-option-label {
+		flex: 1;
+		white-space: nowrap;
+	}
+	.dropdown-option :global(.dropdown-check) {
+		width: 1rem;
+		height: 1rem;
+		color: var(--accent);
+		opacity: 0;
+	}
+	.dropdown-option[aria-selected="true"] :global(.dropdown-check) {
+		opacity: 1;
+	}
+	.dropdown-option[aria-selected="true"] .dropdown-option-label {
+		font-weight: var(--weight-medium);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.dropdown-popover,
+		.dropdown-trigger :global(.dropdown-chevron) {
+			transition-duration: 1ms;
+		}
+	}
+</style>
