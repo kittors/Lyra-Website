@@ -9,10 +9,11 @@ import mascot from "../assets/brand/mascot.png";
  * A phone, drawn to an iPhone's own geometry: a 390 × 844 pt screen in a 13 pt bezel, the Dynamic
  * Island, the status bar and the home indicator.
  *
- * The phone captures are the app's content only — no status bar, no home indicator — so the frame
- * draws both: the status bar sits above the content, the content fills the rest of the screen at its
- * own proportions, and whatever the screen shows around it takes the content's own edge colours,
- * sampled from the capture at build time, so there is no seam to see.
+ * The phone captures are the whole 390 × 844 pt screen, taken with the phone's safe areas reserved:
+ * the app keeps its own controls out of the top 47 pt and the bottom 34 pt, as it does under a real
+ * status bar and home indicator. So the capture fills the screen edge to edge, and the frame draws
+ * its status bar and home indicator over exactly those empty strips — nothing it draws sits on a
+ * control. The status bar's ink follows the capture's own top edge, sampled at build time.
  *
  * Without a screenshot, the phone shows Lyra's mascot and a line saying it is in sync — a placeholder
  * that still says something true about the feature.
@@ -122,11 +123,11 @@ const style = colours ? `--phone-top: ${colours.top}; --phone-side: ${colours.si
 		color: #000;
 	}
 
-	/* The capture fills the screen below the status bar at its own proportions (390 × 844, fitted to
-	 * 797 pt of height), centred; the home indicator floats over its foot, as iOS draws it. */
+	/* The capture is the whole screen (390 × 844 pt, the screen's own size). The status bar and the home
+	 * indicator are drawn on top of it, over the strips the app left empty for them. */
 	.phone-app {
 		position: absolute;
-		inset: calc(47 * var(--pt)) 0 0;
+		inset: 0;
 		display: flex;
 		justify-content: center;
 	}

@@ -19,9 +19,12 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = HOME_TEXT[locale].mobile;
-/** In the captures' order: an approval waiting (1), the session list (2), a finished conversation (3). */
+/**
+ * In the captures' order: a command waiting for approval (1), the session list with that conversation
+ * held down — lifted over the blurred page, its menu open (2), a new conversation's empty screen (3).
+ */
 const phones = mobileShots("dark", locale);
-const [approval, list, reading] = phones;
+const [approval, list, start] = phones;
 ---
 
 <section class="section surface-night mobile" aria-labelledby="mobile-title" data-night>
@@ -39,7 +42,7 @@ const [approval, list, reading] = phones;
 					<PhoneFrame image={approval} alt={t.approvalAlt} synced={t.synced} sizes="(min-width: 48rem) 16.75rem, 56vw" />
 				</div>
 				<div class="trio-side trio-side--right" data-parallax="0.1">
-					<PhoneFrame image={reading} alt={t.readingAlt} synced={t.synced} sizes="(min-width: 48rem) 14.375rem, 42vw" />
+					<PhoneFrame image={start} alt={t.startAlt} synced={t.synced} sizes="(min-width: 48rem) 14.375rem, 42vw" />
 				</div>
 			</div>
 		) : (

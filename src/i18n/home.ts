@@ -94,8 +94,8 @@ const zh = {
 		phoneAlt: "Lyra 的手机端。",
 		desktopAlt: "桌面端的同一个会话。",
 		approvalAlt: "手机上的 Lyra 在等你批准一条命令：拒绝、以后不再问、允许一次。",
-		listAlt: "手机上的项目与会话列表，等你批准的那条带着标记。",
-		readingAlt: "在手机上读一段桌面上已完成的对话。",
+		listAlt: "手机上的会话列表：长按等你批准的那条，它浮起来，旁边弹出置顶、重命名、归档等操作。",
+		startAlt: "在手机上开一个新对话：挑一条建议，或直接输入。",
 	},
 	open: {
 		eyebrow: "MIT 许可",
@@ -213,8 +213,8 @@ const en: HomeText = {
 		phoneAlt: "Lyra on a phone.",
 		desktopAlt: "The same session on the desktop.",
 		approvalAlt: "Lyra on a phone, waiting for approval to run a command: deny, don’t ask again, or allow once.",
-		listAlt: "Projects and sessions on the phone; the one waiting for approval is marked.",
-		readingAlt: "Reading, on the phone, a conversation finished on the desktop.",
+		listAlt: "The session list on the phone: the one waiting for approval, held down, lifts with pin, rename and archive beside it.",
+		startAlt: "Starting a new conversation on the phone: pick a suggestion, or type.",
 	},
 	open: {
 		eyebrow: "MIT licensed",

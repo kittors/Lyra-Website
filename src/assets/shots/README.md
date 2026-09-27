@@ -8,8 +8,9 @@
 
 - 桌面：窗口 1440×900 逻辑像素，2 倍 → **2880×1800** PNG。只截网页内容，不含系统窗口边框和红绿灯；
   左上角那块空白是给红绿灯留的位置，外框由官网用 CSS 画。
-- 手机：390×844 逻辑像素，3 倍 → **1170×2532** PNG。不含状态栏和 Home 指示条，机身由官网画。手机场景里模型显示名
-  写作「Sonnet 5」：「Claude Sonnet 5」在手机输入框里会被截成「Claude So…」。
+- 手机：390×844 逻辑像素，3 倍 → **1170×2532** PNG，就是整块屏幕。拍摄时给页面注入 `--ly-native-top: 47px`、
+  `--ly-native-bottom: 34px`（手机原生壳平时就是这样告诉页面的），页面自己把顶部 47pt 和底部 34pt 留空；官网的
+  `PhoneFrame` 把截图铺满屏幕，状态栏和 Home 指示条正好画在这两条空白上，不会压到任何控件。
 - 命名：`<场景>-<light|dark>.png`，英文界面加 `-en`（`<场景>-<light|dark>-en.png`）。手机也一样：
   `mobile-<n>-light[-en].png` / `mobile-<n>-dark[-en].png`——`src/lib/shots.ts` 先按主题、再按语言找图，
   裸名 `mobile-<n>.png` 在浅色页面上会输给深色那张。
@@ -32,9 +33,9 @@
 | `file-preview-{light,dark}[-en].png` | 对话里点开设计文档的链接，右侧渲染出 Markdown：标题、正文、Mermaid 时序图、有序列表。 |
 | `workspace-panels-{light,dark}[-en].png` | 对话旁边的内置终端：`git lg` 的提交图和整套测试的彩色输出。 |
 | `pull-requests-{light,dark}[-en].png` | 「拉取请求」：等你审查 / 由我创建 / 之前已审查三组，头像、分支、增删行数、检查状态；右侧是 #142 的详情——审查者（已批准 / 已评论）、5 项检查全部通过、标签、渲染好的描述。 |
-| `mobile-1-{light,dark}[-en].png` | 手机上发起的对话停在授权：智能体改写了已推送的提交说明，需要强推，请你批准（拒绝 / 以后不再问 / 允许一次）。 |
-| `mobile-2-{light,dark}[-en].png` | 手机上的侧栏：项目和会话，等你批准的那条带标记。 |
-| `mobile-3-{light,dark}[-en].png` | 在手机上看一段桌面上已完成的对话：标题、表格、Go 代码块。 |
+| `mobile-1-{light,dark}[-en].png` | 手机上发起的对话停在授权：智能体改写了已推送的提交说明，需要强推，请你批准（拒绝 / 以后不再问 / 允许一次）。官网放在中间。 |
+| `mobile-2-{light,dark}[-en].png` | 侧栏里长按那条等你批准的会话：页面变暗模糊，这一行浮起来，旁边弹出置顶、重命名、归档、项目、复制、打开方式。官网放在左边。 |
+| `mobile-3-{light,dark}[-en].png` | 新对话的空态：吉祥物、「要在 aurora-notes 内开发什么？」、可横向滑动的建议，输入框里是完整的模型名。官网放在右边。 |
 
 ## 数据是假的
 
@@ -92,6 +93,12 @@ LYRA_DIR=/path/to/Lyra node scripts/capture/capture.ts    # Lyra 不在旁边时
    里没有这一条。替身显示为「Terminal N」。
 3. **授权卡的风险说明**：`core/src/tools/risk.ts` 里的说明只有中文。替身只翻译了截图里出现的那一句（强制推送）。
 4. **工具摘要的分隔符**：`lib/tool-kinds.ts` 用「、」连接一段工作的各部分，英文里也是。替身换成「, 」。
+5. **手机上授权卡的标题行**：`features/conversation/ApprovalOverlay.tsx` 里类别标签（「Run a command」）和倒计时
+   （「Expires in 4:58」）都不收缩，390pt 宽的英文界面只给标题留约 60pt，`break-words` 把「command」拆成
+   「comma / nd」。类别标签和标题说的是同一件事，替身在手机上把它隐藏，标题排成一行；只作用于手机，不碰桌面。
+
+英文手机的输入框里，模型名显示为「Claude Sonn…」：推理强度「Medium」比中文的「中」宽，把模型名挤成了省略号。
+这是 Lyra 的真实排版，没有做替身（中文界面里是完整的「Claude Sonnet 5」）。
 
 另外，插件市场卡片的图标在深色主题下变空白的问题已在 Lyra 修好（`PluginIcon` 固定 `color-scheme: light`），截图
 不再需要注入。
