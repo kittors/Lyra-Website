@@ -16,11 +16,6 @@
  *     a force push carries is translated. The approval card prints it in the same text node as the
  *     command, so it is replaced as a phrase, not matched as a whole node.
  *  4. Tool summaries. `lib/tool-kinds.ts` joins the parts of a run with "、", in English too.
- *  5. The approval card's header on a phone. In `features/conversation/ApprovalOverlay.tsx` the kind
- *     label ("Run a command") and the countdown ("Expires in 4:58") never shrink, and on a 390 pt
- *     screen in English they leave the title about 60 pt, where `break-words` splits "command" into
- *     "comma" / "nd". The kind label says what the title already says, so on the phone it is hidden
- *     and the title fits on one line. Scoped to the phone host; the desktop is untouched.
  *
  * Installed for every document the target loads, so a reload keeps them, and run once for the
  * document already there. A mutation observer re-applies them as the page renders.
@@ -64,9 +59,6 @@ const STAND_INS = String.raw`(() => {
 		}
 	}).observe(document, { subtree: true, childList: true, characterData: true });
 	if (document.body) sweep(document.body);
-	const style = document.createElement("style");
-	style.textContent = '[data-lyra-host="mobile"] [data-approval-card] [data-ly-avatar-host] > span.shrink-0.text-caption.text-ink-faint:not(.tabular-nums) { display: none; }';
-	(document.head || document.documentElement).appendChild(style);
 	return true;
 })()`;
 
