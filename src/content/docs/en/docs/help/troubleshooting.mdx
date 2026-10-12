@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import { Aside, Badge } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 
 ## macOS
 
@@ -70,6 +70,14 @@ Microsoft Defender has most likely quarantined `Lyra.exe`. Open Windows Security
 
 More in [Update](/en/docs/start/update/).
 
+## "Cannot open the session database" at launch
+
+Conversations live in `~/.lyra/sessions/sessions.db`. If Lyra can't open it, it says where it is and why, and quits rather than touch your conversations:
+
+- A sync folder or another program has it open: close that, then start Lyra again.
+- The file is damaged: move it aside, and Lyra makes a new one.
+- An older Lyra is opening a database a newer one wrote: install the newer version again.
+
 ## Messages won't send
 
 | Message | Fix |
@@ -81,6 +89,10 @@ More in [Update](/en/docs/start/update/).
 
 On an unreliable network, raise the retry count under Settings → General → Retries.
 
+## A picture didn't come through
+
+The card says why: the quota is spent, the key can't use that model, or the network is being retried. See [Drawing and editing pictures](/en/docs/features/images/#when-a-picture-fails).
+
 ## The phone won't connect
 
 - Is the service running under Settings → Mobile sync on your computer?
@@ -90,8 +102,9 @@ On an unreliable network, raise the retry count under Settings → General → R
 
 ## An MCP server won't start
 
-- **Needs a key** <Badge text="Next release" variant="note" size="small" />: fill in the missing values on its card, then switch it on.
+- **Needs a key**: fill in the missing values on its card, then switch it on.
 - **Could not connect**: the error is on the card. Servers launched with `npx` or `uvx` download themselves the first time, so the first start is slower.
+- **A remote server fails and the error names a redirect**: since 0.9.25 Lyra doesn't follow redirects to another domain or port. Use the final address from the error.
 
 ## Still stuck?
 

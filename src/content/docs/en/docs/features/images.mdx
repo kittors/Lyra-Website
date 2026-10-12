@@ -1,0 +1,65 @@
+---
+title: Drawing and editing pictures
+description: Add an image model, ask for a picture in any conversation, and it's drawn right there. Pictures already in the chat can be changed too.
+sidebar:
+  order: 1.5
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import imagesLight from '../../../../../assets/shots/image-generation-light-en.png';
+import imagesDark from '../../../../../assets/shots/image-generation-dark-en.png';
+
+Say "draw…" or "turn this one into a night scene" and the conversation model calls `image_generate`. It writes the brief from what the chat already holds, says which pictures to work from, and hands it to your image model. The picture appears in the conversation.
+
+<Image src={imagesLight} alt="Drawing in a conversation: a finished picture above; below it, two night versions being drawn from it — dots hold each picture's place, the stage is written above them, the percentage sits in the corner" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={imagesDark} alt="Drawing in a conversation: a finished picture above; below it, two night versions being drawn from it — dots hold each picture's place, the stage is written above them, the percentage sits in the corner" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+
+## Add an image model
+
+<Steps>
+
+1. Settings → Models → pick a provider → **Add a model**, and enter the model ID: `gpt-image-1`, `gemini-3.1-flash-image`, `dall-e-3`, `imagen-4.0-generate-001`, `flux-1.1-pro`, `doubao-seedream-4-0` and so on.
+2. Names that say they draw switch on **Image model** by themselves. For one that doesn't (say, `house-artist`), turn it on in the model editor. Image models don't show up among conversation models.
+3. Click the test button on its row. It really draws one small picture, and that call is billed.
+
+</Steps>
+
+<Aside type="tip">
+Many relays leave image models out of `/v1/models`, so **Fetch models** won't list them. Add them by hand once.
+</Aside>
+
+## Which one is used
+
+With one image model, that one. With several, pick the default under Settings → Subagents → Session → **Image model**, or choose **Make default image model** in a provider's model list; with none picked, the first one is used. You can also name one in the chat: "draw it with gpt-image-1".
+
+## While it draws
+
+- The picture's place is held at its final shape by a field of drifting dots, with the current step above it ("Making the first draft", "Setting the scene") and a percentage in the corner.
+- No image endpoint reports progress, so the percentage is an estimate from how long that model usually takes, and it waits at 96% until the picture is really there. Nothing below it moves when it lands.
+- Ask for several and up to four are drawn side by side. If one fails, you still get the others.
+- Say "16:9", "a portrait phone wallpaper" or "a square avatar" and the model picks the shape; ask for "high resolution" or "4K" for more detail.
+
+## Changing a picture
+
+- Paste it into the composer and say what to change, or point at one already in the chat: the newest is `#1`, the one before it `#2`.
+- Hover a picture for **Edit** and **Download**. Edit opens it in the annotation tool: circle what should change and save, and the marked-up copy is on the clipboard, ready to paste back with your instructions.
+- Download saves the original file, named like `lyra-image-2026-10-11-21-58-03.png`.
+
+## When a picture fails
+
+The card says why:
+
+| The card says | What to do |
+| --- | --- |
+| gpt-image-1 is out of quota · Resets in about 1h 53m | Wait, or switch to another image model. This isn't retried |
+| This key can't use gpt-image-1 | The relay limits this key by group (403 `model_not_allowed`). Allow the model for the key in the relay's console, or switch the provider's address to a group that includes it, such as `https://your-relay/group1` |
+| Connection hiccup — retrying | Network trouble gets two more tries at most; then the card reports instead of spinning |
+
+## Good to know
+
+- Every picture is a billed call to the image model's provider. Settings → Usage doesn't count drawing yet.
+- Lyra tries OpenAI's Images API first (`/v1/images/generations`, `/v1/images/edits`). If a provider doesn't answer there, it falls back to Chat Completions with the picture inside the reply (the OpenRouter shape), and remembers which one worked.
+- Pictures are stored in `~/.lyra/session-media/` and are still there when you reopen the chat.
+- The phone app doesn't show pictures drawn in a conversation.
+- A picture drawn by a subagent stays in its own pane, not in the main conversation.

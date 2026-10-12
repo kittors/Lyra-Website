@@ -12,7 +12,7 @@ import panelsDark from '../../../../assets/shots/workspace-panels-dark.png';
 import previewLight from '../../../../assets/shots/file-preview-light.png';
 import previewDark from '../../../../assets/shots/file-preview-dark.png';
 
-对话右边是一排随时能打开的面板：文件、终端、Git、浏览器……每个会话一套。
+面板开在对话旁边：文件、终端、Git、浏览器……每个会话一套。只开着一个会话时，顶栏右端是终端、浏览器、Git 三个按钮，旁边的「面板」菜单（⋮）里是全部面板；分屏时，每一屏的标题栏里各有一套。
 
 <Image src={panelsLight} alt="对话右边打开着一个工作区面板" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
 <Image src={panelsDark} alt="对话右边打开着一个工作区面板" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
@@ -58,7 +58,8 @@ import previewDark from '../../../../assets/shots/file-preview-dark.png';
 | 浏览器 | `⌘T` | 内置浏览器，Agent 也能直接操作 |
 
 - **挪位置**：拖动面板顶部中间的小横条，放到别处重新排布。
-- **铺满**：面板可以占满整个对话区，`Esc` 还原。
+- **排法**：默认是「分栏」，每个面板各占一格，可以拖到对话的另一侧或下方。到「设置 → 外观 → 面板」可以改成「标签页」：所有面板收在右侧一个面板里，每个占一个标签，这种排法下不能拖动。
+- **全屏**：面板可以占满整个对话区，`Esc` 退出。
 - **新窗口**：除浏览器外，面板都能单独开成一个窗口。
 
 <Aside>

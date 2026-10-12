@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import { Steps, Aside, Badge } from '@astrojs/starlight/components';
+import { Steps, Aside } from '@astrojs/starlight/components';
 
 [Lyra 插件市场](https://market.07230805.xyz)是 Lyra 默认的插件来源。每个条目都由平台从 GitHub 仓库构建：拉取代码、数清里面有几个技能和服务、打包并记下 SHA-256。用户安装时，Lyra 会核对这个哈希。
 
@@ -48,7 +48,7 @@ import { Steps, Aside, Badge } from '@astrojs/starlight/components';
 
 ## 自己托管一个来源
 
-不想放进公开市场，也可以自己托管一份索引，让别人把它的地址添加为插件来源（市场页 `⋯` →「插件来源…」<Badge text="下一版本" variant="note" size="small" />）。索引是一个能通过 `https://` 访问的 JSON：
+不想放进公开市场，也可以自己托管一份索引，让别人把它的地址添加为插件来源（市场页 `⋯` →「插件来源…」）。索引是一个能通过 `https://` 访问的 JSON：
 
 ```json
 {

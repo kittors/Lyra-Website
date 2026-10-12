@@ -7,9 +7,12 @@ import SplitHeading from "../SplitHeading.astro";
 import WindowFrame from "../WindowFrame.astro";
 
 /**
- * "Not a wrapper." — the claim that sets Lyra apart, on black. The twenty built-in tools are laid
- * out by the groups the code uses, and as the reader scrolls they light up in the order an agent
- * might call them (`home.ts`). Then the models: yours, on any provider.
+ * "Not a wrapper." — the claim that sets Lyra apart, on black. The twenty-one built-in tools are
+ * laid out by the groups the code uses, and as the reader scrolls they light up in the order an
+ * agent might call them (`home.ts`). Then the models: yours, on any provider.
+ *
+ * `image_generate` is one of them although Lyra only offers it once an image model is configured:
+ * the count follows Lyra's own tool groups (`packages/core/src/tools/groups.ts`) and its README.
  */
 interface Props {
 	locale: Locale;
@@ -19,7 +22,7 @@ const { locale } = Astro.props;
 const t = HOME_TEXT[locale].kernel;
 const toolCount = t.toolGroups.reduce((sum, group) => sum + group.tools.length, 0);
 /** The order the tools light up in: a plausible turn, not the order they are listed in. */
-const CALLS = ["read", "grep", "glob", "symbol", "lsp", "edit", "write", "bash", "bash_output", "todo_write", "task", "skill", "rule", "recall", "learn", "web_search", "web_fetch", "preview", "ls", "ask_user"];
+const CALLS = ["read", "grep", "glob", "symbol", "lsp", "edit", "write", "bash", "bash_output", "todo_write", "task", "skill", "rule", "recall", "learn", "web_search", "web_fetch", "preview", "image_generate", "ls", "ask_user"];
 ---
 
 <section class="section surface-night kernel" id="features" aria-labelledby="kernel-title" data-night>
@@ -88,7 +91,7 @@ const CALLS = ["read", "grep", "glob", "symbol", "lsp", "edit", "write", "bash",
 		pointer-events: none;
 	}
 
-	/* ── The twenty tools ── */
+	/* ── The built-in tools ── */
 	.tools {
 		margin-top: clamp(4.5rem, 3rem + 5vw, 7.5rem);
 	}

@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import { Steps, Aside, Badge } from '@astrojs/starlight/components';
+import { Steps, Aside } from '@astrojs/starlight/components';
 
 The [Lyra Plugin Market](https://market.07230805.xyz) is Lyra's default source. Every entry is built by the platform from a GitHub repository: it fetches the code, counts the skills and servers inside, packages it and records a SHA-256. Lyra checks that hash when someone installs it.
 
@@ -48,7 +48,7 @@ The market site also supports self-service submissions after signing in with Git
 
 ## Host your own source
 
-To share outside the public market, host an index yourself and have people add its address as a source (market `⋯` → **Sources…** <Badge text="Next release" variant="note" size="small" />). The index is a JSON file served over `https://`:
+To share outside the public market, host an index yourself and have people add its address as a source (market `⋯` → **Sources…**). The index is a JSON file served over `https://`:
 
 ```json
 {

@@ -5,14 +5,14 @@ sidebar:
   order: 5
 ---
 
-import { Steps, Aside, Badge } from '@astrojs/starlight/components';
+import { Steps, Aside } from '@astrojs/starlight/components';
 import { Image } from 'astro:assets';
 import marketLight from '../../../../../assets/shots/plugin-market-light-en.png';
 import marketDark from '../../../../../assets/shots/plugin-market-dark-en.png';
 import detailLight from '../../../../../assets/shots/plugin-detail-light-en.png';
 import detailDark from '../../../../../assets/shots/plugin-detail-dark-en.png';
 
-**Plugins** in the sidebar opens the Plugin Market, where you install plugins, MCP servers and skills. Whatever you've installed is managed under Settings → Plugins.
+**Plugins** in the icon rail on the left opens the Plugin Market, where you install plugins, MCP servers and skills. Whatever you've installed is managed under Settings → Plugins.
 
 <Image src={marketLight} alt="The Plugin Market: search and the All / Plugins / MCP / Skills filter at the top, category chips below, then cards grouped by category" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
 <Image src={marketDark} alt="The Plugin Market: search and the All / Plugins / MCP / Skills filter at the top, category chips below, then cards grouped by category" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
@@ -23,20 +23,20 @@ import detailDark from '../../../../../assets/shots/plugin-detail-dark-en.png';
 | --- | --- | --- |
 | Plugin | A bundle of skills | Available in new chats right away |
 | MCP server | An external program that gives the agent tools | Off until you switch it on |
-| Skill collection | A set of `SKILL.md` files | Installed as one bundle you can switch on and off, like a plugin <Badge text="Next release" variant="note" size="small" /> |
+| Skill collection | A set of `SKILL.md` files | Installed as one bundle you can switch on and off, like a plugin |
 
 ## Installing
 
 <Steps>
 
-1. Open **Plugins** in the sidebar and search. You can also browse by category <Badge text="Next release" variant="note" size="small" />
+1. Open **Plugins** in the icon rail and search, or browse by category.
 2. Open a card for the details: what it does, and which skills or servers it brings.
 
    <Image src={detailLight} alt="The detail page for the Waza skill collection: its name, summary and Install button, with its README below" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
    <Image src={detailDark} alt="The detail page for the Waza skill collection: its name, summary and Install button, with its README below" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 3. Click **Install**. MCP servers arrive switched off; turn them on under Settings → Plugins → MCP.
-4. If an MCP server needs a key, fill it in on the detail page or under Settings → Plugins → MCP before switching it on <Badge text="Next release" variant="note" size="small" />
+4. If an MCP server needs a key, fill it in on the detail page or under Settings → Plugins → MCP before switching it on.
 
 </Steps>
 
@@ -47,11 +47,11 @@ The market doesn't review code. An MCP server runs on your machine with your per
 ## Managing and updating
 
 - **Settings → Plugins** has five tabs — Plugins, MCP, Skills, Rules and Extensions — where you switch things on and off and uninstall them. A button at the top right of the market takes you straight there.
-- **Auto-update** <Badge text="Next release" variant="note" size="small" />: installed items keep up with new versions by default, checked about every 30 minutes. Turn off **Auto-update** in the market's `⋯` menu to be told about updates instead; the sidebar then shows how many are waiting.
-- **Keys** <Badge text="Next release" variant="note" size="small" />: keys you enter for MCP servers are encrypted on this machine. They never go into `settings.json` and are never synced to your phone.
+- **Auto-update**: installed items keep up with new versions by default, checked about every 30 minutes. Turn off **Auto-update** in the market's `⋯` menu to be told about updates instead; the **Plugins** icon in the rail then shows how many are waiting.
+- **Keys**: keys you enter for MCP servers are encrypted on this machine. They never go into `settings.json` and are never synced to your phone.
 
 ## Sources
 
-The default source is the official [Lyra Plugin Market](https://market.07230805.xyz). To add another marketplace, enter its address under **Sources…** in the market's `⋯` menu; it must start with `https://` <Badge text="Next release" variant="note" size="small" />
+The default source is the official [Lyra Plugin Market](https://market.07230805.xyz). To add another marketplace, enter its address under **Sources…** in the market's `⋯` menu; it must start with `https://`.
 
 To list something of your own, see [Publish to the market](/en/docs/extend/publish/).

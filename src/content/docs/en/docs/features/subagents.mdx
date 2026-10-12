@@ -5,7 +5,7 @@ sidebar:
   order: 4
 ---
 
-import { Aside, Badge } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 import { Image } from 'astro:assets';
 import subagentsLight from '../../../../../assets/shots/sub-agents-light-en.png';
 import subagentsDark from '../../../../../assets/shots/sub-agents-dark-en.png';
@@ -33,9 +33,9 @@ The main agent uses the `task` tool to hand work to a subagent. A subagent has i
 - **Ask by name.** Write `@explore` in your message, or pick it from the `@` menu, and this turn sends work to it — even if eagerness is set to **Never delegate**.
 - **Watch progress.** The strip above the composer shows how your subagents are doing. `⌥⌘A` opens the Sub-agents pane with each one's full transcript.
 - **Steer or stop one.** Message a subagent from the pane to correct it, add context or tell it to wrap up — or stop just that one. The main agent and the rest carry on.
-- **Speak up any time.** <Badge text="Next release" variant="note" size="small" /> When you send a message, the main conversation stops waiting; subagents keep going in the background and their results are delivered when they finish.
+- **Speak up any time.** When you send a message, the main conversation stops waiting; subagents keep going in the background and their results are delivered when they finish.
 
-## Checkpoints and resuming&nbsp;<Badge text="Next release" variant="note" size="small" />
+## Checkpoints and resuming
 
 Every so often (60 turns by default) a subagent pauses to check itself. If its checklist is still moving, it keeps going. If not, it writes a handoff and **stops with its context kept**. Click **Ask the main agent to continue it** in the pane and it picks up where it left off, with everything it already read — no fresh start.
 
@@ -48,7 +48,7 @@ Kept context lives in memory only (the most recent 24), so it can't be resumed a
 | Where | What you can change |
 | --- | --- |
 | Settings → Delegation | Eagerness — Never delegate, Sparing, Selective, Eager, Unrestrained — or follow the thinking level (the default). How many run at once: 1–8, default 4; the rest queue |
-| Settings → Subagents | The model and thinking level for each agent, and your own agents |
+| Settings → Subagents | The model and thinking level for each agent, and your own agents; under **Session**, the models for compacting, side chats and drawing |
 
 ## Define your own
 
@@ -70,6 +70,6 @@ You are reviewing code. Only report issues that cause incorrect behaviour…
 | `description` | What the main agent reads to decide whether to send it |
 | `tools` | Restrict it to these tools; omit for all |
 | `model` | Pin a model; omit to follow the conversation |
-| `max-turns` <Badge text="Next release" variant="note" size="small" /> | How many turns between checkpoints; default 60 |
+| `max-turns` | How many turns between checkpoints; default 60 |
 
 The body is its system prompt. It can't see your conversation with the main agent, so include whatever background it needs.

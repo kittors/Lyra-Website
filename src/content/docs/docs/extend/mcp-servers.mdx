@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import { Steps, Tabs, TabItem, FileTree, Aside, Badge } from '@astrojs/starlight/components';
+import { Steps, Tabs, TabItem, FileTree, Aside } from '@astrojs/starlight/components';
 
 市场里没有你要的 MCP 服务？手动加一个，或者打成包分享出去。
 
@@ -24,7 +24,7 @@ import { Steps, Tabs, TabItem, FileTree, Aside, Badge } from '@astrojs/starlight
    | 命令 | `npx` |
    | 参数 | `-y @modelcontextprotocol/server-filesystem /Users/me/code` |
 
-3. 需要密钥的话，在卡片的「启动方式与环境变量」里添加环境变量。名字像密钥的（带 `KEY`、`TOKEN`、`SECRET`、`PASSWORD` 等）会加密保存 <Badge text="下一版本" variant="note" size="small" />
+3. 需要密钥的话，在卡片的「启动方式与环境变量」里添加环境变量。名字像密钥的（带 `KEY`、`TOKEN`、`SECRET`、`PASSWORD` 等）会加密保存。
 4. 新添加的服务默认就是开着的。填好之后看卡片：连上了会显示它提供了几个工具，没连上会显示报错。
 
 </Steps>
@@ -39,6 +39,10 @@ import { Steps, Tabs, TabItem, FileTree, Aside, Badge } from '@astrojs/starlight
 3. 新添加的服务默认就是开着的，填好之后看卡片上的状态。
 
 </Steps>
+
+<Aside>
+远程地址如果会重定向到别的域名或端口，Lyra 不会跟过去——跟过去会把你填在请求头里的令牌带到那个站点。连接会失败，报错里写着它要被转去哪里，把地址改成那个最终地址就行。
+</Aside>
 
 </TabItem>
 </Tabs>
@@ -100,7 +104,7 @@ stdio 服务会以你的权限在本机运行，只添加你信得过的命令�
 一个包里只有 `.mcp.json`、没有技能，它就是 MCP 服务：装好后出现在「设置 → 插件 → MCP」，默认关闭。
 </Aside>
 
-### 需要使用者填的值&nbsp;<Badge text="下一版本" variant="note" size="small" />
+### 需要使用者填的值
 
 密钥这类值要使用者自己填，在 `.mcp.json` 里写成 `${名字}` 占位：本地服务放进 `env`，远程服务放进 `headers`。
 

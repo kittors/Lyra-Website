@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import { Aside, Badge } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 
 Lyra 不用注册账号，也不替你保管数据：会话、设置和密钥都只存在你的电脑上。
 
@@ -19,7 +19,8 @@ Lyra 不用注册账号，也不替你保管数据：会话、设置和密钥都
 | `credentials.json` | API Key 等密钥，加密存放 |
 | `vault.key` | 解开上面那个文件的密钥 |
 | `forges.json` | 代码托管账号的访问令牌，加密存放 |
-| `sessions/` | 会话记录，JSONL 格式，一行一条 |
+| `sessions/` | 会话库 `sessions.db`（SQLite），所有会话和它们花掉的钱都在里面；旁边的 `sessions.db-wal` 是它的一部分。从旧版本升级来的，原来的 `.jsonl` 日志留在这里当备份，Lyra 不再读它们 |
+| `session-media/` | 对话里显示的图片，包括画出来的图 |
 | `sidechats/` | 侧边聊天记录 |
 | `memory.json` | `learn` 工具记下的内容 |
 | `skills/` `plugins/` `mcp/` `agents/` `rules/` `commands/` | 你的技能、插件、MCP 包、智能体、规则和斜杠命令 |
@@ -50,7 +51,7 @@ Lyra 不用注册账号，也不替你保管数据：会话、设置和密钥都
 
 - 模型供应商的 API Key 和代码托管令牌用 AES-256-GCM 加密后存进文件，文件权限 0600；解密用的密钥是同目录下的 `vault.key`。
 - 它们不会写进 `settings.json`，也不会同步到手机。
-- 在 Lyra 里给 MCP 服务填的密钥同样加密保存 <Badge text="下一版本" variant="note" size="small" />
+- 在 Lyra 里给 MCP 服务填的密钥同样加密保存。
 
 <Aside type="caution">
 加密文件和解密密钥放在同一个目录：任何能读你主目录的程序都能解开它们。介意的话，给令牌设一个短一点的有效期。
@@ -59,6 +60,6 @@ Lyra 不用注册账号，也不替你保管数据：会话、设置和密钥都
 ## 清理
 
 - **归档**：只是把会话移出侧栏，记录和用量都还在，随时能取消归档。
-- **删除**：先归档，再到「设置 → 已归档的聊天」里删除。删除后无法恢复。
-- **按时间清理**：「设置 → 存储」里选一段日期，把这段时间的会话记录一起清除。
+- **删除**：先归档，再到「设置 → 已归档的聊天」里删除。删除后无法恢复，从旧版本留下的那份 `.jsonl` 备份也一起删掉；它花过的钱仍然算在「设置 → 使用统计」里。
+- **按时间清理**：「设置 → 存储」里选一段日期，按会话最后活动的时间整条清除。花过的钱不会跟着清掉。
 - **记忆**：「设置 → 个性化」里查看、删除，或者全部清除。

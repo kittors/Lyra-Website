@@ -10,7 +10,7 @@ import { Image } from 'astro:assets';
 import scheduleLight from '../../../../assets/shots/schedule-light.png';
 import scheduleDark from '../../../../assets/shots/schedule-dark.png';
 
-侧栏的「已安排」按时间自动开一个新会话，把你写好的提示词发出去。适合每天早上审一遍未提交的改动、每小时跑一次测试并报告失败这类事。
+图标栏里的「已安排」按时间自动开一个新会话，把你写好的提示词发出去。适合每天早上审一遍未提交的改动、每小时跑一次测试并报告失败这类事。
 
 <Image src={scheduleLight} alt="「已安排」页面：三个定时任务，每个都有提示词、运行时间（每天几点，或每隔多少分钟）和开关" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
 <Image src={scheduleDark} alt="「已安排」页面：三个定时任务，每个都有提示词、运行时间（每天几点，或每隔多少分钟）和开关" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
@@ -20,7 +20,7 @@ import scheduleDark from '../../../../assets/shots/schedule-dark.png';
 <Steps>
 
 1. 先打开任务要用的项目。新任务会在这个项目的主文件夹里运行。
-2. 侧栏 →「已安排」→ 新建。
+2. 图标栏 →「已安排」→ 新建。
 3. 改名字，写提示词。
 4. 选「每天」某个时刻，或者「每隔」多少分钟。
 5. 打开开关。新建的任务默认是停用的。
@@ -37,5 +37,5 @@ import scheduleDark from '../../../../assets/shots/schedule-dark.png';
 - **删除任务**：只删任务本身，它跑出来的会话都还在。
 
 <Aside>
-任务开始、失败都会在窗口里提示。失败后不会每分钟重试，等下一个时间点再跑。
+任务开始、失败都会在窗口里提示。失败的原因写在任务卡片上，输入框上方也有一行提示；没看过的失败会在图标栏「已安排」上显示红色数字，侧栏的铃铛里也有一行。失败后不会每分钟重试，等下一个时间点再跑。
 </Aside>

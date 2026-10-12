@@ -10,7 +10,7 @@ import { Image } from 'astro:assets';
 import scheduleLight from '../../../../../assets/shots/schedule-light-en.png';
 import scheduleDark from '../../../../../assets/shots/schedule-dark-en.png';
 
-**Scheduled** in the sidebar starts a fresh conversation on a timer and sends the prompt you wrote. Good for reviewing uncommitted changes every morning, or running the tests every hour and reporting what failed.
+**Scheduled** in the icon rail starts a fresh conversation on a timer and sends the prompt you wrote. Good for reviewing uncommitted changes every morning, or running the tests every hour and reporting what failed.
 
 <Image src={scheduleLight} alt="The Scheduled page: tasks, each with its prompt, a schedule (daily at a set time, or every so many minutes) and an on/off switch" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
 <Image src={scheduleDark} alt="The Scheduled page: tasks, each with its prompt, a schedule (daily at a set time, or every so many minutes) and an on/off switch" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
@@ -20,7 +20,7 @@ import scheduleDark from '../../../../../assets/shots/schedule-dark-en.png';
 <Steps>
 
 1. Open the project the task should use first. A new task runs in that project's main folder.
-2. Sidebar → **Scheduled** → New.
+2. Icon rail → **Scheduled** → New.
 3. Rename it and write the prompt.
 4. Choose **Daily** at a time of day, or **Every** so many minutes.
 5. Switch it on. New tasks start out paused.
@@ -37,5 +37,5 @@ import scheduleDark from '../../../../../assets/shots/schedule-dark-en.png';
 - **Deleting a task** keeps the conversations it already produced.
 
 <Aside>
-Lyra tells you in the window when a task starts or fails. A failed task isn't retried every minute; it waits for its next slot.
+Lyra tells you in the window when a task starts or fails. Why it failed is written on the task's card, and a line above the composer points to it; failures you haven't looked at show as a red number on **Scheduled** in the icon rail and as a row under the bell. A failed task isn't retried every minute; it waits for its next slot.
 </Aside>

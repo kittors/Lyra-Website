@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import { Aside, Badge } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 import { Image } from 'astro:assets';
 import splitLight from '../../../../../assets/shots/split-view-light-en.png';
 import splitDark from '../../../../../assets/shots/split-view-dark-en.png';
@@ -20,7 +20,7 @@ Put up to four conversations side by side in one window. Each keeps its own term
 - **From the menu**: right-click a conversation in the sidebar → **Open in** → **Split view**. It's added as a new column; if there's no width for that, an existing screen with room is split, and failing that it opens in a new window.
 - **By dragging**: drag a conversation from the sidebar onto a screen. Whichever edge you're nearest is where it lands.
 
-With four screens already open, dropping another one replaces the screen under the pointer. If a screen is too narrow to split and stay readable, Lyra tells you there's no room <Badge text="Next release" variant="note" size="small" />
+With four screens already open, dropping another one replaces the screen under the pointer. If a screen is too narrow to split and stay readable, Lyra tells you there's no room.
 
 ## Rearranging
 
@@ -33,10 +33,10 @@ With four screens already open, dropping another one replaces the screen under t
 
 ## Good to know
 
-- **Panes belong to conversations.** Browser tabs, terminals and open files are separate for each screen.
-- **Everything stays readable.** A chat is at least 420 px wide and each pane at least 300 px. If the window gets too narrow, extra panes move into windows of their own, and come back when there's room.
+- **Panes belong to conversations.** Each screen has its own browser tabs and terminals; the file open in File contents is shared by the whole window.
+- **Everything stays readable.** A chat is at least 420 px wide and each pane at least 300 px. When the window gets too narrow, two panes stack; narrower still, the pane beside the chat covers part of it until there's room again.
 - **The layout is remembered**, including across restarts.
 
 <Aside type="tip">
-`Esc` restores a pane you've maximized. It never closes the screens beside it.
+`Esc` leaves full screen. It never closes the screens beside it.
 </Aside>

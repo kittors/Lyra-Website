@@ -169,7 +169,7 @@ function parallax(): void {
 	}
 }
 
-/** The twenty tools light up one by one, in the order an agent might call them. */
+/** The built-in tools light up one by one, in the order an agent might call them. */
 function tools(): void {
 	const block = $("[data-tools]");
 	if (!block) return;

@@ -12,10 +12,10 @@ import panelsDark from '../../../../../assets/shots/workspace-panels-dark-en.png
 import previewLight from '../../../../../assets/shots/file-preview-light-en.png';
 import previewDark from '../../../../../assets/shots/file-preview-dark-en.png';
 
-Beside the conversation sits a row of panes you can open at any time — files, terminal, Git, browser and more. Each conversation has its own set.
+Panes open beside the conversation — files, terminal, Git, browser and more — and each conversation has its own set. With one conversation on screen, the right end of the toolbar has buttons for the terminal, the browser and Git, and the **Panels** menu (⋮) beside them lists them all; in split view each screen has the same set in its own title bar.
 
-<Image src={panelsLight} alt="A conversation with the built-in terminal open beside it, showing a commit graph and test output," sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
-<Image src={panelsDark} alt="A conversation with the built-in terminal open beside it, showing a commit graph and test output," sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+<Image src={panelsLight} alt="A conversation with the built-in terminal open beside it, showing a commit graph and test output" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={panelsDark} alt="A conversation with the built-in terminal open beside it, showing a commit graph and test output" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 ## Attachments
 
@@ -58,7 +58,8 @@ Click a file in the **Files** pane and it opens in **File contents**:
 | Browser | `⌘T` | A built-in browser the agent can drive too |
 
 - **Move** a pane by dragging the small bar at its top centre.
-- **Maximize** a pane to fill the conversation area; `Esc` restores it.
+- **Layout**: **Split** by default — each pane gets a space of its own that you can drag to the other side of the chat or below it. Under Settings → Appearance → Panels you can switch to **Tabs**: every pane in one pane on the right, one tab each, and tabs can't be dragged.
+- **Full screen**: a pane can fill the conversation area; `Esc` leaves it.
 - **Pop out** any pane except the browser into its own window.
 
 <Aside>

@@ -6,8 +6,14 @@ sidebar:
 ---
 
 import { Steps, Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import pullsLight from '../../../../../assets/shots/pull-requests-light-en.png';
+import pullsDark from '../../../../../assets/shots/pull-requests-dark-en.png';
 
-**Pull requests** in the sidebar gathers the pull requests waiting on you and the ones you opened, across GitHub, GitLab, Gitee and Gitea — self-hosted instances included.
+**Pull requests** in the icon rail gathers the pull requests waiting on you and the ones you opened, across GitHub, GitLab, Gitee and Gitea — self-hosted instances included.
+
+<Image src={pullsLight} alt="Pull requests: the list on the left in three groups — waiting on you, yours, already reviewed; on the right, the selected one's summary with its branch, reviewers, checks, status and description" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={pullsDark} alt="Pull requests: the list on the left in three groups — waiting on you, yours, already reviewed; on the right, the selected one's summary with its branch, reviewers, checks, status and description" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 ## Connecting an account
 

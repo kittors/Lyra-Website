@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import { Aside, Badge } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 
 Lyra has no accounts and keeps none of your data for you: your sessions, settings and keys stay on your computer.
 
@@ -19,7 +19,8 @@ Everything user-level is in `~/.lyra` (on Windows, `%USERPROFILE%\.lyra`):
 | `credentials.json` | API keys and other secrets, encrypted |
 | `vault.key` | The key that decrypts the file above |
 | `forges.json` | Access tokens for code-hosting accounts, encrypted |
-| `sessions/` | Session logs, one JSON record per line |
+| `sessions/` | `sessions.db`, an SQLite database holding every conversation and what it spent; the `sessions.db-wal` beside it is part of it. If you upgraded from an older version, the old `.jsonl` logs stay here as a backup and are no longer read |
+| `session-media/` | Pictures shown in conversations, including the ones drawn for you |
 | `sidechats/` | Side chats |
 | `memory.json` | What the `learn` tool wrote down |
 | `skills/` `plugins/` `mcp/` `agents/` `rules/` `commands/` | Your skills, plugins, MCP bundles, agents, rules and slash commands |
@@ -50,7 +51,7 @@ Usage statistics are calculated on your machine and never uploaded.
 
 - Model provider API keys and code-hosting tokens are encrypted with AES-256-GCM into files with 0600 permissions; the decryption key is `vault.key` in the same folder.
 - They're never written to `settings.json` and never synced to your phone.
-- Keys you enter for MCP servers in Lyra are encrypted the same way <Badge text="Next release" variant="note" size="small" />
+- Keys you enter for MCP servers in Lyra are encrypted the same way.
 
 <Aside type="caution">
 The encrypted file and its key sit side by side, so anything that can read your home folder can decrypt them. If that matters to you, give your tokens a short expiry.
@@ -59,6 +60,6 @@ The encrypted file and its key sit side by side, so anything that can read your 
 ## Cleaning up
 
 - **Archive** just moves a chat out of the sidebar. Its log and usage stay, and you can unarchive it any time.
-- **Delete** by archiving first, then deleting under Settings → Archived chats. Deletion can't be undone.
-- **Clear by date** under Settings → Storage: pick a date range and clear the session records from it.
+- **Delete** by archiving first, then deleting under Settings → Archived chats. Deletion can't be undone, and the old `.jsonl` backup from an earlier version goes with it; what the chat spent still counts under Settings → Usage.
+- **Clear by date** under Settings → Storage: pick a date range and the conversations last active in it are cleared whole. What they spent stays counted.
 - **Memory** can be reviewed, deleted or cleared under Settings → Personalization.

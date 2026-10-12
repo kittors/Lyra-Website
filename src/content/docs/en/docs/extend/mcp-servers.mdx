@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import { Steps, Tabs, TabItem, FileTree, Aside, Badge } from '@astrojs/starlight/components';
+import { Steps, Tabs, TabItem, FileTree, Aside } from '@astrojs/starlight/components';
 
 Can't find the MCP server you need in the market? Add it by hand, or package it for others.
 
@@ -24,7 +24,7 @@ Can't find the MCP server you need in the market? Add it by hand, or package it 
    | Command | `npx` |
    | Arguments | `-y @modelcontextprotocol/server-filesystem /Users/me/code` |
 
-3. If it needs a key, add an environment variable under **How it starts, and its environment** on its card. Anything named like a secret (containing `KEY`, `TOKEN`, `SECRET`, `PASSWORD` and so on) is stored encrypted <Badge text="Next release" variant="note" size="small" />
+3. If it needs a key, add an environment variable under **How it starts, and its environment** on its card. Anything named like a secret (containing `KEY`, `TOKEN`, `SECRET`, `PASSWORD` and so on) is stored encrypted.
 4. A new server starts out switched on. Once it's filled in, check its card: it shows how many tools it provides when connected, or the error when not.
 
 </Steps>
@@ -39,6 +39,10 @@ Can't find the MCP server you need in the market? Add it by hand, or package it 
 3. A new server starts out switched on; once it's filled in, check the status on its card.
 
 </Steps>
+
+<Aside>
+If the address redirects to another domain or port, Lyra won't follow it — that would hand the token in the server's headers to the other site. The connection fails and the error names where it was being sent; put that final address in instead.
+</Aside>
 
 </TabItem>
 </Tabs>
@@ -100,7 +104,7 @@ Point the manifest's `mcpServers` at the file:
 A bundle with only a `.mcp.json` and no skills is an MCP server. It installs into Settings → Plugins → MCP, switched off.
 </Aside>
 
-### Values the user supplies&nbsp;<Badge text="Next release" variant="note" size="small" />
+### Values the user supplies
 
 For values like keys that each user has to supply, write a `${NAME}` placeholder in `.mcp.json` — in `env` for a local server, in `headers` for a remote one.
 

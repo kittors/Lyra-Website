@@ -19,6 +19,12 @@ Three: **Responses** (`/v1/responses`), **Anthropic Messages** (`/v1/messages`) 
 
 Pick the one your provider documents: Responses for OpenAI, Messages for Anthropic, and usually Chat Completions for other OpenAI-compatible services.
 
+Image models also use OpenAI's Images API (`/v1/images/generations`, `/v1/images/edits`), falling back to Chat Completions where a provider doesn't offer it.
+
+## Can it draw pictures?
+
+Yes. Add an image model (`gpt-image-1` or `gemini-3.1-flash-image`, for example) and ask for a picture in any conversation — see [Drawing and editing pictures](/en/docs/features/images/).
+
 ## How does it relate to Claude Code or Codex?
 
 It doesn't. Lyra's agent loop, tools, skills and MCP support are its own, not a wrapper around either. It does read the same formats, though: `SKILL.md` skills, `.mcp.json`, `AGENTS.md` and `CLAUDE.md` in your project, plus `.claude/skills` and `.claude/commands`.
@@ -33,7 +39,17 @@ Not to Lyra. There's no account to sign up for; conversations go only to the mod
 
 ## How do I move to a new computer?
 
-Copy the whole `~/.lyra` folder across. Keep `credentials.json` and `vault.key` together — with only one of them, the keys can't be decrypted.
+Quit Lyra, then copy the whole `~/.lyra` folder across. Keep `credentials.json` and `vault.key` together — with only one of them, the keys can't be decrypted.
+
+Don't keep `~/.lyra` in a folder that iCloud, Dropbox or OneDrive syncs while Lyra is running: the session database is written through a `-wal` file beside it, and a sync client that copies one without the other leaves a database that won't open.
+
+## Does a deleted chat still count toward what I've spent?
+
+Yes. Spending is recorded on its own, and neither deleting a chat nor clearing by date takes it out of Settings → Usage.
+
+## If Lyra crashes halfway through a reply, is it lost?
+
+What had already arrived — text and reasoning — is kept: replies are written to the session database as they stream, and next time that reply is in the conversation as if you had pressed Stop. A half-written tool call is dropped.
 
 ## What's the difference between plugins, skills and MCP?
 

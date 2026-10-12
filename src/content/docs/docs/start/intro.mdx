@@ -12,8 +12,8 @@ import heroDark from '../../../../assets/shots/hero-conversation-dark.png';
 
 Lyra 是一个独立的通用 AI 智能体。接上你自己的模型，它就能在你的电脑上读代码、改文件、跑命令；出门在外，拿手机也能接着聊。
 
-<Image src={heroLight} alt="Lyra 主窗口：左边是项目和会话，中间是对话，右边是 Git 面板" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
-<Image src={heroDark} alt="Lyra 主窗口：左边是项目和会话，中间是对话，右边是 Git 面板" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
+<Image src={heroLight} alt="Lyra 主窗口：顶上是工具栏，最左边是图标栏，左边是项目和会话，中间是对话，右边是 Git 面板" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={heroDark} alt="Lyra 主窗口：顶上是工具栏，最左边是图标栏，左边是项目和会话，中间是对话，右边是 Git 面板" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 ## 它是什么
 
@@ -26,7 +26,10 @@ Lyra 是一个独立的通用 AI 智能体。接上你自己的模型，它就�
 
 <CardGrid>
   <Card title="对话与工具" icon="comment-alt">
-    20 个内置工具：读写文件、搜索代码、执行命令、抓取网页。[了解](/docs/features/conversation/)
+    21 个内置工具：读写文件、搜索代码、执行命令、抓取网页，配了生图模型还能画图。[了解](/docs/features/conversation/)
+  </Card>
+  <Card title="画图" icon="seti:image">
+    配一个生图模型，在对话里画图、改图。[了解](/docs/features/images/)
   </Card>
   <Card title="子智能体" icon="random">
     把大活拆给有独立上下文的子智能体，可以并行。[了解](/docs/features/subagents/)

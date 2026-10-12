@@ -6,8 +6,14 @@ sidebar:
 ---
 
 import { Steps, Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import pullsLight from '../../../../assets/shots/pull-requests-light.png';
+import pullsDark from '../../../../assets/shots/pull-requests-dark.png';
 
-侧栏的「拉取请求」把你在 GitHub、GitLab、Gitee、Gitea 上等着审的、自己发起的拉取请求放在一处，自建实例也支持。
+图标栏里的「拉取请求」把你在 GitHub、GitLab、Gitee、Gitea 上等着审的、自己发起的拉取请求放在一处，自建实例也支持。
+
+<Image src={pullsLight} alt="拉取请求：左边是分成「等你审查」「由我创建」「之前已审查」三组的列表，右边是选中那条的摘要——分支、审查者、检查、状态和描述" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={pullsDark} alt="拉取请求：左边是分成「等你审查」「由我创建」「之前已审查」三组的列表，右边是选中那条的摘要——分支、审查者、检查、状态和描述" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 ## 连接账号
 

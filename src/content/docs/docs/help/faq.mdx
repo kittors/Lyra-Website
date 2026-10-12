@@ -19,6 +19,12 @@ sidebar:
 
 按供应商文档选：OpenAI 官方用 Responses，Anthropic 用 Messages，其他兼容 OpenAI 的服务一般是 Chat Completions。
 
+生图模型另外会用 OpenAI 的 Images 接口（`/v1/images/generations`、`/v1/images/edits`），走不通再改走 Chat Completions。
+
+## 能画图吗？
+
+能。配一个生图模型（比如 `gpt-image-1` 或 `gemini-3.1-flash-image`），在对话里说「画一张……」就行，见[画图与改图](/docs/features/images/)。
+
 ## 和 Claude Code、Codex 是什么关系？
 
 没有关系。Lyra 的 agent 内核、工具、技能和 MCP 都是自己实现的，不是它们的外壳。不过它读得懂同样的格式：`SKILL.md` 技能、`.mcp.json`、项目里的 `AGENTS.md` 和 `CLAUDE.md`，以及 `.claude/skills`、`.claude/commands`。
@@ -33,7 +39,17 @@ sidebar:
 
 ## 换电脑怎么迁移？
 
-把 `~/.lyra` 整个拷过去。`credentials.json` 和 `vault.key` 要一起拷，少一个，密钥就解不开了。
+先退出 Lyra，再把 `~/.lyra` 整个拷过去。`credentials.json` 和 `vault.key` 要一起拷，少一个，密钥就解不开了。
+
+Lyra 开着的时候，不要把 `~/.lyra` 放进 iCloud、Dropbox、OneDrive 这类同步盘：会话库写入时旁边有一个 `-wal` 文件，同步程序只拷走其中一个，拷过去的库就打不开。
+
+## 删掉的会话，花的钱还算吗？
+
+算。花销单独记账，删会话、按日期清理都不会把它从「设置 → 使用统计」里减掉。
+
+## 回复写到一半 Lyra 崩了，会丢吗？
+
+已经收到的文字和思考不会丢：回复一边流一边写进会话库，下次打开时，这一条就像你按了停止那样留在对话里。写了一半的工具调用不保留。
 
 ## 插件、技能、MCP 有什么区别？
 
