@@ -148,7 +148,8 @@ export function settingsFor({ world, lang, theme, modelPort, providerSet = "core
 		skillRegistries: [`${MARKET}?kind=skill`],
 		alwaysAllow: [],
 		sync: { enabled: false, port: 4517, token: null },
-		appearance: { theme, reduceMotion: "off" },
+		// No macOS window material: under it the sidebar is see-through, and a page screenshot has nothing behind it.
+		appearance: { theme, reduceMotion: "off", vibrancy: false },
 		...extra,
 	};
 }

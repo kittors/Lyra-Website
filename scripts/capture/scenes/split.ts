@@ -2,9 +2,7 @@
  * `split-view` — two conversations side by side.
  *
  * Left, the lead conversation still at work; right, a finished one from earlier in the same
- * project, with its answer and the card of files it changed. Both in `aurora-notes` on purpose:
- * the composer's project row follows the focused conversation rather than its own pane, so two
- * projects side by side would show one pane with the other's project name.
+ * project, with its answer and the card of files it changed.
  *
  * The finished conversation is dragged in from the sidebar with the real pointer, the way a person
  * opens a split, next to a fresh conversation in which the lead one is then started.
@@ -22,7 +20,6 @@ import { settingsFor, writeProfile } from "../lib/settings.ts";
 import { shootBoth } from "../lib/shoot.ts";
 import { openLyra, type LyraWindow } from "../lib/window.ts";
 import { buildWorld, holdVitest } from "../lib/world.ts";
-import { expand } from "../lib/frame.ts";
 import { fitTurn, REST, testRunning } from "./hero.ts";
 
 /** The hand-written conversation this scene plays live instead. */
@@ -93,24 +90,20 @@ export async function splitScene(lang: Lang): Promise<string[]> {
 		await finished(win, model, tab);
 		release = await holdVitest(world);
 		/*
-		 * The lead conversation is created — its question sent — but the model's first reply is held,
-		 * so nothing is in flight when the split opens. Opening a split beside a conversation with a
-		 * tool running drops that pane's live state (the running command is drawn as failed), and a
-		 * message typed into a split's fresh pane goes to whichever conversation has focus.
+		 * The lead conversation is created — its question sent — but the model's first reply is held
+		 * until the split is open, so nothing on screen changes under the drag.
 		 */
 		await startConversation(win, "aurora-notes", heroAsk(lang));
 		await win.until(`[...document.querySelectorAll('[data-ly-row]')].some((r) => r.innerText.includes(${JSON.stringify(hero.title)}))`, 20_000, "主对话出现在侧栏");
 		await pause(600);
 		await dragIntoSplit(win, tab.title ?? "");
 		const left = await win.$<string>(`document.querySelectorAll('[data-ly-split-pane]')[0].getAttribute('data-ly-split-pane')`);
-		// Focus the lead conversation's pane: its status line follows the focused conversation.
+		// Focus the lead conversation's pane: the one at work is the one being watched.
 		await win.click(`[data-ly-split-pane="${left}"] textarea`);
 		await pause(500);
 		go();
 		await reached(model, hero, hero.steps.length - 1);
 		await testRunning(win, `[data-ly-split-pane="${left}"]`);
-		await expand(win, `document.querySelector('[data-ly-split-pane="${left}"] [data-ly-run="running"] > button.ly-flow-row')`);
-		await pause(800);
 		const slack = await fitTurn(win, heroAsk(lang).slice(0, 10), `[data-ly-split-pane="${left}"]`);
 		console.log(`   左侧画面余量：${Math.round(slack)}px`);
 		const sidebar = await win.$<number>(`Math.round(document.querySelector('.ly-sidebar, aside')?.getBoundingClientRect().width ?? 0)`);

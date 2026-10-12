@@ -39,8 +39,21 @@ interface Entry {
 	sha256?: string;
 }
 
+/** The market's index, asked a few times: on a slow connection the first try can time out connecting. */
+async function marketIndex(): Promise<{ plugins: Entry[] }> {
+	for (let attempt = 1; ; attempt++) {
+		try {
+			return (await fetch(MARKET).then((response) => response.json())) as { plugins: Entry[] };
+		} catch (error) {
+			if (attempt >= 5) throw error;
+			console.log(`   读不到市场索引，重试第 ${attempt + 1} 次`);
+			await pause(2000);
+		}
+	}
+}
+
 async function installSkillPacks(lyraHome: string): Promise<void> {
-	const index = (await fetch(MARKET).then((response) => response.json())) as { plugins: Entry[] };
+	const index = await marketIndex();
 	const ledger: Record<string, unknown> = {};
 	for (const [id, skills] of Object.entries(INSTALLED)) {
 		const entry = index.plugins.find((one) => one.id === id);

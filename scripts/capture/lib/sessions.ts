@@ -1,10 +1,11 @@
 /**
- * Conversations written straight into Lyra's session log, for the sidebar and the quieter panes.
+ * Conversations for the sidebar and the quieter panes, seeded as Lyra's older session logs.
  *
- * The log is append-only JSONL under `sessions/<projectId>/<id>.jsonl`, one record per line. The
- * outer `seq` starts at 1, not 0: the reader drops every record whose `seq` is not above the cursor
- * it was given, the default cursor is 0, and a meta record at seq 0 therefore vanishes — the session
- * then never reaches the sidebar, and nothing says why.
+ * Lyra keeps sessions in `sessions/sessions.db`. The first time it opens that database it imports the
+ * logs it finds — append-only JSONL under `sessions/<projectId>/<id>.jsonl`, one record per line —
+ * taking the sessions `sessions/index.json` lists, in its order and with its times. Lyra's own e2e
+ * fixtures are seeded the same way. The outer `seq` starts at 1, as Lyra wrote it; the import
+ * renumbers a record that is out of order rather than dropping it.
  */
 
 import { mkdir, writeFile } from "node:fs/promises";

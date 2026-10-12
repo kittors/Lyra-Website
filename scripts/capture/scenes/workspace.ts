@@ -46,15 +46,7 @@ export async function workspaceScene(lang: Lang): Promise<string[]> {
 		await run("npx vitest run", 5000);
 		await win.until(`(document.querySelector('[data-dock-pane="terminal"]')?.innerText ?? '').includes('Duration')`, 15_000, "测试跑完");
 		await pause(800);
-		/*
-		 * The terminal reads the theme from the page (the \`dark\` class, \`--ly-code-bg\`), which the app
-		 * updates after the terminal has already re-themed — so a theme switch leaves it one theme
-		 * behind. Saving the settings once more, unchanged, re-runs it against the updated page.
-		 */
-		return await shootBoth(win, "workspace-panels", REST, async () => {
-			await win.setAppearance({});
-			await pause(600);
-		});
+		return await shootBoth(win, "workspace-panels", REST);
 	} finally {
 		await win.close().catch(() => {});
 		await world.dispose().catch(() => {});

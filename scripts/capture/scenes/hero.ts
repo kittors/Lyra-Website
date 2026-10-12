@@ -2,10 +2,10 @@
  * `hero-conversation` — the main window with the agent mid-task.
  *
  * The sidebar holds four projects and their recent conversations. The conversation is the agent
- * fixing the sync bug in `aurora-notes`: the question, the files it read, the cause written up with
- * a heading, a code block and a table, then the edit, the new test and the test run it is waiting
- * on — that group opened so each call shows as a card, the plan among them. The Git panel beside it
- * shows the change as a diff.
+ * fixing the sync bug in `aurora-notes`: the question, the first stretch of work folded into its one
+ * line, the cause written up with a heading, a code block and a table, then the second stretch — the
+ * edit and the test run it is waiting on — opened so each call shows as a row. The plan sits above
+ * the composer, and the Git panel beside the conversation shows the change as a diff.
  */
 
 import { heroAsk, heroScript } from "../content/hero.ts";
@@ -74,15 +74,20 @@ export async function playHero(lang: Lang, extraScripts: Script[] = [], extraSet
 }
 
 /**
- * Wait until the last stretch of work — the fix and the test run — is on screen and running.
+ * Wait until the last stretch of work — the fix and the test run — is on screen and running, opened.
  *
- * Not merely "a stretch of tool work is running": the model is asked for its last step while the
- * previous stretch still reads as running, and that step streams its analysis before its tool calls
- * arrive. The lead conversation has two stretches; the second one, running, is the one to wait for.
+ * The analysis cuts the turn's process into two stretches, each folded into one line by default, and
+ * a folded stretch's calls are not in the page at all. So: wait for the second stretch, open it, then
+ * wait for the test command in it. Not merely "a stretch is running": the model is asked for its last
+ * step while the first stretch still reads as running, and that step streams its analysis before its
+ * tool calls arrive.
  */
 export async function testRunning(win: LyraWindow, scope = ""): Promise<void> {
+	const stretches = JSON.stringify(`${scope} [data-ly-turn-process]`.trim());
+	await win.until(`document.querySelectorAll(${stretches}).length >= 2`, 30_000, "第二段工作出现");
+	await expand(win, `[...document.querySelectorAll(${stretches})].at(-1).querySelector(':scope > button.ly-flow-row')`);
 	await win.until(
-		`(() => { const runs = [...document.querySelectorAll(${JSON.stringify(`${scope} [data-ly-run]`.trim())})]; return runs.length >= 2 && runs[runs.length - 1].getAttribute('data-ly-run') === 'running'; })()`,
+		`(() => { const last = [...document.querySelectorAll(${stretches})].at(-1); const runs = last.querySelectorAll('[data-ly-run]'); return runs.length > 0 && runs[runs.length - 1].getAttribute('data-ly-run') === 'running' && last.innerText.includes('vitest'); })()`,
 		30_000,
 		"测试命令开始运行",
 	);
@@ -137,8 +142,6 @@ export async function heroScene(lang: Lang): Promise<string[]> {
 	const { win } = run;
 	try {
 		await openGitDiff(win);
-		await expand(win, `document.querySelector('[data-ly-run="running"] > button.ly-flow-row')`);
-		await pause(800);
 		const slack = await fitTurn(win, heroAsk(lang).slice(0, 10));
 		console.log(`   画面余量：${Math.round(slack)}px`);
 		return await shootBoth(win, "hero-conversation", REST);

@@ -2,7 +2,7 @@
  * `sub-agents` — several sub-agents running at once.
  *
  * The lead agent has sent four release checks out in parallel; three run, one waits. The transcript
- * shows the dispatch opened into its four cards, each with the agent's face; above the composer the
+ * shows the dispatch opened into its four rows, each with the agent's face; above the composer the
  * bar counts who is running and who is queued; the panel on the right follows the reviewer as it
  * reads and searches its way through the sync module.
  */
@@ -52,12 +52,12 @@ export async function subAgentsScene(lang: Lang): Promise<string[]> {
 			await pause(250);
 		}
 		await pause(1500);
-		// The dispatch, opened into its cards.
-		await expand(win, `[...document.querySelectorAll('main [data-ly-run] > button.ly-flow-row')].find((b) => b.closest('[data-ly-run]').querySelector('[data-ly-avatar-host]') || /4/.test(b.innerText))`);
+		// The turn is folded into one line by default; opening it shows the dispatch and its cards.
+		await expand(win, `document.querySelector('main [data-ly-turn-process] > button.ly-flow-row')`);
 		await pause(900);
-		// The reviewer in the panel: its card opens it there.
+		// The reviewer in the panel: its row opens it there.
 		const reviewTitle = releaseTasks(lang)[2].description;
-		const card = await win.mark(`[...document.querySelectorAll('main [data-ly-run] button')].find((b) => !b.classList.contains('ly-flow-row') && b.innerText.includes(${JSON.stringify(reviewTitle)}))`);
+		const card = await win.mark(`[...document.querySelectorAll('main [data-ly-tool] button.ly-flow-row')].find((b) => b.innerText.includes(${JSON.stringify(reviewTitle)}))`);
 		await win.click(card);
 		await win.until(`(document.querySelector('[data-dock-pane="subagents"]')?.innerText ?? '').includes(${JSON.stringify(reviewTitle)})`, 10_000, "面板换到审查子智能体");
 		await pause(800);

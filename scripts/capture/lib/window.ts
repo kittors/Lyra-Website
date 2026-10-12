@@ -15,7 +15,6 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import { loadHarness, OUT, pause, PORTS, type Grabber, type RunningApp } from "./env.ts";
-import { installEnglishStandIns } from "./english.ts";
 import { privateMarkerIn } from "./privacy.ts";
 import { enterWorld, type World } from "./world.ts";
 import type { Lang } from "../content/types.ts";
@@ -292,7 +291,6 @@ export async function openLyra({ world, lang, seed, port = PORTS.desktop }: Open
 	});
 	const window = new LyraWindow(app, grab, lang, world);
 	await window.until(`innerWidth === ${VIEWPORT.width} && innerHeight === ${VIEWPORT.height}`, 10_000);
-	if (lang === "en") await installEnglishStandIns(grab);
 	/*
 	 * Let the running line's rotating phrase be paused for a picture.
 	 *

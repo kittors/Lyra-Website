@@ -21,6 +21,7 @@ import { filePreviewScene } from "./scenes/filepreview.ts";
 import { workspaceScene } from "./scenes/workspace.ts";
 import { mobileScene } from "./scenes/mobile.ts";
 import { pullsScene } from "./scenes/pulls.ts";
+import { imagesScene } from "./scenes/images.ts";
 import type { Lang } from "./content/types.ts";
 
 interface Scene {
@@ -37,6 +38,7 @@ const SCENES: Record<string, Scene> = {
 	schedule: { langs: ["zh", "en"], run: scheduleScene },
 	"settings-models": { langs: ["zh", "en"], run: settingsScene },
 	"file-preview": { langs: ["zh", "en"], run: filePreviewScene },
+	"image-generation": { langs: ["zh", "en"], run: imagesScene },
 	"workspace-panels": { langs: ["zh", "en"], run: workspaceScene },
 	mobile: { langs: ["zh", "en"], run: mobileScene },
 	"pull-requests": { langs: ["zh", "en"], run: pullsScene },

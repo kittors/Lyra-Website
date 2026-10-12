@@ -10,8 +10,8 @@ import { shot, type Scene } from "../lib/shots.ts";
  * and the shadow, all drawn here — the captures are the window's contents only.
  *
  * Everything is sized in container units against the window's own width, so the lights sit where
- * macOS puts them (16 pt in, 15 pt down, as Lyra's `trafficLightPosition` asks) at any size the
- * picture is drawn at.
+ * macOS puts them (16 pt in, 13 pt down — centred in the main window's 40 pt toolbar, as Lyra's
+ * `trafficLightPosition` asks) at any size the picture is drawn at.
  *
  * One <picture> carries both themes. On the page's own surface the dark screenshot is picked by
  * `prefers-color-scheme` — the browser chooses, before any script runs — and `site.ts` rewrites
@@ -177,11 +177,11 @@ const placeholder = pictures.some((picture) => picture.placeholder);
 		-webkit-user-drag: none;
 	}
 
-	/* 12 pt lights, 20 pt apart, their box 16 pt in and 15 pt down — where macOS puts them. */
+	/* 12 pt lights, 20 pt apart, their box 16 pt in and 13 pt down — where macOS puts them. */
 	.window-lights {
 		position: absolute;
 		z-index: 4;
-		top: calc(16 * var(--pt));
+		top: calc(14 * var(--pt));
 		left: calc(17 * var(--pt));
 		display: flex;
 		gap: calc(8 * var(--pt));
