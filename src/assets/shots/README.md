@@ -34,6 +34,11 @@
 | `settings-models-{light,dark}[-en].png` | 模型设置：五个供应商（Anthropic、OpenAI、OpenRouter、DeepSeek、Moonshot AI），选中 OpenRouter：「连接」卡片（Base URL、API 格式、API Key）和「模型」卡片，五个模型是五家的官方标志；密钥是占位符，显示为圆点。 |
 | `file-preview-{light,dark}[-en].png` | 对话里点开设计文档的链接，右侧渲染出 Markdown：标题、正文、Mermaid 时序图、有序列表。 |
 | `image-generation-{light,dark}[-en].png` | 对话里画图：在 `aurora-notes` 里给空笔记页画插画。上面一张已经画好，下面是照着它画的两张夜景、正画到一半：点阵占着图的位置，上方写着画到哪一步，角上是百分比。 |
+| `studio-{light,dark}[-en].png` | 「创作」：八张真实模型画的图按天排开——今天是竖版和横版的极光、黄昏的纸船，昨天是同一只纸船的冬夜、月夜和清晨，往下是三天前的两版 `orbit-cli` 图标（被底边裁到一半）。同一条链路上的图角上写着几步：纸船 4，极光 2。 |
+| `studio-detail-{light,dark}[-en].png` | 在「创作」里点开冬夜那张：左边大图和「想怎么改」的输入框；右边是对话名、时间和项目，4 步的生成链路（清晨 → 月夜 → 冬夜用强调色，黄昏那条分支接回清晨），提示词，模型、尺寸、比例、清晰度、耗时。 |
+| `video-generation-{light,dark}[-en].png` | 做视频：在纸船那个对话里说「把黄昏那张做成 6 秒的视频」，视频还在做——按 16:9 占好位置的点阵，上方「生成中 · 已等 1m 13s」，角上是百分比。 |
+| `credential-card-{light,dark}[-en].png` | 对话里的凭据卡片：模型要登上 `atlas-api` 的 staging 服务器，向你要 deploy 账号的密码。用途、「密码 · 只能用于 ssh://deploy@staging.atlas-api.dev」、密码框、拒绝 / 存进保险箱 / 提交，还有剩余时间。 |
+| `vault-{light,dark}[-en].png` | 保险箱：四类凭据各一项（SSH 密钥、令牌、账号密码、密码），每行写着名称、类别和只能用于哪里。 |
 | `workspace-panels-{light,dark}[-en].png` | 对话旁边的内置终端：`git lg` 的提交图和整套测试的彩色输出。 |
 | `pull-requests-{light,dark}[-en].png` | 「拉取请求」：等你审查 / 由我创建 / 之前已审查三组，头像、分支、增删行数、检查状态；右侧是 #142 的详情——审查者（已批准 / 已评论）、5 项检查全部通过、标签、渲染好的描述。 |
 | `mobile-1-{light,dark}[-en].png` | 手机上发起的对话停在授权：智能体改写了已推送的提交说明，需要强推，请你批准（拒绝 / 以后不再问 / 允许一次）。官网放在中间。 |
@@ -53,6 +58,13 @@
   Lyra 自己的工具真做的。`npx vitest`、`npx tsc` 是项目里的假命令，输出仿照真实工具。
 - 画图场景的生图模型配在一个指向本机的供应商下（`scripts/capture/lib/images.ts`）：它照 OpenAI Images 接口回图，
   回的是 Lyra 自己测试用的两张图（`packages/desktop/e2e/assets/image-gen-{day,night}.jpg`）。
+- **「创作」和做视频里的图是真的**：`scripts/capture/art/generate.ts` 用真实的生图模型画过一次（纸船和极光是
+  `gemini-3.1-flash-image`，图标是 `grok-imagine-image-quality`），连同提示词、尺寸存在 `scripts/capture/assets/`
+  里提交。拍摄时不调用任何模型：画过这些图的三个对话按 Lyra 记录的格式写进会话（`scripts/capture/lib/drawings.ts`），
+  生成链路靠结果里的 `sources` 连起来，时间分在今天、昨天和三天前。重画要用自己 Lyra 里配好的这两个模型，会计费。
+- 做视频那张没有成片：手上的 xAI 账号开了 Zero Data Retention，这种团队生成视频必须给 `output.upload_url`，Lyra
+  不发这个参数。所以拍的是视频还在做的样子，xAI 的视频接口由本机一个一直回答 pending 的服务代替（`lib/videos.ts`）。
+- 保险箱里的值全是占位符，页面也从不显示值；那把 SSH 私钥每次拍摄现做，拍完就丢。
 - 拉取请求页连的是本机一个假的 GitHub Enterprise（`/api/v3/user`、`/api/graphql`、diff 接口），应用按真实 GitHub
   账号的方式查询它。
 - 时间：应用跑在一个此刻正好是下午的时区里，时间戳不会出现深夜的「0:01」。
@@ -77,10 +89,18 @@ LYRA_DIR=/path/to/Lyra node scripts/capture/capture.ts    # Lyra 不在旁边时
 ```
 
 场景名：`hero-conversation`、`split-view`、`sub-agents`、`plugin-market`、`plugin-detail`、`schedule`、
-`settings-models`、`file-preview`、`image-generation`、`workspace-panels`、`pull-requests`、`mobile`。
+`settings-models`、`file-preview`、`image-generation`、`studio`、`video-generation`、`vault`、`workspace-panels`、
+`pull-requests`、`mobile`。
+
+「创作」和做视频用的图要换的话，先重画再拍：
+
+```bash
+node scripts/capture/art/generate.ts            # 用你 Lyra 里的生图模型重画全部（计费）
+node scripts/capture/art/generate.ts icon       # 只重画一组：boat、aurora、icon
+```
 
 拍摄时会在屏幕左上角弹出 Lyra 窗口，**别动鼠标**：真实指针经过窗口会带出悬停效果、打断拖拽（脚本在每张之前都会
-把指针挪到空白处，但挡不住拍摄那一刻的真鼠标）。调试端口只用 9790–9791。
+把指针挪到空白处，但挡不住拍摄那一刻的真鼠标）。调试端口只用 9790–9792（重画图用 9792）。
 
 主图和分屏的取景有硬约束：对话区上下各有一道渐隐（顶 36px、底 48px，只在还能往那边滚时出现），状态行落在底部
 渐隐里会发灰。所以脚本把对话滚到最底（没有底部渐隐），再检查问题气泡在顶部渐隐之外，终端里会打印「画面余量」。

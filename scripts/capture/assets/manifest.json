@@ -1,0 +1,66 @@
+{
+	"boat-day": {
+		"file": "boat-day.jpg",
+		"mimeType": "image/jpeg",
+		"width": 1376,
+		"height": 768,
+		"model": "gemini-3.1-flash-image",
+		"prompt": "A minimalist, premium editorial photograph: a single red origami paper boat floating on perfectly still water in soft early-morning light. Pale blue sky with a gentle haze, distant misty hills on the horizon, a faint reflection of the boat on the water. Generous negative space, calm and quiet mood, shallow depth of field, natural colours, ultra-detailed, 16:9."
+	},
+	"boat-night": {
+		"file": "boat-night.jpg",
+		"mimeType": "image/jpeg",
+		"width": 1376,
+		"height": 768,
+		"model": "gemini-3.1-flash-image",
+		"prompt": "Turn this into a calm moonlit night: a deep navy sky with a full moon and scattered stars, silver moonlight shimmering on the still water, the hills in soft shadow. Keep the red paper boat exactly as it is and where it is, and keep the composition and the photographic style."
+	},
+	"boat-winter": {
+		"file": "boat-winter.jpg",
+		"mimeType": "image/jpeg",
+		"width": 1376,
+		"height": 768,
+		"model": "gemini-3.1-flash-image",
+		"prompt": "Make this a winter night: light snow falling, snow covering the distant hills and the shoreline, thin sheets of ice at the edges of the water, cold blue tones. Keep the red paper boat, the moon and the composition exactly as they are."
+	},
+	"boat-dusk": {
+		"file": "boat-dusk.jpg",
+		"mimeType": "image/jpeg",
+		"width": 1376,
+		"height": 768,
+		"model": "gemini-3.1-flash-image",
+		"prompt": "Change the time of day to golden hour at sunset: a warm amber and rose sky with soft clouds, the sun low behind the hills, a golden path of light on the water and a warm glow on the paper boat. Keep the boat exactly as it is and where it is, and keep the composition."
+	},
+	"aurora-wide": {
+		"file": "aurora-wide.jpg",
+		"mimeType": "image/jpeg",
+		"width": 1376,
+		"height": 768,
+		"model": "gemini-3.1-flash-image",
+		"prompt": "Cinematic landscape photograph: vivid green and violet northern lights rippling across a starry night sky above snow-capped mountain peaks, mirrored in a glassy alpine lake, dark pine forest along the shore. Long exposure, crisp stars, deep blues, ultra-detailed, 16:9."
+	},
+	"aurora-tall": {
+		"file": "aurora-tall.jpg",
+		"mimeType": "image/jpeg",
+		"width": 768,
+		"height": 1376,
+		"model": "gemini-3.1-flash-image",
+		"prompt": "Recompose this scene as a 9:16 vertical image for a phone splash screen: the northern lights sweeping across the upper half of the frame, the snow-capped peaks and their reflection in the lake in the lower half. Same photographic style, colours and mood."
+	},
+	"icon-a": {
+		"file": "icon-a.jpg",
+		"mimeType": "image/jpeg",
+		"width": 1024,
+		"height": 1024,
+		"model": "grok-imagine-image-quality",
+		"prompt": "A premium app icon for a command-line tool called orbit: a glossy 3D planet circled by a thin glowing orbit ring with a tiny satellite, centred on a rounded-square tile with a deep indigo-to-violet gradient. Soft studio lighting, subtle glass highlights, clean and modern, no text, 1:1."
+	},
+	"icon-b": {
+		"file": "icon-b.jpg",
+		"mimeType": "image/jpeg",
+		"width": 1024,
+		"height": 1024,
+		"model": "grok-imagine-image-quality",
+		"prompt": "A premium app icon for a command-line tool called orbit: a glossy 3D planet circled by a thin glowing orbit ring with a tiny satellite, centred on a rounded-square tile with a deep indigo-to-violet gradient. Soft studio lighting, subtle glass highlights, clean and modern, no text, 1:1."
+	}
+}

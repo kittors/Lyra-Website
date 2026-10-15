@@ -6,8 +6,14 @@ sidebar:
 ---
 
 import { Steps, Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import videoLight from '../../../../../assets/shots/video-generation-light-en.png';
+import videoDark from '../../../../../assets/shots/video-generation-dark-en.png';
 
 Say "make a video of…" or "make this picture move" and the conversation model calls `video_generate`. It writes the brief from what the chat already holds, says which picture to start from, and hands it to your video model. A video is a task you wait for: half a minute for a short one, several minutes for a long one. When it's done, it plays in the conversation.
+
+<Image src={videoLight} alt="A video being made in the conversation: the dusk picture above, then “Turn the dusk one into a 6-second video”; below, its 16:9 place held by a field of dots, with “Making the video · 1m 13s so far” above it and the percentage in the corner" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={videoDark} alt="A video being made in the conversation: the dusk picture above, then “Turn the dusk one into a 6-second video”; below, its 16:9 place held by a field of dots, with “Making the video · 1m 13s so far” above it and the percentage in the corner" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 ## Add a video model
 

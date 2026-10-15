@@ -6,8 +6,14 @@ sidebar:
 ---
 
 import { Steps, Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import videoLight from '../../../../assets/shots/video-generation-light.png';
+import videoDark from '../../../../assets/shots/video-generation-dark.png';
 
 在对话里说「做一段……的视频」「让这张图动起来」，对话模型会调用 `video_generate`：它按上下文写好提示词、指明从哪张图做起，交给你配的视频模型。视频是一个要等的任务，短的半分钟，长的好几分钟，做好以后就在对话里播放。
+
+<Image src={videoLight} alt="对话里正在做的视频：上面是黄昏那张图，接着一句「把黄昏那张做成 6 秒的视频」；下面按 16:9 占好位置的是一片点阵，上方写着「生成中 · 已等 1m 13s」，右下角是百分比" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={videoDark} alt="对话里正在做的视频：上面是黄昏那张图，接着一句「把黄昏那张做成 6 秒的视频」；下面按 16:9 占好位置的是一片点阵，上方写着「生成中 · 已等 1m 13s」，右下角是百分比" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 ## 加一个视频模型
 

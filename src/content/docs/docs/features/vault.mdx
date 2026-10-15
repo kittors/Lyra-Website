@@ -6,12 +6,20 @@ sidebar:
 ---
 
 import { Steps, Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import cardLight from '../../../../assets/shots/credential-card-light.png';
+import cardDark from '../../../../assets/shots/credential-card-dark.png';
+import vaultLight from '../../../../assets/shots/vault-light.png';
+import vaultDark from '../../../../assets/shots/vault-dark.png';
 
 对话里要用到密码、SSH 密钥或令牌时，值交给 Lyra，不交给模型。模型拿到的是一个名字，比如 `nas-root`，用的时候也只写这个名字。
 
 ## 对话里的凭据卡片
 
 模型要一个凭据时（它调用 `request_credential`），输入框上方会出来一张标着「提供凭据」的卡片，标题是模型起的，比如「NAS 的 root 密码」。
+
+<Image src={cardLight} alt="对话里的凭据卡片：模型要登上 staging 服务器，向你要 deploy 账号的密码。卡片标题是模型起的，下面引着它说的用途，再下面一行是 Lyra 写的「密码 · 只能用于 ssh://deploy@staging.atlas-api.dev」，然后是密码框，左边「拒绝」，右边「存进保险箱」和「提交」" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={cardDark} alt="对话里的凭据卡片：模型要登上 staging 服务器，向你要 deploy 账号的密码。卡片标题是模型起的，下面引着它说的用途，再下面一行是 Lyra 写的「密码 · 只能用于 ssh://deploy@staging.atlas-api.dev」，然后是密码框，左边「拒绝」，右边「存进保险箱」和「提交」" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 - 最上面引着模型说的用途。这句话是模型写的，不一定准。
 - 下面一行是 Lyra 写的：哪一类（密码、账号密码、令牌、SSH 密钥），只能用于哪里，比如「只能用于 ssh://root@nas」。真正执行的是这一行。
@@ -34,6 +42,9 @@ SSH 密钥要粘贴私钥全文（以 `-----BEGIN` 开头），设了口令的�
 ## 保险箱
 
 左侧图标栏「创作」下面那一格。卡片上存下的凭据都在这里，也可以自己加。
+
+<Image src={vaultLight} alt="保险箱：四类凭据各一项——SSH 密钥、令牌、账号密码、密码。每一行是名称和类别，下面写着账号和只能用于哪里，没限定的写「不限地址」" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={vaultDark} alt="保险箱：四类凭据各一项——SSH 密钥、令牌、账号密码、密码。每一行是名称和类别，下面写着账号和只能用于哪里，没限定的写「不限地址」" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 <Steps>
 

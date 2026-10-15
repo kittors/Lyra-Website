@@ -6,8 +6,16 @@ sidebar:
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import studioLight from '../../../../../assets/shots/studio-light-en.png';
+import studioDark from '../../../../../assets/shots/studio-dark-en.png';
+import detailLight from '../../../../../assets/shots/studio-detail-light-en.png';
+import detailDark from '../../../../../assets/shots/studio-detail-dark-en.png';
 
 **Studio**, on the left-hand rail, holds every [picture drawn](/en/docs/features/images/) and [video made](/en/docs/features/video/) in any conversation. No need to remember which chat it was in; look here.
+
+<Image src={studioLight} alt="Studio: pieces grouped by day, each at its own shape. Today, a tall and a wide picture of the northern lights and the paper boat at dusk; yesterday, the same boat on a winter night, on a moonlit night and in the morning; below, two takes on an icon from three days ago. Pictures that share a history show how many steps it has" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={studioDark} alt="Studio: pieces grouped by day, each at its own shape. Today, a tall and a wide picture of the northern lights and the paper boat at dusk; yesterday, the same boat on a winter night, on a moonlit night and in the morning; below, two takes on an icon from three days ago. Pictures that share a history show how many steps it has" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 ## Browsing and searching
 
@@ -26,6 +34,9 @@ The piece is shown large on the left; click it for full size. On the right, from
 - **Details**: model, size, aspect ratio and how long it took; quality for a picture, length for a video.
 
 `←` and `→` step to the previous and next piece, and `Esc` goes back to Studio. Videos play right there.
+
+<Image src={detailLight} alt="The winter night opened in Studio: the picture large on the left, with a box under it for what to change; on the right the conversation, time and project, then its history from the morning picture to the dusk one with this picture’s own path in the accent colour, then the prompt, model, size, ratio and time taken" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={detailDark} alt="The winter night opened in Studio: the picture large on the left, with a box under it for what to change; on the right the conversation, time and project, then its history from the morning picture to the dusk one with this picture’s own path in the accent colour, then the prompt, model, size, ratio and time taken" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 ## How it was made
 

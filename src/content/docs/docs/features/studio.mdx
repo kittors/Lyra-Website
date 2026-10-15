@@ -6,8 +6,16 @@ sidebar:
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import studioLight from '../../../../assets/shots/studio-light.png';
+import studioDark from '../../../../assets/shots/studio-dark.png';
+import detailLight from '../../../../assets/shots/studio-detail-light.png';
+import detailDark from '../../../../assets/shots/studio-detail-dark.png';
 
 左侧图标栏的「创作」里，是所有对话里[画过的图](/docs/features/images/)和[做过的视频](/docs/features/video/)。不用记得是在哪个对话里画的，到这里找就行。
+
+<Image src={studioLight} alt="「创作」：作品按天排开，每张按自己的比例显示。今天是竖版、横版两张极光和黄昏的纸船，昨天是同一只纸船的冬夜、月夜和清晨，往下是三天前的两版图标；同一条链路上的图，角上写着这条链路有几步" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={studioDark} alt="「创作」：作品按天排开，每张按自己的比例显示。今天是竖版、横版两张极光和黄昏的纸船，昨天是同一只纸船的冬夜、月夜和清晨，往下是三天前的两版图标；同一条链路上的图，角上写着这条链路有几步" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 ## 浏览和搜索
 
@@ -26,6 +34,9 @@ import { Aside } from '@astrojs/starlight/components';
 - **参数**：模型、尺寸、比例、耗时；图还有清晰度，视频还有片长。
 
 `←` `→` 切到上一张、下一张，`Esc` 回到「创作」。视频在这里直接播放。
+
+<Image src={detailLight} alt="在「创作」里点开冬夜那张：左边是大图，下面一个输入框写要怎么改；右边是对话名、时间和项目，生成链路从清晨那张排到黄昏那张，这张的来路用强调色标出，再往下是提示词和模型、尺寸、比例、耗时" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={detailDark} alt="在「创作」里点开冬夜那张：左边是大图，下面一个输入框写要怎么改；右边是对话名、时间和项目，生成链路从清晨那张排到黄昏那张，这张的来路用强调色标出，再往下是提示词和模型、尺寸、比例、耗时" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 ## 生成链路
 

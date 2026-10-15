@@ -27,11 +27,17 @@ export interface FixtureSession {
 	messages: FixtureMessage[];
 	modelId: string;
 	archived?: boolean;
+	/**
+	 * The conversation as Lyra records it, one message per entry, each carrying its own `timestamp` —
+	 * for exchanges the text-only `messages` cannot hold: tool calls and their results. Written
+	 * instead of `messages` when present.
+	 */
+	recorded?: Record<string, unknown>[];
 }
 
 const ZERO = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0, cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } };
 
-function usageFor(text: string) {
+export function usageFor(text: string) {
 	const output = Math.round(text.length / 1.6);
 	const input = 4200 + text.length * 2;
 	const cacheRead = 2600;
@@ -49,8 +55,9 @@ export async function writeSessions(lyraHome: string, sessions: FixtureSession[]
 		await mkdir(dir, { recursive: true });
 		const [provider, ...rest] = session.modelId.split("/");
 		const model = rest.join("/");
-		// Spread the exchange over the minutes before `at`, a minute or two per message.
-		const start = session.at - session.messages.length * 95_000;
+		const recorded = session.recorded;
+		// Spread the exchange over the minutes before `at`, a minute or two per message — unless it says when.
+		const start = recorded ? Number(recorded[0]?.timestamp ?? session.at) : session.at - session.messages.length * 95_000;
 		const records: string[] = [];
 		let seq = 0;
 		const meta = {
@@ -63,13 +70,15 @@ export async function writeSessions(lyraHome: string, sessions: FixtureSession[]
 			updatedAt: session.at,
 			modelId: session.modelId,
 			thinking: "medium",
-			messageCount: session.messages.length,
+			messageCount: recorded ? recorded.length : session.messages.length,
 			usage: ZERO,
 			seq: 0,
 		};
 		records.push(JSON.stringify({ seq: ++seq, ts: start, type: "meta", meta }));
 		records.push(JSON.stringify({ seq: ++seq, ts: start, type: "title", title: session.title, source: "auto" }));
-		session.messages.forEach((message, index) => {
+		if (recorded) {
+			for (const message of recorded) records.push(JSON.stringify({ seq: ++seq, ts: Number(message.timestamp), type: "message", message }));
+		} else session.messages.forEach((message, index) => {
 			const ts = index === session.messages.length - 1 ? session.at : start + index * 95_000 + 30_000;
 			const body =
 				message.role === "user"

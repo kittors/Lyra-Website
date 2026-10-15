@@ -24,6 +24,9 @@ export const OUT = join(SITE, "scripts", "capture", "out");
 /** Where the chosen shots are committed. */
 export const SHOTS = join(SITE, "src", "assets", "shots");
 
+/** Pictures real image models drew (`art/generate.ts`), handed to the app by the scenes that show them. */
+export const ASSETS = join(SITE, "scripts", "capture", "assets");
+
 /**
  * Debugger ports this capture may use. Other agents' probes run on the machine at the same time and
  * pick their ports from elsewhere; 9790–9799 is this script's own range.

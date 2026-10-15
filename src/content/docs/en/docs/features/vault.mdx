@@ -6,12 +6,20 @@ sidebar:
 ---
 
 import { Steps, Aside } from '@astrojs/starlight/components';
+import { Image } from 'astro:assets';
+import cardLight from '../../../../../assets/shots/credential-card-light-en.png';
+import cardDark from '../../../../../assets/shots/credential-card-dark-en.png';
+import vaultLight from '../../../../../assets/shots/vault-light-en.png';
+import vaultDark from '../../../../../assets/shots/vault-dark-en.png';
 
 When a conversation needs a password, an SSH key or a token, the value goes to Lyra and not to the model. The model gets a name, such as `nas-root`, and uses the credential by that name.
 
 ## The credential card
 
 When the model needs a credential (it calls `request_credential`), a card marked **Provide a credential** appears above the composer. Its title is the model's, such as "Root password for the NAS".
+
+<Image src={cardLight} alt="The credential card in a conversation: to log in to the staging server, the model asks for the deploy account’s password. The title is the model’s, then its sentence on what it’s for, then Lyra’s line, “Password · Only for ssh://deploy@staging.atlas-api.dev”, the password field, No on the left, Save to vault and Submit on the right" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={cardDark} alt="The credential card in a conversation: to log in to the staging server, the model asks for the deploy account’s password. The title is the model’s, then its sentence on what it’s for, then Lyra’s line, “Password · Only for ssh://deploy@staging.atlas-api.dev”, the password field, No on the left, Save to vault and Submit on the right" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 - At the top is the model's own sentence about what it's for. The model wrote it, and it may be wrong.
 - The line under it is Lyra's: the kind (Password, Login, Token or SSH key) and where it may be used, such as "Only for ssh://root@nas". That line is what's enforced.
@@ -34,6 +42,9 @@ Later, when you approve a command that uses a credential, its approval card list
 ## The Vault
 
 The **Vault** is on the left-hand rail, under Studio. Everything saved from a card is here, and you can add your own.
+
+<Image src={vaultLight} alt="The Vault: one credential of each kind — an SSH key, a token, a login and a password. Each row has the name and the kind, and under it the username and where it may be used, or “Any address” when it isn’t limited" sizes="(min-width: 50rem) 48rem, 100vw" class="dark:sl-hidden" />
+<Image src={vaultDark} alt="The Vault: one credential of each kind — an SSH key, a token, a login and a password. Each row has the name and the kind, and under it the username and where it may be used, or “Any address” when it isn’t limited" sizes="(min-width: 50rem) 48rem, 100vw" class="light:sl-hidden" />
 
 <Steps>
 
