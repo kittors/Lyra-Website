@@ -37,10 +37,12 @@ When asked, you can **Allow once** or **Stop asking**; a command that has to run
 | --- | --- |
 | Files and code | `read` `write` `edit` `ls` `glob` `grep` `symbol` `lsp` |
 | Commands | `bash` `bash_output` |
-| Session and memory | `todo_write` `task` `skill` `rule` `recall` `learn` `ask_user` |
-| Network, preview and pictures | `web_fetch` `web_search` `preview` `image_generate` |
+| Session and memory | `todo_write` `task` `skill` `rule` `recall` `learn` `ask_user` `request_credential` `list_credentials` |
+| Network, preview, pictures and video | `web_fetch` `web_search` `preview` `image_generate` `video_generate` |
 
-`image_generate` is only offered once you've added an image model — see [Drawing and editing pictures](/en/docs/features/images/).
+`image_generate` is only offered once you've added an image model — see [Drawing and editing pictures](/en/docs/features/images/) — and `video_generate` once you've added a video model.
+
+`request_credential` asks you for a password, SSH key or token on a card. The value goes to Lyra, not the model: the model gets a name and uses the credential by that name in commands and the browser, and any output containing the value comes back masked. `list_credentials` lists names, kinds and where each may be used — never the values. Both are offered only where the card can be shown.
 
 On top of these come the tools that drive the built-in browser, plus whatever your [MCP servers](/en/docs/features/mcp/) provide.
 
@@ -48,7 +50,7 @@ On top of these come the tools that drive the built-in browser, plus whatever yo
 
 ## What shows up in replies
 
-- **Markdown**: tables and code blocks render as usual, and a `mermaid` block becomes a diagram.
+- **Markdown**: tables, code blocks and formulas (KaTeX) render as usual, and a `mermaid` block becomes a diagram. A code block, formula or table wider than the column scrolls sideways, with a thin scrollbar that appears under the pointer.
 - **File links**: a local path shows as a file icon and its name. Click to open it beside the chat. Right-click to open it in the app chosen under Settings → General → Default file opener (Zed, Cursor or VS Code, say), pick another app, show it in the Finder (File Explorer on Windows), or copy its path or relative path.
 - **File changes**: see which files a turn touched, review each diff, or undo the turn's direct edits. The file rows on the **N files edited** card and each file's title in the diff pane have the same right-click menu.
 - **Tool calls**: the reads, edits and commands of a turn fold into one summary line that grows as calls land. Open it for one row per call; whatever the model says in between stays outside the fold. For the card layout, choose **Expanded** under Settings → Appearance → Tool calls.
@@ -58,7 +60,7 @@ On top of these come the tools that drive the built-in browser, plus whatever yo
 You can edit and resend a message, or undo it. A turn that failed or was interrupted can **Carry on** from where it stopped. To try another direction without losing this one, fork it (below).
 
 <Aside type="tip">
-Want to ask something without disturbing the main conversation while it works? Press `⌥⌘S` for a **side chat**. It can read the main conversation but never writes into it.
+Want to ask something without disturbing the main conversation while it works? Press `⌥⌘S` (`Ctrl+Alt+S` on Windows and Linux) for a **side chat**. It can read the main conversation but never writes into it.
 </Aside>
 
 ## Fork from here

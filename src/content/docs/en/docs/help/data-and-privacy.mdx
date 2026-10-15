@@ -16,13 +16,15 @@ Everything user-level is in `~/.lyra` (on Windows, `%USERPROFILE%\.lyra`):
 | Path | Contents |
 | --- | --- |
 | `settings.json` | Providers, models, MCP, permission mode and other settings — no API keys |
-| `credentials.json` | API keys and other secrets, encrypted |
+| `credentials.json` | API keys, and the Vault's passwords, SSH keys and tokens, encrypted |
 | `vault.key` | The key that decrypts the file above |
 | `forges.json` | Access tokens for code-hosting accounts, encrypted |
 | `sessions/` | `sessions.db`, an SQLite database holding every conversation and what it spent; the `sessions.db-wal` beside it is part of it. If you upgraded from an older version, the old `.jsonl` logs stay here as a backup and are no longer read |
 | `session-media/` | Pictures shown in conversations, including the ones drawn for you |
 | `sidechats/` | Side chats |
-| `memory.json` | What the `learn` tool wrote down |
+| `memory.json` | Your personal memory, managed under Settings → Personalization |
+| `projects/<id>/memory/` | What one project taught it: `learned.md` from the `learn` tool, and `MEMORY.md` from the optional background pass (off by default) |
+| `worktrees/` | Conversations' own worktrees; move them under Settings → Worktrees |
 | `skills/` `plugins/` `mcp/` `agents/` `rules/` `commands/` | Your skills, plugins, MCP bundles, agents, rules and slash commands |
 
 In a project:
@@ -49,7 +51,7 @@ Usage statistics are calculated on your machine and never uploaded.
 
 ## Keys
 
-- Model provider API keys and code-hosting tokens are encrypted with AES-256-GCM into files with 0600 permissions; the decryption key is `vault.key` in the same folder.
+- Model provider API keys, the Vault's passwords and SSH keys, and code-hosting tokens are encrypted with AES-256-GCM into files with 0600 permissions; the decryption key is `vault.key` in the same folder.
 - They're never written to `settings.json` and never synced to your phone.
 - Keys you enter for MCP servers in Lyra are encrypted the same way.
 

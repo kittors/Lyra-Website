@@ -14,7 +14,7 @@ The sidebar groups conversations by project, or lists every chat by date. `⌘B`
 | Where | What |
 | --- | --- |
 | Toolbar | Back, Forward and the sidebar toggle on the left. With one conversation on screen, its title and **Conversation actions** (⋯) in the middle, and at the right end buttons for the terminal, the browser and Git, plus the **Panels** menu (⋮) |
-| Icon rail (far left) | Conversations, [Pull requests](/en/docs/features/pull-requests/), [Scheduled](/en/docs/features/scheduled/), [Plugins](/en/docs/features/plugins/); Settings at the bottom, with an update mark above it when a new version is out |
+| Icon rail (far left) | Conversations, [Pull requests](/en/docs/features/pull-requests/), [Scheduled](/en/docs/features/scheduled/), [Plugins](/en/docs/features/plugins/), Studio and Vault; Settings at the bottom, with an update mark above it when a new version is out |
 | Top of the sidebar | Search chats, Notifications (the bell), New chat |
 | **Projects** tab | Conversations grouped by project, pinned projects first |
 | **Chats** tab | Every conversation, grouped into Today, Yesterday, Last 7 days and so on |
@@ -45,5 +45,5 @@ Removing a project only takes it off the list. Its conversations are archived, a
 The sidebar's **List settings** offers Recently updated, Recently created and Manual order. Dragging a project or conversation switches to manual order; press `Esc` mid-drag to cancel.
 
 <Aside type="tip">
-Want every new conversation to work in its own Git worktree, leaving your main checkout alone? Turn on **Create a worktree for every new conversation** under Settings → Worktrees.
+Want a conversation to work in its own Git worktree, leaving your main checkout alone? A new conversation's composer has a **Worktree** toggle: press it before the first message and that conversation starts in a fresh worktree. To make it the default, turn on **Start new conversations in a worktree by default** under Settings → Worktrees. Worktrees go in `~/.lyra/worktrees`, not beside your project.
 </Aside>

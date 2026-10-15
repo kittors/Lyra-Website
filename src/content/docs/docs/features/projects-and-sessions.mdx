@@ -14,7 +14,7 @@ import { Aside } from '@astrojs/starlight/components';
 | 位置 | 内容 |
 | --- | --- |
 | 顶栏 | 左边是后退、前进和侧栏开关；只开着一个会话时，中间是它的标题和「会话操作」（⋯），右端是终端、浏览器、Git 三个面板按钮和「面板」菜单（⋮） |
-| 图标栏（最左一列） | 对话、[拉取请求](/docs/features/pull-requests/)、[已安排](/docs/features/scheduled/)、[插件](/docs/features/plugins/)；底部是设置，有新版本时设置上方多一个更新标记 |
+| 图标栏（最左一列） | 对话、[拉取请求](/docs/features/pull-requests/)、[已安排](/docs/features/scheduled/)、[插件](/docs/features/plugins/)、创作、保险箱；底部是设置，有新版本时设置上方多一个更新标记 |
 | 侧栏顶部 | 搜索会话、通知（铃铛）、新对话 |
 | 「项目」标签 | 按项目分组的会话，置顶的项目排在最上面 |
 | 「聊天」标签 | 全部会话，按今天、昨天、过去 7 天等分段 |
@@ -45,5 +45,5 @@ import { Aside } from '@astrojs/starlight/components';
 侧栏上的「列表设置」里可以选最近更新、最近创建或手动排序。直接拖动项目或会话，就会切到手动排序；拖动途中按 `Esc` 取消。
 
 <Aside type="tip">
-想让每个新会话都在独立的 Git 工作树里干活、不碰主工作区？到「设置 → Worktrees」打开「新建会话时自动创建独立工作树」。
+想让会话在独立的 Git 工作树里干活、不碰主工作区？新对话的输入框上有「工作树」开关，发第一条消息前点一下，这个会话就在新工作树里开始。想每次都这样，到「设置 → Worktrees」打开「新会话默认用独立工作树」。工作树默认建在 `~/.lyra/worktrees`，不会在项目旁边多出目录。
 </Aside>

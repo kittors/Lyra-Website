@@ -16,13 +16,15 @@ Lyra 不用注册账号，也不替你保管数据：会话、设置和密钥都
 | 路径 | 内容 |
 | --- | --- |
 | `settings.json` | 供应商、模型、MCP、权限模式等设置，不含 API Key |
-| `credentials.json` | API Key 等密钥，加密存放 |
+| `credentials.json` | API Key，以及保险箱里的密码、SSH 密钥和令牌，加密存放 |
 | `vault.key` | 解开上面那个文件的密钥 |
 | `forges.json` | 代码托管账号的访问令牌，加密存放 |
 | `sessions/` | 会话库 `sessions.db`（SQLite），所有会话和它们花掉的钱都在里面；旁边的 `sessions.db-wal` 是它的一部分。从旧版本升级来的，原来的 `.jsonl` 日志留在这里当备份，Lyra 不再读它们 |
 | `session-media/` | 对话里显示的图片，包括画出来的图 |
 | `sidechats/` | 侧边聊天记录 |
-| `memory.json` | `learn` 工具记下的内容 |
+| `memory.json` | 你的个人记忆，在「设置 → 个性化」里管 |
+| `projects/<id>/memory/` | 一个项目学到的东西：`learn` 记下的 `learned.md`，后台整理出的 `MEMORY.md`（默认关） |
+| `worktrees/` | 会话的独立工作树，「设置 → Worktrees」里可以换位置 |
 | `skills/` `plugins/` `mcp/` `agents/` `rules/` `commands/` | 你的技能、插件、MCP 包、智能体、规则和斜杠命令 |
 
 项目里的：
@@ -49,7 +51,7 @@ Lyra 不用注册账号，也不替你保管数据：会话、设置和密钥都
 
 ## 密钥
 
-- 模型供应商的 API Key 和代码托管令牌用 AES-256-GCM 加密后存进文件，文件权限 0600；解密用的密钥是同目录下的 `vault.key`。
+- 模型供应商的 API Key、保险箱里的密码和 SSH 密钥、代码托管令牌用 AES-256-GCM 加密后存进文件，文件权限 0600；解密用的密钥是同目录下的 `vault.key`。
 - 它们不会写进 `settings.json`，也不会同步到手机。
 - 在 Lyra 里给 MCP 服务填的密钥同样加密保存。
 

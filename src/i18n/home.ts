@@ -25,8 +25,8 @@ const zh = {
 		toolGroups: [
 			{ name: "文件与代码", tools: ["read", "write", "edit", "ls", "glob", "grep", "symbol", "lsp"] },
 			{ name: "执行命令", tools: ["bash", "bash_output"] },
-			{ name: "会话与记忆", tools: ["todo_write", "task", "skill", "rule", "recall", "learn", "ask_user"] },
-			{ name: "网络、预览与画图", tools: ["web_fetch", "web_search", "preview", "image_generate"] },
+			{ name: "会话与记忆", tools: ["todo_write", "task", "skill", "rule", "recall", "learn", "ask_user", "request_credential", "list_credentials"] },
+			{ name: "网络、预览、画图与视频", tools: ["web_fetch", "web_search", "preview", "image_generate", "video_generate"] },
 		],
 		modelsTitle: "模型，你说了算。",
 		modelsLead: "供应商想加几个就加几个，每个下面挂任意多个模型。三种接口格式都支持。",
@@ -147,8 +147,8 @@ const en: HomeText = {
 		toolGroups: [
 			{ name: "Files and code", tools: ["read", "write", "edit", "ls", "glob", "grep", "symbol", "lsp"] },
 			{ name: "Commands", tools: ["bash", "bash_output"] },
-			{ name: "Session and memory", tools: ["todo_write", "task", "skill", "rule", "recall", "learn", "ask_user"] },
-			{ name: "Network, preview and pictures", tools: ["web_fetch", "web_search", "preview", "image_generate"] },
+			{ name: "Session and memory", tools: ["todo_write", "task", "skill", "rule", "recall", "learn", "ask_user", "request_credential", "list_credentials"] },
+			{ name: "Network, preview, pictures and video", tools: ["web_fetch", "web_search", "preview", "image_generate", "video_generate"] },
 		],
 		modelsTitle: "Your models. Your keys.",
 		modelsLead: "Add as many providers as you like, with as many models on each. All three API formats work.",
