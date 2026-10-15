@@ -1,17 +1,17 @@
 {
-	"version": "0.9.25",
-	"tag": "v0.9.25",
-	"publishedAt": "2026-10-12T03:44:52Z",
-	"notesUrl": "https://github.com/kittors/Lyra/releases/tag/v0.9.25",
+	"version": "0.9.30",
+	"tag": "v0.9.30",
+	"publishedAt": "2026-10-15T08:56:57Z",
+	"notesUrl": "https://github.com/kittors/Lyra/releases/tag/v0.9.30",
 	"assets": [
 		{
 			"id": "mac-arm64",
 			"os": "macos",
 			"arch": "arm64",
 			"format": "dmg",
-			"name": "Lyra-0.9.25-arm64.dmg",
-			"size": 220435575,
-			"sha256": "da9e0da6a8cada8833e2e2e975db7322d62ef4da316f804e9f5c6daba04c6781",
+			"name": "Lyra-0.9.30-arm64.dmg",
+			"size": 221357983,
+			"sha256": "edfaec0d88f1bf8b921ae078a5867321611f5cd659bf8ea9b8fea27042ee8944",
 			"href": "/dl/mac-arm64"
 		},
 		{
@@ -19,9 +19,9 @@
 			"os": "macos",
 			"arch": "x64",
 			"format": "dmg",
-			"name": "Lyra-0.9.25-x64.dmg",
-			"size": 225457285,
-			"sha256": "65c1995bcb60178eefa7c0f50d4c8bef2028d55733c633513fa00900e15a7b7c",
+			"name": "Lyra-0.9.30-x64.dmg",
+			"size": 226377194,
+			"sha256": "01c6c07a507e499f10841aa9381807e9f700d7a72293ff66590506ed06531764",
 			"href": "/dl/mac-x64"
 		},
 		{
@@ -29,9 +29,9 @@
 			"os": "windows",
 			"arch": "x64",
 			"format": "exe",
-			"name": "Lyra-0.9.25-x64.exe",
-			"size": 184676438,
-			"sha256": "7477c9d0e727eed54af71839666d13c72b37d2a9d7dad715c9a20374341fe97b",
+			"name": "Lyra-0.9.30-x64.exe",
+			"size": 185600899,
+			"sha256": "acf9a95da4c177a85f86c08636f4f7d7360216e63a3900614243232a1fc9b0fd",
 			"href": "/dl/win-x64"
 		},
 		{
@@ -39,9 +39,9 @@
 			"os": "windows",
 			"arch": "arm64",
 			"format": "exe",
-			"name": "Lyra-0.9.25-arm64.exe",
-			"size": 176497813,
-			"sha256": "84e4e0211034313fbe3ef7bb967debdb22e67eba7f404086e3e6713c06c9af78",
+			"name": "Lyra-0.9.30-arm64.exe",
+			"size": 177423399,
+			"sha256": "072df1fed6acf3b5ebb3ebe902befb43c478bf422c4100e11cddc2a15762b3dd",
 			"href": "/dl/win-arm64"
 		},
 		{
@@ -49,9 +49,9 @@
 			"os": "linux",
 			"arch": "x64",
 			"format": "appimage",
-			"name": "Lyra-0.9.25-x86_64.AppImage",
-			"size": 213442472,
-			"sha256": "2712316b33399599bddce5062751f9b71500b912df67893309698fe7630b3187",
+			"name": "Lyra-0.9.30-x86_64.AppImage",
+			"size": 214225994,
+			"sha256": "cc7e78993d28e9337d9fc85b33940370f439596656880352db372f81a5af97f7",
 			"href": "/dl/linux-x64-appimage"
 		},
 		{
@@ -59,9 +59,9 @@
 			"os": "linux",
 			"arch": "arm64",
 			"format": "appimage",
-			"name": "Lyra-0.9.25-arm64.AppImage",
-			"size": 211767593,
-			"sha256": "73d47dcbc65e079f96d321990f604eb4f35599e8e3412bc48eb381ca1f9e35bf",
+			"name": "Lyra-0.9.30-arm64.AppImage",
+			"size": 212549653,
+			"sha256": "96ee3574bb8db54dc11804f14889365b4007172496974332072b042dd52aa1f5",
 			"href": "/dl/linux-arm64-appimage"
 		},
 		{
@@ -69,9 +69,9 @@
 			"os": "linux",
 			"arch": "x64",
 			"format": "deb",
-			"name": "Lyra-0.9.25-amd64.deb",
-			"size": 177858880,
-			"sha256": "3a423573d74ec09724eb06e77a773af80f9bc05532d07368fdcd6afb4242ad92",
+			"name": "Lyra-0.9.30-amd64.deb",
+			"size": 178582772,
+			"sha256": "a8c0dc7690920306120dacbf1693cfd00196300e9cbfe4016c6f36ab56756c90",
 			"href": "/dl/linux-x64-deb"
 		},
 		{
@@ -79,9 +79,9 @@
 			"os": "linux",
 			"arch": "arm64",
 			"format": "deb",
-			"name": "Lyra-0.9.25-arm64.deb",
-			"size": 171420892,
-			"sha256": "ce19dafe665bbe55ce441bba309e094e10449e635d757914b949b3defe8cff67",
+			"name": "Lyra-0.9.30-arm64.deb",
+			"size": 172144440,
+			"sha256": "af58e3c4536eb6e905ee8068825824ba1628c17c8106d00479666fbb45b2d6bc",
 			"href": "/dl/linux-arm64-deb"
 		},
 		{
@@ -89,9 +89,9 @@
 			"os": "android",
 			"arch": "universal",
 			"format": "apk",
-			"name": "Lyra-0.9.25-android.apk",
-			"size": 125313312,
-			"sha256": "0d4af62bc6933a9932c0e838f5659890275e4030348f3eb972651efb98b00e7b",
+			"name": "Lyra-0.9.30-android.apk",
+			"size": 125313352,
+			"sha256": "9b406d43ce56f018890bf8b3831cd9a8739fae91a827c1fe0eace0f57f0b9233",
 			"href": "/dl/android"
 		},
 		{
@@ -99,9 +99,9 @@
 			"os": "ios",
 			"arch": "universal",
 			"format": "ipa",
-			"name": "Lyra-0.9.25-ios-unsigned.ipa",
-			"size": 13067376,
-			"sha256": "604ef8f5478599a5147bb4194139f1b7e2ed3c5cdbecc04c225955cd9b62218b",
+			"name": "Lyra-0.9.30-ios-unsigned.ipa",
+			"size": 13067343,
+			"sha256": "d72b09058f8d18441718058dd3bfaac93a8bb1b9ce366d1b68f12264d6722b88",
 			"href": "/dl/ios"
 		}
 	],
