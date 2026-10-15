@@ -1,6 +1,6 @@
 ---
 title: Drawing and editing pictures
-description: Add an image model, ask for a picture in any conversation, and it's drawn right there. Pictures already in the chat can be changed too.
+description: Add an image model, ask for a picture in any conversation, and it's drawn right there. Pictures already in the chat can be changed, or drawn again with another model.
 sidebar:
   order: 1.5
 ---
@@ -20,18 +20,23 @@ Say "draw…" or "turn this one into a night scene" and the conversation model c
 <Steps>
 
 1. Settings → Models → pick a provider → **Add a model**, and enter the model ID: `gpt-image-1`, `gemini-3.1-flash-image`, `dall-e-3`, `imagen-4.0-generate-001`, `flux-1.1-pro`, `doubao-seedream-4-0` and so on.
-2. Names that say they draw switch on **Image model** by themselves. For one that doesn't (say, `house-artist`), turn it on in the model editor. Image models don't show up among conversation models.
+2. For names that say they draw, the model editor sets **Used for** to **Images** by itself. For one that doesn't (say, `house-artist`), pick it yourself. Image models don't show up among conversation models.
 3. Click the test button on its row. It really draws one small picture, and that call is billed.
 
 </Steps>
 
 <Aside type="tip">
-Many relays leave image models out of `/v1/models`, so **Fetch models** won't list them. Add them by hand once.
+Many relays leave image models out of `/v1/models`, so **Fetch models** won't list them. Type the model ID into its search box and press Enter to add one that isn't listed.
 </Aside>
 
 ## Which one is used
 
-With one image model, that one. With several, pick the default under Settings → Subagents → Session → **Image model**, or choose **Make default image model** in a provider's model list; with none picked, the first one is used. You can also name one in the chat: "draw it with gpt-image-1".
+With one image model, that one. With several, pick the default under Settings → Subagents → Session → **Image model**, or choose **Make default image model** in a provider's model list; with none picked, the first one is used.
+
+A conversation can use another one. Either way, the change applies to that conversation only:
+
+- **The wand in the composer.** With two or more image models, or two or more video models, a wand appears beside the model button; hover it to see which ones are in use. Its menu has an **Image model** and a **Video model** section, each with **Follow the default** at the top. Once the conversation has its own pick, the wand turns to the accent colour, and a pick that differs from the default gets a **Make default image model** row. Picked before there is a conversation, it sets the default.
+- **Naming one.** @-mention a model in a message (the `@` menu has an **Image and video models** group), or just say "draw it with gpt-image-1". Later pictures in that conversation use it too. Name two in one message, to compare them, and the conversation keeps the model it had.
 
 ## While it draws
 
@@ -43,8 +48,17 @@ With one image model, that one. With several, pick the default under Settings �
 ## Changing a picture
 
 - Paste it into the composer and say what to change, or point at one already in the chat: the newest is `#1`, the one before it `#2`.
-- Hover a picture for **Edit** and **Download**. Edit opens it in the annotation tool: circle what should change and save, and the marked-up copy is on the clipboard, ready to paste back with your instructions.
+- Hover a picture for **Edit**, **Again** and **Download**. Edit opens it in the annotation tool: circle what should change and press **Done**, and the marked-up copy goes into this conversation's composer with the caret after it. Say what to change and send; the image model redraws it from your marks. Pictures you sent yourself can be marked up the same way.
 - Download saves the original file, named like `lyra-image-2026-10-11-21-58-03.png`.
+
+## Again, with another model
+
+**Again** offers two things:
+
+- **Redraw with** another image model, keeping the prompt and the reference pictures. The model that drew this one is marked in the list.
+- **Make it a video** with a video model, starting from this picture, which goes along as an attachment. See [Making videos](/en/docs/features/video/).
+
+With one image model and no video model, the button isn't there. Once you pick, Lyra sends a message in the conversation for you ("Redraw this picture with @model…"), and the new picture lands in the chat like the first one. If the composer holds something you haven't sent, the message is added after it and waits for you to send it.
 
 ## When a picture fails
 
@@ -54,10 +68,12 @@ The card says why:
 | --- | --- |
 | gpt-image-1 is out of quota · Resets in about 1h 53m | Wait, or switch to another image model. This isn't retried |
 | This key can't use gpt-image-1 | The relay limits this key by group (403 `model_not_allowed`). Allow the model for the key in the relay's console, or switch the provider's address to a group that includes it, such as `https://your-relay/group1` |
+| The request was refused under the content policy | Sending it again is refused the same way. Rephrase it, or leave out what the policy objects to |
 | Connection hiccup — retrying | Network trouble gets two more tries at most; then the card reports instead of spinning |
 
 ## Good to know
 
+- Every picture drawn in any conversation is kept in **Studio** on the left-hand rail, along with how each one was arrived at. See [Studio](/en/docs/features/studio/).
 - Every picture is a billed call to the image model's provider. Settings → Usage doesn't count drawing yet.
 - Lyra tries OpenAI's Images API first (`/v1/images/generations`, `/v1/images/edits`). If a provider doesn't answer there, it falls back to Chat Completions with the picture inside the reply (the OpenRouter shape), and remembers which one worked.
 - Pictures are stored in `~/.lyra/session-media/` and are still there when you reopen the chat.

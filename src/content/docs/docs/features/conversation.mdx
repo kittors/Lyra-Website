@@ -40,11 +40,11 @@ import { Aside } from '@astrojs/starlight/components';
 | 会话与记忆 | `todo_write` `task` `skill` `rule` `recall` `learn` `ask_user` `request_credential` `list_credentials` |
 | 网络、预览、画图与视频 | `web_fetch` `web_search` `preview` `image_generate` `video_generate` |
 
-`image_generate` 只在配了生图模型时才有，见[画图与改图](/docs/features/images/)；`video_generate` 同理，要先配视频模型。
+`image_generate` 只在配了生图模型时才有，见[画图与改图](/docs/features/images/)；`video_generate` 同理，要先配视频模型，见[做视频](/docs/features/video/)。
 
-`request_credential` 让模型在一张卡片上向你要密码、SSH 密钥或令牌：值交给 Lyra，模型只拿到一个名字，凭名字在命令和浏览器里用它，输出里出现的值会被遮住。`list_credentials` 只列出名字、类型和能用在哪，从不给出值。这两个只在能弹出卡片的地方提供。
+`request_credential` 让模型在一张卡片上向你要密码、SSH 密钥或令牌：值交给 Lyra，模型只拿到一个名字，凭名字在命令和浏览器里用它，输出里出现的值会被遮住。`list_credentials` 只列出名字、类型和能用在哪，从不给出值。这两个只在能弹出卡片的地方提供，见[保险箱与凭据](/docs/features/vault/)。
 
-此外还有操作内置浏览器的工具，以及你启用的 [MCP 服务](/docs/features/mcp/)带来的工具。
+此外还有操作内置浏览器的工具，你启用的 [MCP 服务](/docs/features/mcp/)带来的工具，以及桌面端的两个：`spawn_session` 建议另开一个会话，`archive_session` 在你要求时归档这个对话，见[项目与会话](/docs/features/projects-and-sessions/#建议的新会话)。
 
 `web_search` 不配置也能用，走的是免 key 的 DuckDuckGo，但结果有限，中文尤其差。想搜得好，到「设置 → 网页搜索」填一家的 key（Tavily、Brave、Exa 都有免费额度）。
 
@@ -54,7 +54,9 @@ import { Aside } from '@astrojs/starlight/components';
 - **文件链接**：本地文件路径显示成文件图标加文件名，点一下在旁边打开。右键可以用「设置 → 常规 → 默认文件打开目标」里选的应用打开（比如 Zed、Cursor、VS Code），或者选别的应用打开、在访达（Windows 上是资源管理器）中显示、复制路径或相对路径。
 - **文件改动**：这一轮改了哪些文件一目了然，可以逐个看差异，也可以撤销这一轮直接写入的改动。「已编辑 N 个文件」卡片上的文件行、差异面板里每个文件的标题行，右键是同一个菜单。
 - **工具调用**：一轮里的读文件、改文件、跑命令默认收成一行摘要，跑的时候摘要随调用累加；点开后每次调用各占一行，模型中途说的话留在外面。想要一张张卡片的排法，到「设置 → 外观 → 调用链」选「展开」。
-- **图片**：配了生图模型，说「画一张……」，图就画在对话里，见[画图与改图](/docs/features/images/)。
+- **图片和视频**：配了生图或视频模型，说「画一张……」「做一段视频……」，就生成在对话里，见[画图与改图](/docs/features/images/)和[做视频](/docs/features/video/)。
+- **凭据**：模型要密码时会弹卡片，值不经过它；回复里点名的凭据画成一枚胶囊，点一下复制值，见[保险箱与凭据](/docs/features/vault/)。
+- **建议的新会话**：模型碰到值得单独做的事，会留一张卡片，点「开始」才另开一个会话。
 - **提问卡片**：模型拿不准时会列出选项问你。完全访问模式下它也不会替你回答。
 
 你发过的消息可以编辑后重新发送，也可以撤回；出错或被打断的一轮可以「继续」接着做。想换个方向又不想丢掉这条线，用下面的「从这里分叉」。

@@ -19,11 +19,11 @@ sidebar:
 
 按供应商文档选：OpenAI 官方用 Responses，Anthropic 用 Messages，其他兼容 OpenAI 的服务一般是 Chat Completions。
 
-生图模型另外会用 OpenAI 的 Images 接口（`/v1/images/generations`、`/v1/images/edits`），走不通再改走 Chat Completions。
+生图模型另外会用 OpenAI 的 Images 接口（`/v1/images/generations`、`/v1/images/edits`），走不通再改走 Chat Completions。视频模型走各家自己的任务接口：xAI、火山方舟、OpenAI 视频格式（new-api 等中转）、Google Veo 和阿里百炼，见[做视频](/docs/features/video/#视频接口)。
 
-## 能画图吗？
+## 能画图、做视频吗？
 
-能。配一个生图模型（比如 `gpt-image-1` 或 `gemini-3.1-flash-image`），在对话里说「画一张……」就行，见[画图与改图](/docs/features/images/)。
+能。配一个生图模型（比如 `gpt-image-1` 或 `gemini-3.1-flash-image`），在对话里说「画一张……」；配一个视频模型（比如 `grok-imagine-video-1.5`），说「做一段……的视频」。见[画图与改图](/docs/features/images/)和[做视频](/docs/features/video/)。
 
 ## 和 Claude Code、Codex 是什么关系？
 

@@ -1,0 +1,50 @@
+---
+title: Worktrees
+description: Let a conversation work in a copy of the repository and leave your checkout alone; merge it back into main when it's done, or bring main's new commits in.
+sidebar:
+  order: 2.5
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A worktree is another checkout of a Git repository, with a folder and a branch of its own. A conversation working in one changes that copy: what you have half-written in your own checkout is left alone, and several conversations can work on one project without stepping on each other.
+
+## Choosing when you start
+
+A new conversation's composer has a **Worktree** toggle after the project and the branch, when the project is a Git repository. Turn it on before the first message and the conversation starts in a fresh worktree. Once a conversation has started, it can't be moved into one.
+
+- Turn on **Start new conversations in a worktree by default** under Settings → Worktrees and the toggle starts out on; you can still turn it off for one conversation.
+- Worktrees go in `~/.lyra/worktrees`, so nothing new appears beside your repository. To put them elsewhere, change **Worktree root** on the same page.
+- These conversations stay under their project in the sidebar, and their rows are marked as working in a worktree of their own.
+
+If the worktree couldn't be made, the conversation runs in the project folder itself, and its changes land in your own checkout. An amber mark stays after the branch in the composer for as long as that's true; click it for the reason.
+
+## Merging back, or bringing main in
+
+Above the composer of a worktree conversation, a chip names the worktree's branch and how far it is from the branch it was cut from: `↑2` is two commits ahead, `↓1` one behind. Click it. The top of the menu says which branch it was cut from, how far ahead and behind it is, and how many files are uncommitted. Under that:
+
+| In the menu | What it does |
+| --- | --- |
+| Merge into main | Merges the worktree's commits into main |
+| Sync from main | Merges main's new commits into the worktree |
+| Show in the Finder | Opens the worktree's folder (**Show in File Explorer** on Windows) |
+
+"main" here is whichever branch the worktree was cut from; the menu uses its real name.
+
+- Both need the changes committed and the conversation stopped. When one can't run, the reason is written under it: "The chat is still running", "Commit 3 changed files first", "No commits to merge", "Already up to date". If main is checked out in another worktree, or a merge was left unfinished in the project folder, that stops it too, and the menu says which.
+- A merge that would conflict is backed out at once, so your project folder is never left half-merged. The menu lists the files and suggests syncing from main first, settling them in the worktree, then merging again.
+- When a sync stops on conflicts, the menu lists the files. **Ask this chat to resolve them** sends a message in your name asking it to resolve them, keeping what each side meant, and commit the merge. Or **Abandon this sync**.
+- After a merge, the menu offers **Archive this chat**.
+- Merging and syncing happen on this computer only. Nothing is pushed.
+
+## Cleaned up when you're done
+
+- Delete or archive a conversation and its worktree folder goes with it. If every commit on its branch is in main, the branch is deleted too; otherwise the branch stays, holding the commits.
+- Restore it from the archive and it's checked out again where it was.
+- A folder with uncommitted changes is never taken. The delete dialog says what stays behind: how many files are uncommitted and where, and which branch still has commits that aren't merged.
+
+<Aside type="note">
+Worktree conversations made by older versions each had a group of their own named after the project, with the copy beside the repository. From 0.9.28, they're moved back under their project at startup; their file tree fills in, and committing from them works.
+</Aside>
+
+A conversation may also suggest starting a separate one, in a new worktree; see [Projects and chats](/en/docs/features/projects-and-sessions/#suggested-chats).

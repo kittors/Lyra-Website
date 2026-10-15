@@ -40,11 +40,11 @@ When asked, you can **Allow once** or **Stop asking**; a command that has to run
 | Session and memory | `todo_write` `task` `skill` `rule` `recall` `learn` `ask_user` `request_credential` `list_credentials` |
 | Network, preview, pictures and video | `web_fetch` `web_search` `preview` `image_generate` `video_generate` |
 
-`image_generate` is only offered once you've added an image model — see [Drawing and editing pictures](/en/docs/features/images/) — and `video_generate` once you've added a video model.
+`image_generate` is only offered once you've added an image model — see [Drawing and editing pictures](/en/docs/features/images/) — and `video_generate` once you've added a video model — see [Making videos](/en/docs/features/video/).
 
-`request_credential` asks you for a password, SSH key or token on a card. The value goes to Lyra, not the model: the model gets a name and uses the credential by that name in commands and the browser, and any output containing the value comes back masked. `list_credentials` lists names, kinds and where each may be used — never the values. Both are offered only where the card can be shown.
+`request_credential` asks you for a password, SSH key or token on a card. The value goes to Lyra, not the model: the model gets a name and uses the credential by that name in commands and the browser, and any output containing the value comes back masked. `list_credentials` lists names, kinds and where each may be used — never the values. Both are offered only where the card can be shown; see [Vault and credentials](/en/docs/features/vault/).
 
-On top of these come the tools that drive the built-in browser, plus whatever your [MCP servers](/en/docs/features/mcp/) provide.
+On top of these come the tools that drive the built-in browser, whatever your [MCP servers](/en/docs/features/mcp/) provide, and two on the desktop: `spawn_session` suggests starting a separate chat, and `archive_session` archives this one when you ask it to — see [Projects and chats](/en/docs/features/projects-and-sessions/#suggested-chats).
 
 `web_search` works out of the box through keyless DuckDuckGo, but results are limited. For better search, add a key for Tavily, Brave or Exa under Settings → Web search — all three have a free tier.
 
@@ -54,7 +54,9 @@ On top of these come the tools that drive the built-in browser, plus whatever yo
 - **File links**: a local path shows as a file icon and its name. Click to open it beside the chat. Right-click to open it in the app chosen under Settings → General → Default file opener (Zed, Cursor or VS Code, say), pick another app, show it in the Finder (File Explorer on Windows), or copy its path or relative path.
 - **File changes**: see which files a turn touched, review each diff, or undo the turn's direct edits. The file rows on the **N files edited** card and each file's title in the diff pane have the same right-click menu.
 - **Tool calls**: the reads, edits and commands of a turn fold into one summary line that grows as calls land. Open it for one row per call; whatever the model says in between stays outside the fold. For the card layout, choose **Expanded** under Settings → Appearance → Tool calls.
-- **Pictures**: with an image model set up, ask for a picture and it's drawn in the conversation — see [Drawing and editing pictures](/en/docs/features/images/).
+- **Pictures and videos**: with an image or video model set up, ask for a picture or a video and it's made in the conversation — see [Drawing and editing pictures](/en/docs/features/images/) and [Making videos](/en/docs/features/video/).
+- **Credentials**: when the model needs a password, a card asks you for it and the value never reaches the model. A credential named in a reply is drawn as a chip that copies the value when clicked — see [Vault and credentials](/en/docs/features/vault/).
+- **Suggested chats**: when the model finds something worth doing on its own, it leaves a card; a separate chat starts only when you press **Start**.
 - **Questions**: when the model is unsure, it asks you with a set of options. Even in Full access it won't answer for you.
 
 You can edit and resend a message, or undo it. A turn that failed or was interrupted can **Carry on** from where it stopped. To try another direction without losing this one, fork it (below).

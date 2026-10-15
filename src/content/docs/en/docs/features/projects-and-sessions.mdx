@@ -1,6 +1,6 @@
 ---
 title: Projects and chats
-description: How the sidebar organizes projects and conversations — creating, pinning, archiving and sorting.
+description: How the sidebar organizes projects and conversations — creating, pinning, archiving and sorting — and the chats a conversation suggests.
 sidebar:
   order: 2
 ---
@@ -14,7 +14,7 @@ The sidebar groups conversations by project, or lists every chat by date. `⌘B`
 | Where | What |
 | --- | --- |
 | Toolbar | Back, Forward and the sidebar toggle on the left. With one conversation on screen, its title and **Conversation actions** (⋯) in the middle, and at the right end buttons for the terminal, the browser and Git, plus the **Panels** menu (⋮) |
-| Icon rail (far left) | Conversations, [Pull requests](/en/docs/features/pull-requests/), [Scheduled](/en/docs/features/scheduled/), [Plugins](/en/docs/features/plugins/), Studio and Vault; Settings at the bottom, with an update mark above it when a new version is out |
+| Icon rail (far left) | Conversations, [Pull requests](/en/docs/features/pull-requests/), [Scheduled](/en/docs/features/scheduled/), [Plugins](/en/docs/features/plugins/), [Studio](/en/docs/features/studio/) and [Vault](/en/docs/features/vault/); Settings at the bottom, with an update mark above it when a new version is out |
 | Top of the sidebar | Search chats, Notifications (the bell), New chat |
 | **Projects** tab | Conversations grouped by project, pinned projects first |
 | **Chats** tab | Every conversation, grouped into Today, Yesterday, Last 7 days and so on |
@@ -44,6 +44,18 @@ Removing a project only takes it off the list. Its conversations are archived, a
 
 The sidebar's **List settings** offers Recently updated, Recently created and Manual order. Dragging a project or conversation switches to manual order; press `Esc` mid-drag to cancel.
 
+## Suggested chats
+
+When a conversation comes across something worth doing on its own — dead code, a stale page, a missing test — it doesn't fold it into the change at hand. It leaves a **Suggested chat** card in the conversation instead, saying why it brings it up now and what the new chat would do.
+
+- Nothing runs until you press **Start**. The new chat opens in the same project and runs in the background; you stay where you are. When the project is a Git repository, the card also has a **Worktree** toggle, to start it in a fresh worktree.
+- The new chat takes the card's title. The card then shows how it's doing — **Started**, **Running**, **Done** or **Stopped short** — and opens it when clicked.
+- Not wanted? The × at the top right dismisses the suggestion.
+
+## Letting a chat archive itself
+
+Say "archive this when you're done" and the conversation archives itself once its last reply is finished. It only does this when you ask. Archived chats can be restored from Settings → Archived chats.
+
 <Aside type="tip">
-Want a conversation to work in its own Git worktree, leaving your main checkout alone? A new conversation's composer has a **Worktree** toggle: press it before the first message and that conversation starts in a fresh worktree. To make it the default, turn on **Start new conversations in a worktree by default** under Settings → Worktrees. Worktrees go in `~/.lyra/worktrees`, not beside your project.
+Want a conversation to work in its own Git worktree, leaving your main checkout alone? A new conversation's composer has a **Worktree** toggle; press it before the first message. Merging back into main, syncing from it and cleaning up are covered in [Worktrees](/en/docs/features/worktrees/).
 </Aside>

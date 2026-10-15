@@ -54,6 +54,7 @@ Usage statistics are calculated on your machine and never uploaded.
 - Model provider API keys, the Vault's passwords and SSH keys, and code-hosting tokens are encrypted with AES-256-GCM into files with 0600 permissions; the decryption key is `vault.key` in the same folder.
 - They're never written to `settings.json` and never synced to your phone.
 - Keys you enter for MCP servers in Lyra are encrypted the same way.
+- Commands the agent runs can't read `credentials.json` or `vault.key`: inside the sandbox they're refused outright, and in full access you're asked first, every time. How the Vault works is in [Vault and credentials](/en/docs/features/vault/).
 
 <Aside type="caution">
 The encrypted file and its key sit side by side, so anything that can read your home folder can decrypt them. If that matters to you, give your tokens a short expiry.
